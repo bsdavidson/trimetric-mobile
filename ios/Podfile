@@ -28,6 +28,9 @@ target 'trimetric_mobile' do
 
   # Mapbox
   pod 'react-native-mapbox-gl', :path => '../node_modules/@mapbox/react-native-mapbox-gl'
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
+
+
+
 
 end

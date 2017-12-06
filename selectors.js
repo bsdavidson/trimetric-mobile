@@ -24,6 +24,10 @@ function getStops(state) {
   return state.stops;
 }
 
+function getSelectedItems(state) {
+  return state.selectedItems.features;
+}
+
 export const getVehiclePoints = createSelector(getVehicles, vehicles => {
   let collection = {
     type: "FeatureCollection",
@@ -37,9 +41,10 @@ export const getVehiclePoints = createSelector(getVehicles, vehicles => {
     return {
       type: "Feature",
       properties: {
+        type: "vehicle",
         icon: getRouteTypeIcon(v.route_type),
         vehicle_id: v.vehicle.id,
-        route_id: v.trip.route_id
+        route_id: v.trip.route_id || ""
       },
       geometry: {
         type: "Point",
@@ -47,9 +52,44 @@ export const getVehiclePoints = createSelector(getVehicles, vehicles => {
       }
     };
   });
-
   return collection;
 });
+
+export const getSelectedItemsInfo = createSelector(
+  getStops,
+  getVehicles,
+  getSelectedItems,
+  (stops, vehicles, items) => {
+    if (items.length === 0) {
+      return [];
+    }
+
+    let itemsInfo = [];
+    items.forEach(item => {
+      switch (item.properties.type) {
+        case "vehicle":
+          for (let i = 0; i < vehicles.length; i++) {
+            if (vehicles[i].vehicle.id == item.properties.vehicle_id) {
+              itemsInfo.push({type: "vehicle", vehicle: vehicles[i]});
+              break;
+            }
+          }
+          break;
+        case "stop":
+          for (let i = 0; i < stops.length; i++) {
+            if (stops[i].id === item.properties.stop_id) {
+              itemsInfo.push({type: "stop", stop: stops[i]});
+              break;
+            }
+          }
+          break;
+        default:
+          throw new Error(`unknown item type: ${item.properties.type}`);
+      }
+    });
+    return itemsInfo;
+  }
+);
 
 export const getStopPoints = createSelector(getStops, stops => {
   let collection = {
@@ -63,6 +103,7 @@ export const getStopPoints = createSelector(getStops, stops => {
     return {
       type: "Feature",
       properties: {
+        type: "stop",
         stop_id: s.id
       },
       geometry: {

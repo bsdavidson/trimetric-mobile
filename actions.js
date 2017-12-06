@@ -1,8 +1,9 @@
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
-export const UPDATE_LINES = "UPDATE_LINES";
+export const UPDATE_ROUTE_SHAPES = "UPDATE_ROUTE_SHAPES";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const UPDATE_ROUTES = "UPDATE_ROUTES";
 export const UPDATE_STOPS = "UPDATE_STOPS";
+export const UPDATE_SELECTED_ITEMS = "UPDATE_SELECTED_ITEMS";
 export const UPDATE_VEHICLES = "UPDATE_VEHICLES";
 
 export const LocationTypes = {
@@ -45,10 +46,10 @@ export function updateRoutes(routes) {
   };
 }
 
-export function updateLines(lineData) {
+export function updateRouteShapes(routeShapes) {
   return {
-    type: UPDATE_LINES,
-    lineData
+    type: UPDATE_ROUTE_SHAPES,
+    routeShapes
   };
 }
 
@@ -56,6 +57,13 @@ export function updateStops(stops) {
   return {
     type: UPDATE_STOPS,
     stops
+  };
+}
+
+export function updateSelectedItems(selectedItems) {
+  return {
+    type: UPDATE_SELECTED_ITEMS,
+    selectedItems
   };
 }
 

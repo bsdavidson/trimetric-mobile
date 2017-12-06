@@ -1,11 +1,9 @@
 // @ts-check
 
-import Config from "react-native-config";
-
 import {
   LocationTypes,
   updateArrivals,
-  updateLines,
+  updateRouteShapes,
   updateLocation,
   updateRoutes,
   updateStops,
@@ -17,12 +15,12 @@ const UPDATE_TIMEOUT = 1000;
 const MESSAGE_TYPE_TO_ACTION = {
   arrivals: updateArrivals,
   routes: updateRoutes,
-  route_shapes: updateLines,
+  route_shapes: updateRouteShapes,
   stops: updateStops,
   vehicles: updateVehicles
 };
 
-const BASE_URL = Config.BASE_URL || "https://trimetric.briand.co";
+const BASE_URL = "http://10.0.0.68:8181";
 
 function buildQuery(params) {
   return Object.keys(params)
@@ -43,7 +41,7 @@ export class DataService {
 
   connect() {
     const url = `${BASE_URL}/ws`.replace(/^http(s?)/, "ws$1");
-    this.connection = new WebSocket(url);
+    this.connection = new WebSocket(url + "?chunkify=false");
 
     this.connection.onopen = () => {
       console.log("WebSocket Connected");

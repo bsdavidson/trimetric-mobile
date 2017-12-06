@@ -3,11 +3,12 @@ import {createStore, combineReducers} from "redux";
 import {
   LocationTypes,
   UPDATE_ARRIVALS,
-  UPDATE_LINES,
   UPDATE_LOCATION,
   UPDATE_ROUTES,
   UPDATE_STOPS,
-  UPDATE_VEHICLES
+  UPDATE_SELECTED_ITEMS,
+  UPDATE_VEHICLES,
+  UPDATE_ROUTE_SHAPES
 } from "./actions";
 import {featureCollection, geometry} from "@turf/helpers";
 
@@ -56,9 +57,12 @@ function arrivals(state = [], action) {
   }
 }
 
-function lineData(state = {type: "FeatureCollection", features: []}, action) {
+function routeShapes(
+  state = {type: "FeatureCollection", features: []},
+  action
+) {
   switch (action.type) {
-    case UPDATE_LINES: {
+    case UPDATE_ROUTE_SHAPES: {
       let featureIndexes = {};
       let features = state.features.slice();
 
@@ -66,7 +70,7 @@ function lineData(state = {type: "FeatureCollection", features: []}, action) {
         featureIndexes[f.properties.color] = i;
       });
 
-      action.lineData.forEach(s => {
+      action.routeShapes.forEach(s => {
         if (!s) {
           return;
         }
@@ -141,6 +145,21 @@ function routes(state = [], action) {
   }
 }
 
+const DEFAULT_SELECT_ITEM_STATE = {
+  type: "FeatureCollection",
+  features: []
+};
+
+function selectedItems(state = DEFAULT_SELECT_ITEM_STATE, action) {
+  switch (action.type) {
+    case UPDATE_SELECTED_ITEMS:
+      return action.selectedItems;
+
+    default:
+      return state;
+  }
+}
+
 function stops(state = [], action) {
   switch (action.type) {
     case UPDATE_STOPS:
@@ -170,9 +189,10 @@ function vehicles(state = [], action) {
 
 export const reducer = combineReducers({
   arrivals,
-  lineData,
+  routeShapes,
   locationClicked,
   routes,
+  selectedItems,
   stops,
   vehicles
 });

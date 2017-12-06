@@ -30,6 +30,7 @@ build/
 local.properties
 *.iml
 
+
 # node.js
 #
 node_modules/
@@ -53,3 +54,4 @@ buck-out/
 */fastlane/screenshots
 
 .env
+android/captures
