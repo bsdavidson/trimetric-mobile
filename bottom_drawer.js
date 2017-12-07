@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
+
 import {
   Animated,
   StyleSheet,
@@ -12,6 +14,7 @@ import {
   Platform
 } from "react-native";
 
+import {selectItem} from "./actions";
 import Arrivals from "./arrivals";
 
 function drawerNav(contentLength, index) {
@@ -29,7 +32,7 @@ function drawerNav(contentLength, index) {
 
 const STATUS_BAR_OFFSET = Platform.OS === "android" ? 24 : 0;
 
-export class BottomDrawer extends Component {
+class BottomDrawer extends Component {
   constructor(props) {
     super(props);
     let {width, height} = Dimensions.get("window");
@@ -56,6 +59,7 @@ export class BottomDrawer extends Component {
     this.setState({
       currentIndex: idx
     });
+    this.props.onSelectItem(this.props.data[idx]);
   }
 
   componentWillUnmount() {
@@ -91,8 +95,6 @@ export class BottomDrawer extends Component {
         useNativeDriver: true
       }).start();
     }
-
-    console.log("StopTap", this.state.stopSelected);
   }
 
   handleLayout(e) {
@@ -186,9 +188,11 @@ export class BottomDrawer extends Component {
         </View>
       );
     }
+    let detailsPageHeight = this.state.screenHeight - drawerHeight - 230;
 
     let drawerPosStyle = {
-      height: drawerHeight
+      height: drawerHeight + detailsPageHeight,
+      top: this.state.screenHeight - drawerHeight - 50
     };
     console.log("height", this.state.screenHeight, this.state.layoutHeight);
 
@@ -196,10 +200,7 @@ export class BottomDrawer extends Component {
       {
         translateY: this.state.animTranslateY.interpolate({
           inputRange: [0, 1],
-          outputRange: [
-            0,
-            -this.state.screenHeight + this.state.layoutHeight + 60
-          ]
+          outputRange: [0, -this.state.screenHeight + drawerHeight + 250]
         })
       }
     ];
@@ -224,21 +225,31 @@ export class BottomDrawer extends Component {
         />
         {pager}
         <View style={[styles.arrivals]}>
-          <Arrivals />
+          <Arrivals selectedStop={this.props.data[this.state.currentIndex]} />
         </View>
       </Animated.View>
     );
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    onSelectItem: item => {
+      dispatch(selectItem(item));
+    }
+  };
+}
+
+export default connect(null, mapDispatchToProps)(BottomDrawer);
+
 const styles = StyleSheet.create({
   arrivals: {
     padding: 10,
     position: "relative",
     top: 0,
-    borderWidth: 1,
-    flex: 1,
-    height: 500
+    borderTopWidth: 2,
+    borderColor: "#cccccc",
+    flex: 1
   },
   drawer: {
     flex: 1,

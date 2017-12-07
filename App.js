@@ -11,7 +11,7 @@ import {VehiclesLayer} from "./vehicles_layer";
 import {StopsLayer} from "./stops_layer";
 import {RouteShapesLayer} from "./route_shapes_layer";
 import {SelectedLayer} from "./selected_layer";
-import {BottomDrawer} from "./bottom_drawer";
+import BottomDrawer from "./bottom_drawer";
 import {updateSelectedItems} from "./actions";
 import {
   getVehiclePoints,
@@ -86,6 +86,23 @@ export class App extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.selectedItem === nextProps.selectedItem) {
+      return;
+    }
+    if (nextProps.selectedItem.type !== "stop") {
+      return;
+    }
+    this.mapRef.setCamera({
+      centerCoordinate: [
+        nextProps.selectedItem.stop.lng,
+        nextProps.selectedItem.stop.lat
+      ],
+      zoom: 16,
+      duration: 500
+    });
+  }
+
   renderInfoModal() {
     if (this.props.selectedItems.features.length === 0) {
       return null;
@@ -153,6 +170,7 @@ function mapStateToProps(state) {
   return {
     routeShapes: state.routeShapes,
     selectedItems: state.selectedItems,
+    selectedItem: state.selectedItem,
     stopPoints: getStopPoints(state),
     selectedItemsInfo: getSelectedItemsInfo(state),
     vehiclePoints: getVehiclePoints(state)

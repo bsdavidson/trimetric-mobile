@@ -1,7 +1,9 @@
+export const SELECT_ITEM = "SELECT_ITEM";
+export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
-export const UPDATE_ROUTE_SHAPES = "UPDATE_ROUTE_SHAPES";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const UPDATE_ROUTES = "UPDATE_ROUTES";
+export const UPDATE_ROUTE_SHAPES = "UPDATE_ROUTE_SHAPES";
 export const UPDATE_STOPS = "UPDATE_STOPS";
 export const UPDATE_SELECTED_ITEMS = "UPDATE_SELECTED_ITEMS";
 export const UPDATE_VEHICLES = "UPDATE_VEHICLES";
@@ -16,6 +18,19 @@ export function clearLocation() {
     type: UPDATE_LOCATION,
     locationClick: null,
     following: false
+  };
+}
+
+export function selectItem(item) {
+  return {
+    type: SELECT_ITEM,
+    item
+  };
+}
+
+export function startFetchingArrivals() {
+  return {
+    type: START_FETCHING_ARRIVALS
   };
 }
 

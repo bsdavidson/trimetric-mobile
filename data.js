@@ -2,6 +2,7 @@
 
 import {
   LocationTypes,
+  startFetchingArrivals,
   updateArrivals,
   updateRouteShapes,
   updateLocation,
@@ -34,9 +35,14 @@ export class DataService {
     this.running = false;
     this.timeoutID = null;
     this.selectedStop = null;
-
+    this.selectedItems = [];
+    this.getStopListFromSelectedStops = this.getStopListFromSelectedStops.bind(
+      this
+    );
     this.handleStopChange = this.handleStopChange.bind(this);
+    this.handleStoreChange = this.handleStoreChange.bind(this);
     this.connect();
+    this.unsubscribe = this.store.subscribe(this.handleStoreChange);
   }
 
   connect() {
@@ -65,12 +71,14 @@ export class DataService {
     };
   }
 
-  fetchArrivals(stop) {
-    if (!stop) {
+  fetchArrivals(stopIDs) {
+    if (!stopIDs || stopIDs.length === 0) {
       throw new Error("stop is required");
     }
 
-    let url = `${BASE_URL}/api/v1/arrivals?${buildQuery({stop_ids: stop.id})}`;
+    let url = `${BASE_URL}/api/v1/arrivals?${buildQuery({
+      stop_ids: stopIDs
+    })}`;
     return fetch(url)
       .then(response => response.json())
       .then(arrivals => {
@@ -115,10 +123,40 @@ export class DataService {
     }, UPDATE_TIMEOUT);
   }
 
+  getStopListFromSelectedStops() {
+    let {selectedItems} = this.store.getState();
+    if (!selectedItems) {
+      return [];
+    }
+    let stopIDs = [];
+    if (!selectedItems.features) {
+      return stopIDs;
+    }
+    selectedItems.features.forEach(s => {
+      if (s.properties.stop_id) {
+        stopIDs.push(s.properties.stop_id);
+      }
+    });
+    return stopIDs;
+  }
+
+  handleStoreChange() {
+    if (!this.store) {
+      return;
+    }
+    let {selectedItems} = this.store.getState();
+    if (selectedItems !== this.selectedItems) {
+      this.selectedItems = selectedItems;
+      this.update();
+      this.store.dispatch(startFetchingArrivals());
+    }
+  }
+
   update() {
+    let stopIDs = this.getStopListFromSelectedStops();
     let promises = [];
-    if (this.selectedStop) {
-      promises.push(this.fetchArrivals(this.selectedStop));
+    if (stopIDs.length > 0) {
+      promises.push(this.fetchArrivals(stopIDs));
     }
     return Promise.all(promises)
       .then(results => {

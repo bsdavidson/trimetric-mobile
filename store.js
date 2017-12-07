@@ -2,6 +2,8 @@ import {createStore, combineReducers} from "redux";
 // import {douglasPeucker} from "./helpers/geom.js";
 import {
   LocationTypes,
+  SELECT_ITEM,
+  START_FETCHING_ARRIVALS,
   UPDATE_ARRIVALS,
   UPDATE_LOCATION,
   UPDATE_ROUTES,
@@ -52,6 +54,17 @@ function arrivals(state = [], action) {
   switch (action.type) {
     case UPDATE_ARRIVALS:
       return action.arrivals;
+    default:
+      return state;
+  }
+}
+
+function fetchingArrivals(state = false, action) {
+  switch (action.type) {
+    case START_FETCHING_ARRIVALS:
+      return true;
+    case UPDATE_ARRIVALS:
+      return false;
     default:
       return state;
   }
@@ -160,6 +173,15 @@ function selectedItems(state = DEFAULT_SELECT_ITEM_STATE, action) {
   }
 }
 
+function selectedItem(state = null, action) {
+  switch (action.type) {
+    case SELECT_ITEM:
+      return action.item;
+    default:
+      return state;
+  }
+}
+
 function stops(state = [], action) {
   switch (action.type) {
     case UPDATE_STOPS:
@@ -189,9 +211,11 @@ function vehicles(state = [], action) {
 
 export const reducer = combineReducers({
   arrivals,
-  routeShapes,
+  fetchingArrivals,
   locationClicked,
+  routeShapes,
   routes,
+  selectedItem,
   selectedItems,
   stops,
   vehicles
