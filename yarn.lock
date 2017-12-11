@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@mapbox/react-native-mapbox-gl@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@mapbox/react-native-mapbox-gl/-/react-native-mapbox-gl-6.0.1.tgz#ef5465b0aa18d49b80fea379be0c3bdda497e2a3"
+"@mapbox/react-native-mapbox-gl@^6.0.2-rc1":
+  version "6.0.2-rc1"
+  resolved "https://registry.yarnpkg.com/@mapbox/react-native-mapbox-gl/-/react-native-mapbox-gl-6.0.2-rc1.tgz#214e7c560e9746dbf22cb85b5959076e345758e4"
   dependencies:
     "@turf/helpers" "4.6.0"
 
@@ -269,6 +269,14 @@ babel-generator@^6.18.0, babel-generator@^6.24.1, babel-generator@^6.26.0:
     source-map "^0.5.6"
     trim-right "^1.0.1"
 
+babel-helper-builder-binary-assignment-operator-visitor@^6.24.1:
+  version "6.24.1"
+  resolved "https://registry.yarnpkg.com/babel-helper-builder-binary-assignment-operator-visitor/-/babel-helper-builder-binary-assignment-operator-visitor-6.24.1.tgz#cce4517ada356f4220bcae8a02c2b346f9a56664"
+  dependencies:
+    babel-helper-explode-assignable-expression "^6.24.1"
+    babel-runtime "^6.22.0"
+    babel-types "^6.24.1"
+
 babel-helper-builder-react-jsx@^6.24.1:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-helper-builder-react-jsx/-/babel-helper-builder-react-jsx-6.26.0.tgz#39ff8313b75c8b65dceff1f31d383e0ff2a408a0"
@@ -294,6 +302,14 @@ babel-helper-define-map@^6.24.1:
     babel-runtime "^6.26.0"
     babel-types "^6.26.0"
     lodash "^4.17.4"
+
+babel-helper-explode-assignable-expression@^6.24.1:
+  version "6.24.1"
+  resolved "https://registry.yarnpkg.com/babel-helper-explode-assignable-expression/-/babel-helper-explode-assignable-expression-6.24.1.tgz#f25b82cf7dc10433c55f70592d5746400ac22caa"
+  dependencies:
+    babel-runtime "^6.22.0"
+    babel-traverse "^6.24.1"
+    babel-types "^6.24.1"
 
 babel-helper-function-name@^6.24.1:
   version "6.24.1"
@@ -416,6 +432,10 @@ babel-plugin-syntax-class-properties@^6.5.0, babel-plugin-syntax-class-propertie
 babel-plugin-syntax-dynamic-import@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-dynamic-import/-/babel-plugin-syntax-dynamic-import-6.18.0.tgz#8d6a26229c83745a9982a441051572caa179b1da"
+
+babel-plugin-syntax-exponentiation-operator@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-exponentiation-operator/-/babel-plugin-syntax-exponentiation-operator-6.13.0.tgz#9ee7e8337290da95288201a6a57f4170317830de"
 
 babel-plugin-syntax-flow@^6.18.0, babel-plugin-syntax-flow@^6.5.0, babel-plugin-syntax-flow@^6.8.0:
   version "6.18.0"
@@ -591,6 +611,14 @@ babel-plugin-transform-es3-property-literals@^6.8.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-es3-property-literals/-/babel-plugin-transform-es3-property-literals-6.22.0.tgz#b2078d5842e22abf40f73e8cde9cd3711abd5758"
   dependencies:
+    babel-runtime "^6.22.0"
+
+babel-plugin-transform-exponentiation-operator@^6.5.0:
+  version "6.24.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-exponentiation-operator/-/babel-plugin-transform-exponentiation-operator-6.24.1.tgz#2ab0c9c7f3098fa48907772bb813fe41e8de3a0e"
+  dependencies:
+    babel-helper-builder-binary-assignment-operator-visitor "^6.24.1"
+    babel-plugin-syntax-exponentiation-operator "^6.8.0"
     babel-runtime "^6.22.0"
 
 babel-plugin-transform-flow-strip-types@^6.21.0, babel-plugin-transform-flow-strip-types@^6.5.0, babel-plugin-transform-flow-strip-types@^6.8.0:
@@ -1158,8 +1186,8 @@ core-js@^1.0.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
 
 core-js@^2.2.2, core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.1.tgz#ae6874dc66937789b80754ff5428df66819ca50b"
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.2.tgz#bc4648656e7dc9dc80d7d3c7bbc172d96e744e63"
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -1427,10 +1455,6 @@ execa@^0.7.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
-
-exenv@^1.2.0:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
 
 expand-brackets@^0.1.4:
   version "0.1.5"
@@ -2710,7 +2734,7 @@ methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
-metro-bundler@^0.20.1:
+metro-bundler@^0.20.0:
   version "0.20.3"
   resolved "https://registry.yarnpkg.com/metro-bundler/-/metro-bundler-0.20.3.tgz#0ded01b64e8963117017b106f75b83cfc34f3656"
   dependencies:
@@ -2834,6 +2858,10 @@ minimist@~0.0.1:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+moment@^2.19.3:
+  version "2.19.3"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.3.tgz#bdb99d270d6d7fda78cc0fbace855e27fe7da69f"
 
 morgan@~1.6.1:
   version "1.6.1"
@@ -3243,13 +3271,6 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.5.10:
-  version "15.5.10"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
-  dependencies:
-    fbjs "^0.8.9"
-    loose-envify "^1.3.1"
-
 prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
@@ -3329,34 +3350,13 @@ react-devtools-core@^2.5.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-modal@^3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.1.7.tgz#21feb937c95cd722bf2d375cada751fdc8189c0e"
-  dependencies:
-    exenv "^1.2.0"
-    prop-types "^15.5.10"
-    warning "^3.0.0"
-
-react-native-animatable@^1.2.3:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.4.tgz#b5fb7657e8f6edadbc26697057a327fb920b3039"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-config@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.10.0.tgz#7ecabfcdc5f8fe34ba42b56b043626eb72d232fe"
 
-react-native-modal@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-4.1.1.tgz#4c1055dc045106542a8e3bb3fd656a6d3bc319d9"
-  dependencies:
-    prop-types "15.5.10"
-    react-native-animatable "^1.2.3"
-
-react-native@0.50.4:
-  version "0.50.4"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.50.4.tgz#194f5da4939087b3acee712a503475f4942dca7e"
+react-native@^0.51.0:
+  version "0.51.0"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.51.0.tgz#fe25934b3030fd323f3ca1a70f034133465955ed"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -3364,6 +3364,7 @@ react-native@0.50.4:
     babel-plugin-syntax-trailing-function-commas "^6.20.0"
     babel-plugin-transform-async-to-generator "6.16.0"
     babel-plugin-transform-class-properties "^6.18.0"
+    babel-plugin-transform-exponentiation-operator "^6.5.0"
     babel-plugin-transform-flow-strip-types "^6.21.0"
     babel-plugin-transform-object-rest-spread "^6.20.2"
     babel-register "^6.24.1"
@@ -3384,7 +3385,7 @@ react-native@0.50.4:
     graceful-fs "^4.1.3"
     inquirer "^3.0.6"
     lodash "^4.16.6"
-    metro-bundler "^0.20.1"
+    metro-bundler "^0.20.0"
     mime "^1.3.4"
     minimist "^1.2.0"
     mkdirp "^0.5.1"
@@ -3400,7 +3401,7 @@ react-native@0.50.4:
     react-clone-referenced-element "^1.0.1"
     react-devtools-core "^2.5.0"
     react-timer-mixin "^0.13.2"
-    regenerator-runtime "^0.9.5"
+    regenerator-runtime "^0.11.0"
     rimraf "^2.5.4"
     semver "^5.0.3"
     shell-quote "1.6.1"
@@ -3521,12 +3522,8 @@ regenerate@^1.2.1:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.3.3.tgz#0c336d3980553d755c39b586ae3b20aa49c82b7f"
 
 regenerator-runtime@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.0.tgz#7e54fe5b5ccd5d6624ea6255c3473be090b802e1"
-
-regenerator-runtime@^0.9.5:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.9.6.tgz#d33eb95d0d2001a4be39659707c51b0cb71ce029"
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
 
 regenerator-transform@^0.10.0:
   version "0.10.1"
@@ -4138,8 +4135,8 @@ ua-parser-js@^0.7.9:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
 
 uglify-es@^3.1.8:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.2.0.tgz#fbbfb9dc465ec7e5065701b9720d0de977d0bc24"
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.2.1.tgz#93de0aad8a1bb629c8a316f686351bc4d6ece687"
   dependencies:
     commander "~2.12.1"
     source-map "~0.6.1"
@@ -4241,12 +4238,6 @@ walker@~1.0.5:
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
-
-warning@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
-  dependencies:
-    loose-envify "^1.0.0"
 
 watch@~0.18.0:
   version "0.18.0"
