@@ -1,4 +1,5 @@
 import {createSelector} from "reselect";
+import Moment from "moment";
 
 // Only tram and bus are used by Trimet
 const ROUTE_TYPE_ICONS = {
@@ -28,11 +29,16 @@ function getSelectedItems(state) {
   return state.selectedItems.features;
 }
 
+function getSelectedItemIndex(state) {
+  return state.selectedItemIndex;
+}
+
 export const getVehiclePoints = createSelector(getVehicles, vehicles => {
   let collection = {
     type: "FeatureCollection",
     features: []
   };
+
   collection.features = vehicles.map(v => {
     if (!v) {
       return;
@@ -88,6 +94,35 @@ export const getSelectedItemsInfo = createSelector(
       }
     });
     return itemsInfo;
+  }
+);
+
+export const getSelectedItem = createSelector(
+  getSelectedItems,
+  getSelectedItemIndex,
+  (selectedItems, idx) => {
+    let item = selectedItems[idx];
+    if (!item) {
+      return null;
+    }
+
+    switch (item.properties.type) {
+      case "vehicle":
+        return {
+          type: "vehicle",
+          position: item.geometry.coordinates,
+          item: item
+        };
+      case "stop":
+        return {
+          type: "stop",
+          position: item.geometry.coordinates,
+          item: item
+        };
+      default:
+        break;
+    }
+    return null;
   }
 );
 

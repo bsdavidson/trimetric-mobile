@@ -1,4 +1,5 @@
 export const SELECT_ITEM = "SELECT_ITEM";
+export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
@@ -21,10 +22,17 @@ export function clearLocation() {
   };
 }
 
-export function selectItem(item) {
+export function selectItemIndex(itemIndex) {
   return {
     type: SELECT_ITEM,
-    item
+    itemIndex
+  };
+}
+
+export function setMapViewInset(bottom) {
+  return {
+    type: SET_MAP_VIEW_INSET,
+    bottom
   };
 }
 

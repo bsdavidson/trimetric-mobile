@@ -11,7 +11,7 @@ import {
   updateVehicles
 } from "./actions";
 
-const UPDATE_TIMEOUT = 1000;
+const UPDATE_TIMEOUT = 10000;
 
 const MESSAGE_TYPE_TO_ACTION = {
   arrivals: updateArrivals,

@@ -31,10 +31,15 @@ class Arrivals extends Component {
       return (
         this.props.selectedStop &&
         this.props.selectedStop.stop &&
-        this.props.selectedStop.stop.id === a.stop_id
+        this.props.selectedStop.stop.id === a.stop_id &&
+        a.vehicle_id !== ""
       );
     });
-    if (arrivalsForStop.length === 0) {
+    if (
+      arrivalsForStop.length === 0 &&
+      this.props.selectedStop &&
+      this.props.selectedStop.type === "stop"
+    ) {
       return (
         <View style={styles.arrivalList}>
           <View style={styles.arrivalItem}>
@@ -70,8 +75,7 @@ export default connect(mapStateToProps)(Arrivals);
 
 const styles = StyleSheet.create({
   arrivalList: {
-    flex: 1,
-    backgroundColor: "#EFEFEF"
+    flex: 1
   },
 
   arrivalItem: {

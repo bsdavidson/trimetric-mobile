@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Platform, StyleSheet, Text, View} from "react-native";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
-import Modal from "react-native-modal"; // 2.4.0
 
 import {MIN_LABEL_LAYER_ID} from "./App";
 

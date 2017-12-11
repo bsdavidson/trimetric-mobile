@@ -3,6 +3,7 @@ import {createStore, combineReducers} from "redux";
 import {
   LocationTypes,
   SELECT_ITEM,
+  SET_MAP_VIEW_INSET,
   START_FETCHING_ARRIVALS,
   UPDATE_ARRIVALS,
   UPDATE_LOCATION,
@@ -26,7 +27,7 @@ function mergeUpdates(state, updates, isEqualFunc, getTimestampFunc) {
   let newCount = 0;
   let expired = 0;
   let updateCount = 0;
-  let expiredTimestamp = new Date().getTime() / 1000 - 300;
+  let expiredTimestamp = Math.round(new Date().getTime() / 1000 - 300);
 
   updates.forEach(u => {
     for (let i = 0; i < newState.length; i++) {
@@ -35,6 +36,7 @@ function mergeUpdates(state, updates, isEqualFunc, getTimestampFunc) {
         updateCount++;
         return;
       }
+
       if (
         getTimestampFunc &&
         getTimestampFunc(newState[i]) < expiredTimestamp
@@ -94,7 +96,8 @@ function routeShapes(
           features.push({
             type: "Feature",
             properties: {
-              color: "#" + s.color
+              color: "#" + s.color,
+              route_id: s.route_id
             },
             geometry: {
               type: "MultiLineString",
@@ -168,15 +171,63 @@ function selectedItems(state = DEFAULT_SELECT_ITEM_STATE, action) {
     case UPDATE_SELECTED_ITEMS:
       return action.selectedItems;
 
+    case UPDATE_VEHICLES:
+      if (state.features.length === 0) {
+        return state;
+      }
+      let changed = false;
+
+      let newFeatures = state.features.map(si => {
+        if (si.properties.type !== "vehicle") {
+          // Not a vehicle, not interested
+          return si;
+        }
+        for (let i = 0; i < action.vehicles.length; i++) {
+          if (si.properties.vehicle_id === action.vehicles[i].vehicle.id) {
+            changed = true;
+            si = Object.assign({}, si, {
+              geometry: Object.assign({}, si.geometry, {
+                coordinates: [
+                  action.vehicles[i].position.lng,
+                  action.vehicles[i].position.lat
+                ]
+              })
+            });
+
+            break;
+          }
+        }
+        return si;
+      });
+      if (!changed) {
+        return state;
+      }
+
+      return {
+        type: "FeatureCollection",
+        features: newFeatures
+      };
+
     default:
       return state;
   }
 }
 
-function selectedItem(state = null, action) {
+function selectedItemIndex(state = null, action) {
   switch (action.type) {
     case SELECT_ITEM:
-      return action.item;
+      return action.itemIndex;
+    case UPDATE_SELECTED_ITEMS:
+      return 0;
+    default:
+      return state;
+  }
+}
+
+function mapViewInset(state = [0, 0, 0, 0], action) {
+  switch (action.type) {
+    case SET_MAP_VIEW_INSET:
+      return [0, 0, action.bottom, 0];
     default:
       return state;
   }
@@ -185,7 +236,7 @@ function selectedItem(state = null, action) {
 function stops(state = [], action) {
   switch (action.type) {
     case UPDATE_STOPS:
-      return state.concat(action.stops);
+      return action.stops;
 
     default:
       return state;
@@ -213,9 +264,10 @@ export const reducer = combineReducers({
   arrivals,
   fetchingArrivals,
   locationClicked,
+  mapViewInset,
   routeShapes,
   routes,
-  selectedItem,
+  selectedItemIndex,
   selectedItems,
   stops,
   vehicles

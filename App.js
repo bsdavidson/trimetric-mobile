@@ -11,11 +11,12 @@ import {VehiclesLayer} from "./vehicles_layer";
 import {StopsLayer} from "./stops_layer";
 import {RouteShapesLayer} from "./route_shapes_layer";
 import {SelectedLayer} from "./selected_layer";
-import BottomDrawer from "./bottom_drawer";
-import {updateSelectedItems} from "./actions";
+import SelectedItemsView from "./selected_items_view";
+import {updateSelectedItems, selectItemIndex} from "./actions";
 import {
   getVehiclePoints,
   getSelectedItemsInfo,
+  getSelectedItem,
   getStopPoints
 } from "./selectors";
 import {setTimeout} from "core-js/library/web/timers";
@@ -42,28 +43,48 @@ export class App extends Component {
       pressedPoints: {type: "FeatureCollection", features: []}
     };
 
-    this.timeout = null;
+    this.zoomLevelTimeout = null;
+    this.cameraTimeout = null;
+    this.handleSelectedItemsResize = this.handleSelectedItemsResize.bind(this);
     this.handleMapRef = this.handleMapRef.bind(this);
     this.handlePress = this.handlePress.bind(this);
     this.handleRegionDidChange = this.handleRegionDidChange.bind(this);
     this.renderInfoModal = this.renderInfoModal.bind(this);
   }
 
-  handleRegionDidChange(event) {
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => {
-      this.setState({
-        zoomLevel: event.properties.zoomLevel
-      });
-    }, 100);
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.selectedItem) {
+      return;
+    }
+    if (this.props.selectedItem === nextProps.selectedItem) {
+      return;
+    }
+
+    if (!nextProps.selectedItem.position) {
+      return;
+    }
+
+    this.mapRef.setCamera({
+      centerCoordinate: nextProps.selectedItem.position,
+      zoom: 16,
+      duration: 600
+    });
   }
 
   handleMapRef(map) {
     this.mapRef = map;
   }
 
+  handleRegionDidChange(event) {
+    clearTimeout(this.zoomLevelTimeout);
+    this.zoomLevelTimeout = setTimeout(() => {
+      this.setState({
+        zoomLevel: event.properties.zoomLevel
+      });
+    }, 100);
+  }
+
   async handlePress(e) {
-    console.log("press", e);
     const {screenPointX, screenPointY} = e.properties;
 
     let collection = await this.mapRef.queryRenderedFeaturesInRect(
@@ -86,28 +107,33 @@ export class App extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedItem === nextProps.selectedItem) {
+  handleSelectedItemsResize() {
+    if (!this.props.selectedItem || !this.props.selectedItem.position) {
       return;
     }
-    if (nextProps.selectedItem.type !== "stop") {
-      return;
+    if (this.cameraTimeout) {
+      clearTimeout(this.cameraTimeout);
     }
-    this.mapRef.setCamera({
-      centerCoordinate: [
-        nextProps.selectedItem.stop.lng,
-        nextProps.selectedItem.stop.lat
-      ],
-      zoom: 16,
-      duration: 500
-    });
+
+    this.cameraTimeout = setTimeout(() => {
+      this.mapRef.setCamera({
+        centerCoordinate: this.props.selectedItem.position,
+        zoom: 16,
+        duration: 600
+      });
+    }, Platform.OS === "ios" ? 100 : 0);
   }
 
   renderInfoModal() {
-    if (this.props.selectedItems.features.length === 0) {
+    if (this.props.selectedItemsInfo.length === 0) {
       return null;
     }
-    return <BottomDrawer data={this.props.selectedItemsInfo} />;
+    return (
+      <SelectedItemsView
+        onResize={this.handleSelectedItemsResize}
+        data={this.props.selectedItemsInfo}
+      />
+    );
   }
 
   render() {
@@ -117,22 +143,15 @@ export class App extends Component {
           styleURL={Mapbox.StyleURL.Light}
           zoomLevel={13}
           centerCoordinate={[-122.6865, 45.508]}
+          contentInset={this.props.mapViewInset}
           onRegionDidChange={this.handleRegionDidChange}
           onPress={this.handlePress}
           ref={this.handleMapRef}
           style={styles.map}>
-          {/* <Mapbox.VectorSource>
-            <Mapbox.FillExtrusionLayer
-              id="poopy_butthole"
-              sourceID="composite"
-              sourceLayerID="building"
-              filter={["==", "extrude", "true"]}
-              minZoomLevel={15}
-              style={mapStyles.building}
-            />
-          </Mapbox.VectorSource> */}
+          {this.props.selectedItem
+            ? SelectedLayer(this.props.selectedItem.item)
+            : null}
 
-          {SelectedLayer(this.props.selectedItems)}
           {RouteShapesLayer(this.props.routeShapes)}
           {StopsLayer(this.props.stopPoints)}
           {VehiclesLayer(this.props.vehiclePoints)}
@@ -168,11 +187,11 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
+    mapViewInset: state.mapViewInset,
     routeShapes: state.routeShapes,
-    selectedItems: state.selectedItems,
-    selectedItem: state.selectedItem,
-    stopPoints: getStopPoints(state),
+    selectedItem: getSelectedItem(state),
     selectedItemsInfo: getSelectedItemsInfo(state),
+    stopPoints: getStopPoints(state),
     vehiclePoints: getVehiclePoints(state)
   };
 }
