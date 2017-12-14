@@ -2,7 +2,13 @@
  * @flow
  */
 import React, {Component} from "react";
-import {Platform, StyleSheet, Text, View} from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator
+} from "react-native";
 import {connect} from "react-redux";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {feature} from "@turf/helpers";
@@ -43,32 +49,34 @@ export class App extends Component {
       pressedPoints: {type: "FeatureCollection", features: []}
     };
 
+    this.stopLen = 0;
+    this.loading = true;
     this.zoomLevelTimeout = null;
     this.cameraTimeout = null;
     this.handleSelectedItemsResize = this.handleSelectedItemsResize.bind(this);
     this.handleMapRef = this.handleMapRef.bind(this);
     this.handlePress = this.handlePress.bind(this);
+    this.handleLongPress = this.handleLongPress.bind(this);
     this.handleRegionDidChange = this.handleRegionDidChange.bind(this);
     this.renderInfoModal = this.renderInfoModal.bind(this);
+    this.selectedItemCameraMove = this.selectedItemCameraMove.bind(this);
+  }
+
+  componentDidUpdate() {
+    let stopsLoaded = false;
+    let stopLen = this.props.stopPoints.features.length;
+    if (stopLen > 0 && stopLen === this.stopLen) {
+      stopsLoaded = true;
+    }
+    this.stopLen = stopLen;
+    if (this.props.routeShapes && stopsLoaded && this.props.vehiclePoints) {
+      this.loading = false;
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.selectedItem) {
-      return;
-    }
-    if (this.props.selectedItem === nextProps.selectedItem) {
-      return;
-    }
-
-    if (!nextProps.selectedItem.position) {
-      return;
-    }
-
-    this.mapRef.setCamera({
-      centerCoordinate: nextProps.selectedItem.position,
-      zoom: 16,
-      duration: 600
-    });
+    this.selectedItemCameraMove(nextProps);
+    this.selectedArrivalCameraMove(nextProps);
   }
 
   handleMapRef(map) {
@@ -107,10 +115,32 @@ export class App extends Component {
     });
   }
 
+  async handleLongPress(e) {
+    console.log("Long Press");
+    await this.mapRef.setCamera({
+      bounds: {
+        ne: [-122.67752, 45.515785],
+        sw: [-122.6775214, 45.5209311],
+
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0
+      },
+      duration: 600,
+      mode: Mapbox.CameraModes.Flight
+    });
+  }
+
   handleSelectedItemsResize() {
-    if (!this.props.selectedItem || !this.props.selectedItem.position) {
+    if (
+      !this.mapRef ||
+      !this.props.selectedItem ||
+      !this.props.selectedItem.position
+    ) {
       return;
     }
+
     if (this.cameraTimeout) {
       clearTimeout(this.cameraTimeout);
     }
@@ -137,28 +167,113 @@ export class App extends Component {
   }
 
   render() {
+    let page = this.loading ? (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+        <View>
+          <Text>Reticulating Splines: {this.stopLen}</Text>
+        </View>
+      </View>
+    ) : (
+      <Mapbox.MapView
+        styleURL={Mapbox.StyleURL.Light}
+        zoomLevel={13}
+        centerCoordinate={[-122.6865, 45.508]}
+        contentInset={this.props.mapViewInset}
+        onRegionDidChange={this.handleRegionDidChange}
+        onPress={this.handlePress}
+        onLongPress={this.handleLongPress}
+        ref={this.handleMapRef}
+        style={styles.map}>
+        {this.props.selectedItem
+          ? SelectedLayer(this.props.selectedItem.item)
+          : null}
+        {RouteShapesLayer(this.props.routeShapes)}
+        {StopsLayer(this.props.stopPoints)}
+        {VehiclesLayer(
+          this.props.vehiclePoints,
+          this.props.selectedArrival &&
+          this.props.selectedArrival.item &&
+          this.props.selectedArrival.item.vehicle_id
+            ? {
+                type: "vehicle_id",
+                value: this.props.selectedArrival.item.vehicle_id
+              }
+            : null
+        )}
+      </Mapbox.MapView>
+    );
+
     return (
       <View style={styles.map}>
-        <Mapbox.MapView
-          styleURL={Mapbox.StyleURL.Light}
-          zoomLevel={13}
-          centerCoordinate={[-122.6865, 45.508]}
-          contentInset={this.props.mapViewInset}
-          onRegionDidChange={this.handleRegionDidChange}
-          onPress={this.handlePress}
-          ref={this.handleMapRef}
-          style={styles.map}>
-          {this.props.selectedItem
-            ? SelectedLayer(this.props.selectedItem.item)
-            : null}
-
-          {RouteShapesLayer(this.props.routeShapes)}
-          {StopsLayer(this.props.stopPoints)}
-          {VehiclesLayer(this.props.vehiclePoints)}
-        </Mapbox.MapView>
+        {page}
         {this.renderInfoModal()}
       </View>
     );
+  }
+
+  selectedItemCameraMove(nextProps) {
+    if (!nextProps.selectedItem) {
+      return false;
+    }
+    if (this.props.selectedItem === nextProps.selectedItem) {
+      return false;
+    }
+
+    if (!nextProps.selectedItem.position) {
+      return false;
+    }
+
+    this.mapRef.setCamera({
+      centerCoordinate: nextProps.selectedItem.position,
+      zoom: 16,
+      duration: 600
+    });
+    return true;
+  }
+
+  selectedArrivalCameraMove(nextProps) {
+    if (!nextProps.selectedArrival) {
+      return false;
+    }
+    if (this.props.selectedArrival === nextProps.selectedArrival) {
+      return false;
+    }
+
+    if (!nextProps.selectedArrival.item.vehicle_position) {
+      return false;
+    }
+    let pos1 = [
+      nextProps.selectedArrival.item.vehicle_position.lng,
+      nextProps.selectedArrival.item.vehicle_position.lat
+    ];
+    let pos2 = nextProps.selectedItem.position;
+
+    let ne = [Math.max(pos1[0], pos2[0]), Math.max(pos1[1], pos2[1])];
+    let sw = [Math.min(pos1[0], pos2[0]), Math.min(pos1[1], pos2[1])];
+    this.mapRef.setCamera({
+      bounds: {
+        ne: ne,
+        sw: sw,
+
+        paddingLeft: 40,
+        paddingRight: 40,
+        paddingTop: 20,
+        paddingBottom: 20
+      },
+      duration: 600,
+      mode: Mapbox.CameraModes.Flight
+    });
+
+    return true;
   }
 }
 
@@ -189,6 +304,7 @@ function mapStateToProps(state) {
   return {
     mapViewInset: state.mapViewInset,
     routeShapes: state.routeShapes,
+    selectedArrival: state.selectedArrival,
     selectedItem: getSelectedItem(state),
     selectedItemsInfo: getSelectedItemsInfo(state),
     stopPoints: getStopPoints(state),

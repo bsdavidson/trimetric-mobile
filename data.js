@@ -47,7 +47,9 @@ export class DataService {
 
   connect() {
     const url = `${BASE_URL}/ws`.replace(/^http(s?)/, "ws$1");
-    this.connection = new WebSocket(url + "?chunkify=false");
+    console.log("Connecting to: ", url);
+
+    this.connection = new WebSocket(url + "?chunkify=true");
 
     this.connection.onopen = () => {
       console.log("WebSocket Connected");
@@ -67,7 +69,7 @@ export class DataService {
       this.handleMessage(parsedMsg);
     };
     this.connection.onerror = err => {
-      console.warn("WebSocket Error:", err);
+      console.warn("WebSocket Error:", err.toString());
     };
   }
 

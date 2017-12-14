@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import Moment from "moment";
 
-import {getSelectedItem} from "./selectors";
+import {getSelectedItem, ROUTE_TYPE_ICONS} from "./selectors";
 
 import {
   Animated,
@@ -14,14 +14,20 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View
 } from "react-native";
 
 import {selectItemIndex, setMapViewInset} from "./actions";
 import Arrivals from "./arrivals";
-import busImage from "./assets/bus.png";
+import tram from "./assets/tram.png";
+import bus from "./assets/bus.png";
 import stopImage from "./assets/stop.png";
+
+const VEHICLE_IMAGE = {
+  0: tram,
+  3: bus
+};
 
 const MAP_AREA_OFFSET = 250;
 const HEADER_HEIGHT = 100;
@@ -252,7 +258,6 @@ class SelectedItemsView extends Component {
         }
       ]
     };
-
     return (
       <Animated.View
         onLayout={this.handleLayout}
@@ -273,7 +278,9 @@ class SelectedItemsView extends Component {
           {header}
         </View>
         <View style={[styles.detailsView]}>
-          <Arrivals selectedStop={this.props.selectedItem} />
+          {this.props.selectedItem.type === "stop" ? (
+            <Arrivals selectedStop={this.props.selectedItem} />
+          ) : null}
         </View>
       </Animated.View>
     );
@@ -319,12 +326,12 @@ function StopItem(props) {
         flexDirection: "row",
         width
       }}>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <View style={styles.itemImageContainer}>
           <Image style={styles.itemImage} source={stopImage} />
         </View>
-      </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback onPress={onPress}>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onPress}>
         <View key={stop.name} style={[styles.itemDescription]}>
           <View>
             <Text style={{fontSize: 18}}>{stop.name}</Text>
@@ -340,7 +347,7 @@ function StopItem(props) {
             </Text>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -354,33 +361,34 @@ function VehicleItem(props) {
         flexDirection: "row",
         width
       }}>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
         <View style={styles.itemImageContainer}>
-          <Image style={styles.itemImage} source={busImage} />
+          <Image
+            style={styles.itemImage}
+            source={VEHICLE_IMAGE[vehicle.route_type]}
+          />
+          <Text>{vehicle.vehicle.id}</Text>
         </View>
-      </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View key={vehicle.vehicle.id} style={[styles.itemDescription]}>
-          <View>
-            <Text>{vehicle.trip.route_id}</Text>
-            <Text>ID: {vehicle.vehicle.id}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onPress}>
+        <View
+          key={vehicle.vehicle.id}
+          style={[styles.itemDescription, {flex: 1, flexDirection: "row"}]}>
+          <View
+            style={{
+              padding: 10
+            }}>
+            <Text style={{fontSize: 36}}>{vehicle.trip.route_id}</Text>
           </View>
 
           <View>
-            <Text>{vehicle.vehicle.label}</Text>
+            <Text style={{fontSize: 20}}>{vehicle.vehicle.label}</Text>
             <Text style={{fontSize: 10}}>
               Updated: {Moment.unix(vehicle.timestamp).fromNow()}
-              {Moment.unix(vehicle.timestamp)
-                .diff(Moment.now())
-                .valueOf()
-                .toFixed(0) / 1000}
-            </Text>
-            <Text>
-              {vehicle.position.lat}/{vehicle.position.lng}
             </Text>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -437,13 +445,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   itemDescription: {
-    justifyContent: "center",
     alignItems: "center",
     height: 100,
     paddingLeft: 10,
     paddingRight: 10,
     minHeight: 100,
-    flex: 1
+    flex: 0
   },
   itemImageContainer: {
     flex: 1,

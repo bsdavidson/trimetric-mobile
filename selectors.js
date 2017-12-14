@@ -2,7 +2,7 @@ import {createSelector} from "reselect";
 import Moment from "moment";
 
 // Only tram and bus are used by Trimet
-const ROUTE_TYPE_ICONS = {
+export const ROUTE_TYPE_ICONS = {
   0: "tram",
   1: "subway",
   2: "rail",
@@ -131,6 +131,9 @@ export const getStopPoints = createSelector(getStops, stops => {
     type: "FeatureCollection",
     features: []
   };
+  if (!stops) {
+    return;
+  }
   collection.features = stops.map(s => {
     if (!s) {
       return;

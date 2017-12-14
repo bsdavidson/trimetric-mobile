@@ -5,36 +5,52 @@ import {
   View,
   StyleSheet,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
+import {selectArrival} from "./actions";
+import {getSelectedItem} from "./selectors";
 
 class Arrivals extends Component {
   constructor(props) {
     super(props);
 
+    this.handleArrivalPress = this.handleArrivalPress.bind(this);
     this.renderArrival = this.renderArrival.bind(this);
+  }
+
+  handleArrivalPress(arrival) {
+    this.props.onArrivalPress(arrival);
   }
 
   renderArrival(arrival) {
     return (
-      <View style={styles.arrivalItem}>
-        <Text>Route: {arrival.item.route_id}</Text>
-        <Text>Desc: {arrival.item.route_long_name}</Text>
-        <Text>StopID: {arrival.item.stop_id}</Text>
-        <Text>ArrivalTime: {arrival.item.arrival_time}</Text>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          this.handleArrivalPress(arrival);
+        }}>
+        <View style={styles.arrivalItem}>
+          <View style={{padding: 10}}>
+            <Text style={{fontSize: 22}}>{arrival.item.route_id}</Text>
+          </View>
+          <View>
+            <Text style={{fontSize: 18}}>{arrival.item.route_long_name}</Text>
+            <Text>StopID: {arrival.item.stop_id}</Text>
+            <Text>ArrivalTime: {arrival.item.arrival_time}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
     );
   }
 
   render() {
+    if (!this.props.selectedItem) {
+      return null;
+    }
     let arrivalsForStop = this.props.arrivals.filter(a => {
-      return (
-        this.props.selectedStop &&
-        this.props.selectedStop.stop &&
-        this.props.selectedStop.stop.id === a.stop_id &&
-        a.vehicle_id !== ""
-      );
+      return this.props.selectedItem.item.properties.stop_id === a.stop_id;
     });
+
     if (
       arrivalsForStop.length === 0 &&
       this.props.selectedStop &&
@@ -65,13 +81,22 @@ class Arrivals extends Component {
 
 function mapStateToProps(state) {
   return {
+    selectedItem: getSelectedItem(state),
     arrivals: state.arrivals,
     selectedItems: state.selectedItems,
     fetchingArrivals: state.fetchingArrivals
   };
 }
 
-export default connect(mapStateToProps)(Arrivals);
+function mapDispatchToProps(dispatch) {
+  return {
+    onArrivalPress: arrival => {
+      dispatch(selectArrival(arrival));
+    }
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Arrivals);
 
 const styles = StyleSheet.create({
   arrivalList: {
@@ -80,13 +105,14 @@ const styles = StyleSheet.create({
 
   arrivalItem: {
     backgroundColor: "#FFFFFF",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     height: 100,
     paddingLeft: 10,
     paddingRight: 10,
     marginBottom: 7,
     minHeight: 100,
+    flexDirection: "row",
     flex: 1,
     borderWidth: 1,
     borderColor: "#cccccc"

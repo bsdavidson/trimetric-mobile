@@ -1,4 +1,5 @@
 export const SELECT_ITEM = "SELECT_ITEM";
+export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
@@ -19,6 +20,13 @@ export function clearLocation() {
     type: UPDATE_LOCATION,
     locationClick: null,
     following: false
+  };
+}
+
+export function selectArrival(arrival) {
+  return {
+    type: SELECT_ARRIVAL,
+    arrival
   };
 }
 

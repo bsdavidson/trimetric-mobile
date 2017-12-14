@@ -3,6 +3,7 @@ import {createStore, combineReducers} from "redux";
 import {
   LocationTypes,
   SELECT_ITEM,
+  SELECT_ARRIVAL,
   SET_MAP_VIEW_INSET,
   START_FETCHING_ARRIVALS,
   UPDATE_ARRIVALS,
@@ -23,11 +24,23 @@ export const DEFAULT_LOCATION = {
 };
 
 function mergeUpdates(state, updates, isEqualFunc, getTimestampFunc) {
-  let newState = state.slice();
-  let newCount = 0;
   let expired = 0;
+  let newCount = 0;
   let updateCount = 0;
   let expiredTimestamp = Math.round(new Date().getTime() / 1000 - 300);
+
+  let newState;
+  if (getTimestampFunc) {
+    newState = state.filter(u => {
+      return getTimestampFunc && getTimestampFunc(u) > expiredTimestamp;
+    });
+  } else {
+    newState = state.slice();
+  }
+
+  if (state.length > newState.length) {
+    expired += state.length - newState.length;
+  }
 
   updates.forEach(u => {
     for (let i = 0; i < newState.length; i++) {
@@ -36,20 +49,15 @@ function mergeUpdates(state, updates, isEqualFunc, getTimestampFunc) {
         updateCount++;
         return;
       }
-
-      if (
-        getTimestampFunc &&
-        getTimestampFunc(newState[i]) < expiredTimestamp
-      ) {
-        expired++;
-        return;
-      }
     }
     newCount++;
     newState.push(u);
   });
 
-  return newState;
+  if (newCount + updateCount + expired > 0) {
+    return newState;
+  }
+  return state;
 }
 
 function arrivals(state = [], action) {
@@ -213,6 +221,15 @@ function selectedItems(state = DEFAULT_SELECT_ITEM_STATE, action) {
   }
 }
 
+function selectedArrival(state = null, action) {
+  switch (action.type) {
+    case SELECT_ARRIVAL:
+      return action.arrival;
+    default:
+      return state;
+  }
+}
+
 function selectedItemIndex(state = null, action) {
   switch (action.type) {
     case SELECT_ITEM:
@@ -236,7 +253,7 @@ function mapViewInset(state = [0, 0, 0, 0], action) {
 function stops(state = [], action) {
   switch (action.type) {
     case UPDATE_STOPS:
-      return action.stops;
+      return state.concat(action.stops);
 
     default:
       return state;
@@ -252,7 +269,6 @@ function vehicles(state = [], action) {
         (a, b) => a.vehicle.id === b.vehicle.id,
         v => v.timestamp
       );
-
       return newState;
     }
     default:
@@ -267,6 +283,7 @@ export const reducer = combineReducers({
   mapViewInset,
   routeShapes,
   routes,
+  selectedArrival,
   selectedItemIndex,
   selectedItems,
   stops,
