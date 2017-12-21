@@ -25,6 +25,10 @@ function getStops(state) {
   return state.stops;
 }
 
+function getSelectedArrival(state) {
+  return state.selectedArrival;
+}
+
 function getSelectedItems(state) {
   return state.selectedItems.features;
 }
@@ -32,6 +36,55 @@ function getSelectedItems(state) {
 function getSelectedItemIndex(state) {
   return state.selectedItemIndex;
 }
+
+export const getVehicleInfoFromSelectedItem = createSelector(
+  getSelectedItems,
+  getSelectedItemIndex,
+  getVehicles,
+  (selectedItems, idx, vehicles) => {
+    let item = selectedItems[idx];
+    if (!item) {
+      return null;
+    }
+    for (let i = 0; i < vehicles.length; i++) {
+      if (vehicles[i].vehicle.id === item.properties.vehicle_id) {
+        return vehicles[i];
+      }
+    }
+  }
+);
+
+export const getStopInfoFromSelectedItem = createSelector(
+  getSelectedItems,
+  getSelectedItemIndex,
+  getStops,
+  (selectedItems, idx, stops) => {
+    let item = selectedItems[idx];
+    if (!item) {
+      return null;
+    }
+    for (let i = 0; i < stops.length; i++) {
+      if (stops[i].id === item.properties.stop_id) {
+        return stops[i];
+      }
+    }
+  }
+);
+
+export const getVehicleInfoFromArrival = createSelector(
+  getVehicles,
+  getSelectedArrival,
+  (vehicles, arrival) => {
+    if (!arrival || !arrival.item || !arrival.item.vehicle_id) {
+      return null;
+    }
+    for (let i = 0; i < vehicles.length; i++) {
+      if (vehicles[i].vehicle.id === arrival.item.vehicle_id) {
+        return vehicles[i];
+      }
+    }
+  }
+);
 
 export const getVehiclePoints = createSelector(getVehicles, vehicles => {
   let collection = {
@@ -50,7 +103,8 @@ export const getVehiclePoints = createSelector(getVehicles, vehicles => {
         type: "vehicle",
         icon: getRouteTypeIcon(v.route_type),
         vehicle_id: v.vehicle.id,
-        route_id: v.trip.route_id || ""
+        route_id: v.trip.route_id || "",
+        stop_id: v.stop_id
       },
       geometry: {
         type: "Point",

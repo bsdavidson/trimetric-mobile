@@ -21,7 +21,7 @@ const MESSAGE_TYPE_TO_ACTION = {
   vehicles: updateVehicles
 };
 
-const BASE_URL = "http://10.0.0.68:8181";
+const BASE_URL = "http://10.0.1.6:8181";
 
 function buildQuery(params) {
   return Object.keys(params)
@@ -57,6 +57,9 @@ export class DataService {
 
     this.connection.onclose = () => {
       console.warn("WebSocket Disconnected");
+      setTimeout(() => {
+        this.connect();
+      }, 1000);
     };
 
     this.connection.onmessage = message => {
@@ -66,6 +69,7 @@ export class DataService {
         console.warn("WebSocket JSON Error:", err);
         return;
       }
+
       this.handleMessage(parsedMsg);
     };
     this.connection.onerror = err => {

@@ -4,7 +4,7 @@ import Mapbox from "@mapbox/react-native-mapbox-gl";
 
 import {MIN_LABEL_LAYER_ID} from "./App";
 
-export function StopsLayer(stopPoints) {
+export function StopsLayer(stopPoints, filter) {
   if (!stopPoints) {
     return null;
   }
@@ -19,6 +19,9 @@ export function StopsLayer(stopPoints) {
         <Mapbox.SymbolLayer
           id="stop_symbols_layer"
           minZoomLevel={13}
+          filter={
+            filter ? ["==", filter.type, filter.value] : ["!=", "test", "123"]
+          }
           belowLayerID={MIN_LABEL_LAYER_ID}
           style={mapStyles.stopSymbolsLayer}
         />
@@ -28,6 +31,9 @@ export function StopsLayer(stopPoints) {
         <Mapbox.CircleLayer
           id="stop_points_layer"
           maxZoomLevel={13}
+          filter={
+            filter ? ["==", filter.type, filter.value] : ["!=", "test", "123"]
+          }
           belowLayerID={MIN_LABEL_LAYER_ID}
           style={mapStyles.stopPointsLayer}
         />

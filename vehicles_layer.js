@@ -33,7 +33,6 @@ export function VehiclesLayer(vehiclePoints, filter) {
   if (!vehiclePoints) {
     return null;
   }
-
   return (
     <View>
       <Mapbox.ShapeSource

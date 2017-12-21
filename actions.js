@@ -1,3 +1,4 @@
+export const CLEAR_SELECTION = "CLEAR_SELECTION";
 export const SELECT_ITEM = "SELECT_ITEM";
 export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
@@ -27,6 +28,12 @@ export function selectArrival(arrival) {
   return {
     type: SELECT_ARRIVAL,
     arrival
+  };
+}
+
+export function clearSelection() {
+  return {
+    type: CLEAR_SELECTION
   };
 }
 

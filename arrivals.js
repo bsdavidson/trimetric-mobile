@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import Moment from "moment";
 import {connect} from "react-redux";
 import {
   Text,
@@ -9,7 +10,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import {selectArrival} from "./actions";
-import {getSelectedItem} from "./selectors";
+import {getSelectedItem, getVehicleInfoFromArrival} from "./selectors";
 
 class Arrivals extends Component {
   constructor(props) {
@@ -23,6 +24,10 @@ class Arrivals extends Component {
     this.props.onArrivalPress(arrival);
   }
 
+  componentWillUnmount() {
+    this.props.onArrivalPress(null);
+  }
+
   renderArrival(arrival) {
     return (
       <TouchableOpacity
@@ -32,11 +37,23 @@ class Arrivals extends Component {
         <View style={styles.arrivalItem}>
           <View style={{padding: 10}}>
             <Text style={{fontSize: 22}}>{arrival.item.route_id}</Text>
+            <Text style={{fontSize: 12, textAlign: "center"}}>
+              {arrival.item.vehicle_id}
+            </Text>
           </View>
           <View>
             <Text style={{fontSize: 18}}>{arrival.item.route_long_name}</Text>
-            <Text>StopID: {arrival.item.stop_id}</Text>
-            <Text>ArrivalTime: {arrival.item.arrival_time}</Text>
+            <Text style={{fontSize: 14}}>{arrival.item.headsign}</Text>
+
+            <Text>Stop ID: {arrival.item.stop_id}</Text>
+            <Text>
+              Arrival Time:{" "}
+              {Moment(arrival.item.arrival_time, "HH:mm:ss").fromNow()}
+            </Text>
+            <Text style={{fontSize: 12}}>
+              {arrival.item.vehicle_position.lat} {" / "}{" "}
+              {arrival.item.vehicle_position.lng}{" "}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -82,6 +99,7 @@ class Arrivals extends Component {
 function mapStateToProps(state) {
   return {
     selectedItem: getSelectedItem(state),
+    arrivalVehicle: getVehicleInfoFromArrival(state),
     arrivals: state.arrivals,
     selectedItems: state.selectedItems,
     fetchingArrivals: state.fetchingArrivals

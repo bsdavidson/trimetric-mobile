@@ -2,6 +2,7 @@ import {createStore, combineReducers} from "redux";
 // import {douglasPeucker} from "./helpers/geom.js";
 import {
   LocationTypes,
+  CLEAR_SELECTION,
   SELECT_ITEM,
   SELECT_ARRIVAL,
   SET_MAP_VIEW_INSET,
@@ -64,6 +65,7 @@ function arrivals(state = [], action) {
   switch (action.type) {
     case UPDATE_ARRIVALS:
       return action.arrivals;
+
     default:
       return state;
   }
@@ -176,6 +178,8 @@ const DEFAULT_SELECT_ITEM_STATE = {
 
 function selectedItems(state = DEFAULT_SELECT_ITEM_STATE, action) {
   switch (action.type) {
+    case CLEAR_SELECTION:
+      return DEFAULT_SELECT_ITEM_STATE;
     case UPDATE_SELECTED_ITEMS:
       return action.selectedItems;
 
@@ -225,6 +229,8 @@ function selectedArrival(state = null, action) {
   switch (action.type) {
     case SELECT_ARRIVAL:
       return action.arrival;
+    case CLEAR_SELECTION:
+      return null;
     default:
       return state;
   }
@@ -236,6 +242,8 @@ function selectedItemIndex(state = null, action) {
       return action.itemIndex;
     case UPDATE_SELECTED_ITEMS:
       return 0;
+    case CLEAR_SELECTION:
+      return null;
     default:
       return state;
   }
@@ -263,13 +271,14 @@ function stops(state = [], action) {
 function vehicles(state = [], action) {
   switch (action.type) {
     case UPDATE_VEHICLES: {
-      let newState = mergeUpdates(
-        state,
-        action.vehicles,
-        (a, b) => a.vehicle.id === b.vehicle.id,
-        v => v.timestamp
-      );
-      return newState;
+      return action.vehicles;
+      // let newState = mergeUpdates(
+      //   state,
+      //   action.vehicles,
+      //   (a, b) => a.vehicle.id === b.vehicle.id,
+      //   v => v.timestamp
+      // );
+      // return newState;
     }
     default:
       return state;

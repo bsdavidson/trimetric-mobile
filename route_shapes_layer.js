@@ -4,7 +4,14 @@ import Mapbox from "@mapbox/react-native-mapbox-gl";
 
 import {MIN_LABEL_LAYER_ID} from "./App";
 
-export function RouteShapesLayer(routeShapes) {
+// Setting a filter to match a non-existing attribute effectivly hides all the
+// elements in the layer.
+const EXCLUDE_ALL = ["==", "invalid_attribute", "1"];
+// By filtering using a != against a non-existing attrib
+// effectivly shows all
+const INCLUDE_ALL = ["!=", "non_existing_attribute", "1"];
+
+export function RouteShapesLayer(routeShapes, filter) {
   if (!routeShapes) {
     return null;
   }
@@ -14,6 +21,7 @@ export function RouteShapesLayer(routeShapes) {
         <Mapbox.LineLayer
           id="route_shapes_layer"
           belowLayerID={MIN_LABEL_LAYER_ID}
+          filter={filter ? EXCLUDE_ALL : INCLUDE_ALL}
           style={mapStyles.routeShapesLayer}
         />
       </Mapbox.ShapeSource>

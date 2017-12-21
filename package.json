@@ -14,7 +14,8 @@
     "react-native-config": "^0.10.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "turf": "^3.0.14"
   },
   "devDependencies": {
     "babel-jest": "21.2.0",

@@ -2,7 +2,12 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import Moment from "moment";
 
-import {getSelectedItem, ROUTE_TYPE_ICONS} from "./selectors";
+import {
+  getSelectedItem,
+  getVehicleInfoFromArrival,
+  getStopInfoFromSelectedItem,
+  ROUTE_TYPE_ICONS
+} from "./selectors";
 
 import {
   Animated,
@@ -18,8 +23,9 @@ import {
   View
 } from "react-native";
 
-import {selectItemIndex, setMapViewInset} from "./actions";
+import {clearSelection, selectItemIndex, setMapViewInset} from "./actions";
 import Arrivals from "./arrivals";
+import VehicleInfo from "./vehicle_info";
 import tram from "./assets/tram.png";
 import bus from "./assets/bus.png";
 import stopImage from "./assets/stop.png";
@@ -29,23 +35,16 @@ const VEHICLE_IMAGE = {
   3: bus
 };
 
+const CURRENT_VEHICLE_STATUS = {
+  0: "Incoming at",
+  1: "Stopped at",
+  2: "In Transit to"
+};
+
 const MAP_AREA_OFFSET = 250;
 const HEADER_HEIGHT = 100;
-const HEADER_PAGINATION_HEIGHT = 20;
+const HEADER_PAGINATION_HEIGHT = 25;
 const STATUS_BAR_OFFSET = Platform.OS === "android" ? 24 : 0;
-
-function headerPagination(contentLength, index) {
-  let pageNav = [];
-  for (let i = 0; i < contentLength; i++) {
-    let style = index === i ? styles.active : styles.inactive;
-    pageNav.push(
-      <View key={"pgnav-" + i} style={style}>
-        <Text>{i + 1}</Text>
-      </View>
-    );
-  }
-  return pageNav;
-}
 
 function keyExtractor(item, index) {
   return String(index);
@@ -65,17 +64,20 @@ class SelectedItemsView extends Component {
       marginTop: screenHeight * 0.3,
       openTween: new Animated.Value(0),
       screenHeight,
-      screenWidth
+      screenWidth,
+      isScrolling: false
     };
 
     this.headerListRef = null;
-
+    this.scrollTimeout = null;
     this.calculatePageIndex = this.calculatePageIndex.bind(this);
     this.handleHeaderListRef = this.handleHeaderListRef.bind(this);
     this.handleHeaderScroll = this.handleHeaderScroll.bind(this);
     this.handleIconTap = this.handleIconTap.bind(this);
     this.handleLayout = this.handleLayout.bind(this);
     this.renderHeaderItem = this.renderHeaderItem.bind(this);
+    this.headerPagination = this.headerPagination.bind(this);
+    this.getItemLayout = this.getItemLayout.bind(this);
   }
 
   calculatePageIndex(itemWidth, currentOffset) {
@@ -84,6 +86,22 @@ class SelectedItemsView extends Component {
 
   componentDidMount() {
     this.close();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedItem && nextProps.selectedItem.type === "vehicle") {
+      if (this.state.isOpen) {
+        this.close();
+      }
+    }
+  }
+
+  getItemLayout(data, index) {
+    return {
+      length: this.state.screenWidth,
+      offset: this.state.screenWidth * index,
+      index
+    };
   }
 
   // compare the current selected item with the selected item(s) in the store
@@ -152,12 +170,41 @@ class SelectedItemsView extends Component {
       e.nativeEvent.contentOffset.x
     );
     if (idx !== this.props.selectedItemIndex) {
-      this.selectItem(idx);
+      this.props.onSelectItemIndex(idx);
     }
   }
 
   handleHeaderListRef(list) {
     this.headerListRef = list;
+  }
+
+  handlePagePress(index) {
+    this.headerListRef.scrollToOffset({offset: index * this.state.screenWidth});
+  }
+
+  headerPagination(data, index) {
+    let pageNav = [];
+    for (let i = 0; i < data.length; i++) {
+      let style = index === i ? styles.active : styles.inactive;
+      let image =
+        data[i].type === "stop" ? (
+          <Image style={styles.pageIcon} source={stopImage} />
+        ) : (
+          <Image style={styles.pageIcon} source={bus} />
+        );
+
+      pageNav.push(
+        <TouchableOpacity
+          key={"pgnav-" + i}
+          style={style}
+          onPress={() => {
+            this.handlePagePress(i);
+          }}>
+          <View>{image}</View>
+        </TouchableOpacity>
+      );
+    }
+    return pageNav;
   }
 
   openOrClose() {
@@ -212,6 +259,7 @@ class SelectedItemsView extends Component {
           width={this.state.layoutWidth}
           onPress={this.handleIconTap}
           stop={item.stop}
+          selectedArrival={this.props ? this.props.selectedArrival : null}
         />
       );
     }
@@ -222,6 +270,7 @@ class SelectedItemsView extends Component {
           width={this.state.layoutWidth}
           onPress={this.handleIconTap}
           vehicle={item.vehicle}
+          stopInfo={this.props.selectedVehicleStopInfo}
         />
       );
     }
@@ -235,10 +284,7 @@ class SelectedItemsView extends Component {
       headerHeight += HEADER_PAGINATION_HEIGHT;
       header = (
         <View style={styles.headerPagination}>
-          {headerPagination(
-            this.props.data.length,
-            this.props.selectedItemIndex
-          )}
+          {this.headerPagination(this.props.data, this.props.selectedItemIndex)}
         </View>
       );
     }
@@ -258,6 +304,15 @@ class SelectedItemsView extends Component {
         }
       ]
     };
+
+    let detailsView = null;
+    if (this.props.selectedItem.type === "stop") {
+      detailsView = <Arrivals selectedStop={this.props.selectedItem} />;
+    }
+    if (this.props.selectedItem.type === "vehicle") {
+      detailsView = <VehicleInfo />;
+    }
+
     return (
       <Animated.View
         onLayout={this.handleLayout}
@@ -268,6 +323,7 @@ class SelectedItemsView extends Component {
             data={this.props.data}
             style={styles.header}
             renderItem={this.renderHeaderItem}
+            getItemLayout={this.getItemLayout}
             extraData={this.state}
             horizontal={true}
             pagingEnabled={true}
@@ -276,25 +332,44 @@ class SelectedItemsView extends Component {
             onScroll={this.handleHeaderScroll}
           />
           {header}
+          <TouchableOpacity
+            style={{zIndex: 99, flex: 0, position: "absolute", right: 0}}
+            onPress={this.props.onClearSelection}>
+            <View
+              style={{
+                padding: 2,
+                margin: 5,
+                marginRight: 8,
+                paddingLeft: 6,
+                paddingRight: 6,
+                backgroundColor: "#dddddd",
+                borderRadius: 24
+              }}>
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 24,
+                  lineHeight: 24,
+                  fontWeight: "bold"
+                }}>
+                &#x00D7;
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        <View style={[styles.detailsView]}>
-          {this.props.selectedItem.type === "stop" ? (
-            <Arrivals selectedStop={this.props.selectedItem} />
-          ) : null}
-        </View>
+        <View style={[styles.detailsView]}>{detailsView}</View>
       </Animated.View>
     );
-  }
-
-  selectItem(idx) {
-    this.props.onSelectItemIndex(idx);
   }
 }
 
 function mapStateToProps(state) {
   return {
     selectedItem: getSelectedItem(state),
-    selectedItemIndex: state.selectedItemIndex
+    selectedItemIndex: state.selectedItemIndex,
+    selectedArrival: state.selectedArrival,
+    selectedArrivalVehicleInfo: getVehicleInfoFromArrival(state),
+    selectedVehicleStopInfo: getStopInfoFromSelectedItem(state)
   };
 }
 
@@ -311,6 +386,9 @@ function mapDispatchToProps(dispatch, ownProps) {
       if (ownProps.onResize) {
         ownProps.onResize();
       }
+    },
+    onClearSelection: () => {
+      dispatch(clearSelection());
     }
   };
 }
@@ -318,7 +396,7 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedItemsView);
 
 function StopItem(props) {
-  let {width, onPress, stop} = props;
+  let {width, onPress, stop, selectedArrival} = props;
   return (
     <View
       style={{
@@ -327,21 +405,21 @@ function StopItem(props) {
         width
       }}>
       <TouchableOpacity onPress={onPress}>
-        <View style={styles.itemImageContainer}>
-          <Image style={styles.itemImage} source={stopImage} />
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onPress}>
         <View key={stop.name} style={[styles.itemDescription]}>
           <View>
-            <Text style={{fontSize: 18}}>{stop.name}</Text>
+            <Text
+              numberOfLines={1}
+              style={{fontSize: 18, paddingRight: 20, paddingLeft: 4}}>
+              {stop.name}
+            </Text>
           </View>
-          <View>
+          <View style={{flexDirection: "row", marginTop: 5}}>
+            <Image style={styles.itemImage} source={stopImage} />
             <Text
               style={{
                 color: "#999999",
-                fontSize: 14,
-                justifyContent: "center"
+                fontSize: 13,
+                paddingTop: 5
               }}>
               {stop.desc}
             </Text>
@@ -353,7 +431,7 @@ function StopItem(props) {
 }
 
 function VehicleItem(props) {
-  let {width, vehicle, onPress} = props;
+  let {width, vehicle, onPress, onClear, stopInfo} = props;
   return (
     <View
       style={{
@@ -361,34 +439,33 @@ function VehicleItem(props) {
         flexDirection: "row",
         width
       }}>
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.itemImageContainer}>
-          <Image
-            style={styles.itemImage}
-            source={VEHICLE_IMAGE[vehicle.route_type]}
-          />
-          <Text>{vehicle.vehicle.id}</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onPress}>
-        <View
-          key={vehicle.vehicle.id}
-          style={[styles.itemDescription, {flex: 1, flexDirection: "row"}]}>
-          <View
-            style={{
-              padding: 10
-            }}>
-            <Text style={{fontSize: 36}}>{vehicle.trip.route_id}</Text>
+      <View key={vehicle.vehicle.id} style={[styles.itemDescription]}>
+        <View>
+          <Text style={{fontSize: 18, paddingRight: 20}}>
+            {vehicle.vehicle.label}
+          </Text>
+          <View style={{flexDirection: "row", marginTop: 5}}>
+            <Image
+              style={styles.itemImage}
+              source={VEHICLE_IMAGE[vehicle.route_type]}
+            />
+            <View style={{flexDirection: "column"}}>
+              <Text
+                style={{
+                  color: "#999999",
+                  fontSize: 13,
+                  paddingTop: 5,
+                  paddingLeft: 5
+                }}>
+                {CURRENT_VEHICLE_STATUS[vehicle.current_status]} {stopInfo.name}
+              </Text>
+              <Text style={{fontSize: 10, padding: 5, paddingTop: 0}}>
+                Updated: {Moment.unix(vehicle.timestamp).fromNow()}
+              </Text>
+            </View>
           </View>
-
-          <View>
-            <Text style={{fontSize: 20}}>{vehicle.vehicle.label}</Text>
-            <Text style={{fontSize: 10}}>
-              Updated: {Moment.unix(vehicle.timestamp).fromNow()}
-            </Text>
-          </View>
         </View>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -428,6 +505,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "relative",
     maxHeight: 25,
+    height: 25,
     backgroundColor: "#44FFFF",
     marginLeft: 10,
     marginRight: 10
@@ -445,28 +523,27 @@ const styles = StyleSheet.create({
     flex: 1
   },
   itemDescription: {
-    alignItems: "center",
     height: 100,
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 10,
+    justifyContent: "center",
     minHeight: 100,
     flex: 0
   },
-  itemImageContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: 60,
-    maxWidth: 60,
-    height: 100,
-    backgroundColor: "#EFEFEF"
-  },
+
   itemImage: {
     marginTop: 0,
     padding: 0,
-    width: 40,
+    paddingRight: 10,
+    width: 25,
     resizeMode: "contain",
-    height: 40,
+    height: 25
+  },
+  pageIcon: {
+    margin: 0,
+    padding: 10,
+    width: 15,
+    resizeMode: "contain",
+    height: 15,
     alignItems: "center"
   }
 });
