@@ -6,20 +6,28 @@ import {
   Platform,
   StyleSheet,
   Text,
+  Image,
   View,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  TouchableOpacity,
+  Switch
 } from "react-native";
 import {connect} from "react-redux";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {feature, lineString} from "@turf/helpers";
 
-import {VehiclesLayer} from "./vehicles_layer";
-import {StopsLayer} from "./stops_layer";
-import {RouteShapesLayer} from "./route_shapes_layer";
-import {SelectedLayer} from "./selected_layer";
+import VehiclesLayer from "./vehicles_layer";
+import StopsLayer from "./stops_layer";
+import RouteShapesLayer from "./route_shapes_layer";
+import SelectedLayer from "./selected_layer";
 import SelectedItemsView from "./selected_items_view";
-import {updateSelectedItems, selectItemIndex} from "./actions";
+import LayersMenu from "./layers_menu";
+import {
+  updateSelectedItems,
+  selectItemIndex,
+  updateLayerVisibility
+} from "./actions";
 import {
   getVehiclePoints,
   getSelectedItemsInfo,
@@ -27,6 +35,7 @@ import {
   getSelectedItem,
   getStopPoints
 } from "./selectors";
+
 import {setTimeout} from "core-js/library/web/timers";
 
 Mapbox.setAccessToken(
@@ -40,6 +49,12 @@ const TOUCH_HALF_SIZE = 44 / 2;
 // this to be queried dynamically using map.getStyle().layers, but the react native
 // map doesn't seem to expose that.
 export const MIN_LABEL_LAYER_ID = "road-label-small";
+// Setting a filter to match a non-existing attribute effectivly hides all the
+// elements in the layer.
+export const EXCLUDE_ALL = ["==", "non_existing_attribute", "1"];
+// By filtering using a != against a non-existing attrib
+// effectivly shows all
+export const INCLUDE_ALL = ["!=", "non_existing_attribute", "1"];
 
 export class App extends Component {
   constructor(props) {
@@ -268,39 +283,10 @@ export class App extends Component {
         onLongPress={this.handleLongPress}
         ref={this.handleMapRef}
         style={styles.map}>
-        {RouteShapesLayer(
-          this.props.routeShapes,
-          this.props.selectedArrival ? "filter" : null
-        )}
-        {StopsLayer(
-          this.props.stopPoints,
-          this.props.selectedItem &&
-          this.props.selectedItem.item &&
-          this.props.selectedItem.type === "stop" &&
-          this.props.selectedArrival
-            ? {
-                type: "stop_id",
-                value: this.props.selectedItem.item.properties.stop_id
-              }
-            : null
-        )}
-        {VehiclesLayer(
-          this.props.vehiclePoints,
-          this.props.selectedArrival &&
-          this.props.selectedArrival.item &&
-          this.props.selectedArrival.item.vehicle_id
-            ? {
-                type: "vehicle_id",
-                value: this.props.selectedArrival.item.vehicle_id
-              }
-            : null
-        )}
-        {this.props.selectedItem
-          ? SelectedLayer(
-              this.props.selectedItem.item,
-              this.props.selectedArrival ? null : this.state.pressedBox
-            )
-          : null}
+        <RouteShapesLayer />
+        <StopsLayer />
+        <VehiclesLayer />
+        <SelectedLayer />
       </Mapbox.MapView>
     );
 
@@ -308,6 +294,7 @@ export class App extends Component {
       <View style={styles.map}>
         {page}
         {this.renderInfoModal()}
+        <LayersMenu />
       </View>
     );
   }
@@ -319,7 +306,6 @@ export class App extends Component {
     if (this.props.selectedItem === nextProps.selectedItem) {
       return false;
     }
-
     if (!nextProps.selectedItem.position) {
       return false;
     }
@@ -393,7 +379,6 @@ export class App extends Component {
       nextProps.selectedArrivalVehicleInfo.position.lat
     ];
     let pos2 = nextProps.selectedItem.position;
-
     this.moveCameraToArrival(pos1, pos2);
   }
 }
@@ -423,6 +408,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
+    layerVisibility: state.layerVisibility,
     mapViewInset: state.mapViewInset,
     routeShapes: state.routeShapes,
     selectedArrival: state.selectedArrival,

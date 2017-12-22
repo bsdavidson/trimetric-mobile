@@ -1,17 +1,12 @@
 import React, {Component} from "react";
 import {Platform, StyleSheet, Text, View} from "react-native";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
+import {connect} from "react-redux";
 
-import {MIN_LABEL_LAYER_ID} from "./App";
+import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./App";
 
-// Setting a filter to match a non-existing attribute effectivly hides all the
-// elements in the layer.
-const EXCLUDE_ALL = ["==", "invalid_attribute", "1"];
-// By filtering using a != against a non-existing attrib
-// effectivly shows all
-const INCLUDE_ALL = ["!=", "non_existing_attribute", "1"];
-
-export function RouteShapesLayer(routeShapes, filter) {
+function RouteShapesLayer(props) {
+  const {routeShapes, visible} = props;
   if (!routeShapes) {
     return null;
   }
@@ -21,13 +16,22 @@ export function RouteShapesLayer(routeShapes, filter) {
         <Mapbox.LineLayer
           id="route_shapes_layer"
           belowLayerID={MIN_LABEL_LAYER_ID}
-          filter={filter ? EXCLUDE_ALL : INCLUDE_ALL}
+          filter={visible ? INCLUDE_ALL : EXCLUDE_ALL}
           style={mapStyles.routeShapesLayer}
         />
       </Mapbox.ShapeSource>
     </View>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    visible: state.layerVisibility.routeShapes && !state.selectedArrival,
+    routeShapes: state.routeShapes
+  };
+}
+
+export default connect(mapStateToProps)(RouteShapesLayer);
 
 const mapStyles = Mapbox.StyleSheet.create({
   routeShapesLayer: {

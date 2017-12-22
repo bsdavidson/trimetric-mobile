@@ -4,6 +4,7 @@ export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
+export const UPDATE_LAYER_VISIBILITY = "UPDATE_LAYER_VISIBILITY";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const UPDATE_ROUTES = "UPDATE_ROUTES";
 export const UPDATE_ROUTE_SHAPES = "UPDATE_ROUTE_SHAPES";
@@ -61,6 +62,14 @@ export function updateArrivals(arrivals) {
   return {
     type: UPDATE_ARRIVALS,
     arrivals
+  };
+}
+
+export function updateLayerVisibility(layerName, visible) {
+  return {
+    type: UPDATE_LAYER_VISIBILITY,
+    layerName,
+    visible
   };
 }
 

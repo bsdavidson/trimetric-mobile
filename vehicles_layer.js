@@ -1,9 +1,11 @@
 import React, {Component} from "react";
 import {Platform, StyleSheet, Text, View} from "react-native";
+import {connect} from "react-redux";
 
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 
-import {MIN_LABEL_LAYER_ID} from "./App";
+import {MIN_LABEL_LAYER_ID, INCLUDE_ALL, EXCLUDE_ALL} from "./App";
+import {getVehiclePoints, getSelectedItem} from "./selectors";
 
 // VehiclePoints example:
 //
@@ -29,7 +31,9 @@ import {MIN_LABEL_LAYER_ID} from "./App";
 // args:
 // filter = {type:"vehicle_id", value: "1234"}
 
-export function VehiclesLayer(vehiclePoints, filter) {
+function VehiclesLayer(props) {
+  const {vehiclePoints, filter, labelsVisible} = props;
+
   if (!vehiclePoints) {
     return null;
   }
@@ -43,11 +47,12 @@ export function VehiclesLayer(vehiclePoints, filter) {
         shape={vehiclePoints}>
         <Mapbox.SymbolLayer
           id="vehicle_symbols_layer"
-          style={mapStyles.vehicleSymbolsLayer}
+          style={[
+            mapStyles.vehicleSymbolsLayer,
+            {textField: labelsVisible ? "{route_id}" : ""}
+          ]}
           belowLayerID={MIN_LABEL_LAYER_ID}
-          filter={
-            filter ? ["==", filter.type, filter.value] : ["!=", "test", "123"]
-          }
+          filter={filter}
         />
       </Mapbox.ShapeSource>
 
@@ -57,21 +62,53 @@ export function VehiclesLayer(vehiclePoints, filter) {
           maxZoomLevel={13}
           style={mapStyles.vehiclePointsLayer}
           belowLayerID={MIN_LABEL_LAYER_ID}
-          filter={
-            filter ? ["==", filter.type, filter.value] : ["!=", "test", "123"]
-          }
+          filter={filter}
         />
       </Mapbox.ShapeSource>
     </View>
   );
 }
 
+function mapStateToProps(state) {
+  let id;
+  const selectedItem = getSelectedItem(state);
+  if (selectedItem && selectedItem.item && selectedItem.type === "vehicle") {
+    id = selectedItem.item.properties.vehicle_id;
+  } else if (
+    state.selectedArrival &&
+    state.selectedArrival.item &&
+    state.selectedArrival.item.vehicle_id
+  ) {
+    id = state.selectedArrival.item.vehicle_id;
+  }
+
+  let filter = INCLUDE_ALL;
+
+  if (id) {
+    filter = ["==", "vehicle_id", id];
+  } else if (!state.layerVisibility.buses && !state.layerVisibility.trains) {
+    filter = EXCLUDE_ALL;
+  } else if (!state.layerVisibility.buses) {
+    filter = ["!=", "icon", "bus"];
+  } else if (!state.layerVisibility.trains) {
+    filter = ["!=", "icon", "tram"];
+  }
+  return {
+    filter,
+    vehiclePoints: getVehiclePoints(state),
+    labelsVisible: state.layerVisibility.vehicleLabels
+  };
+}
+
+export default connect(mapStateToProps)(VehiclesLayer);
+
 const mapStyles = Mapbox.StyleSheet.create({
   vehicleSymbolsLayer: {
     iconImage: "{icon}",
     iconAllowOverlap: true,
+    // textAllowOverlap: true,
+    textOptional: true,
     iconOpacity: 1,
-    textField: "{route_id}",
     textOffset: [0, -1],
     textHaloColor: "#FFFFFF",
     textHaloWidth: 3,

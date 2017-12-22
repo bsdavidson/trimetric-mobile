@@ -1,23 +1,18 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import {Platform, StyleSheet, Text, View} from "react-native";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 
 import {MIN_LABEL_LAYER_ID} from "./App";
 
-export function SelectedLayer(selectedPoints, pressedBox) {
-  if (!selectedPoints) {
+function SelectedLayer(props) {
+  const {selectedItem} = props;
+  if (!selectedItem) {
     return null;
   }
   return (
     <View>
-      <Mapbox.ShapeSource id="selected_box_source" shape={pressedBox}>
-        <Mapbox.LineLayer
-          id="pressed_box_layer"
-          style={mapStyles.pressedLineLayer}
-          belowLayerID={MIN_LABEL_LAYER_ID}
-        />
-      </Mapbox.ShapeSource>
-      <Mapbox.ShapeSource id="pressed_points_source" shape={selectedPoints}>
+      <Mapbox.ShapeSource id="pressed_points_source" shape={selectedItem}>
         <Mapbox.CircleLayer
           id="pressed_points_layer"
           style={mapStyles.pressedPointsLayer}
@@ -28,13 +23,20 @@ export function SelectedLayer(selectedPoints, pressedBox) {
   );
 }
 
+function mapStateToProps(state) {
+  return {
+    selectedItem: state.selectedItems.features[0]
+  };
+}
+
+export default connect(mapStateToProps)(SelectedLayer);
+
 const mapStyles = Mapbox.StyleSheet.create({
   pressedPointsLayer: {
     circleColor: "rgba(0,0,0,0)",
     circleStrokeWidth: 2,
     circleStrokeOpacity: 0.5,
     circleStrokeColor: "#00FFFF",
-    // circleTranslate: {x: 1.5, y: 0},
     circleRadius: 14
   },
   pressLineLayer: {

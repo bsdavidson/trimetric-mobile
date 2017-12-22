@@ -8,6 +8,7 @@ import {
   SET_MAP_VIEW_INSET,
   START_FETCHING_ARRIVALS,
   UPDATE_ARRIVALS,
+  UPDATE_LAYER_VISIBILITY,
   UPDATE_LOCATION,
   UPDATE_ROUTES,
   UPDATE_STOPS,
@@ -66,6 +67,23 @@ function arrivals(state = [], action) {
     case UPDATE_ARRIVALS:
       return action.arrivals;
 
+    default:
+      return state;
+  }
+}
+
+const DEFAULT_LAYERS = {
+  routeShapes: true,
+  buses: true,
+  trains: true,
+  stops: true,
+  vehicleLabels: true
+};
+
+function layerVisibility(state = DEFAULT_LAYERS, action) {
+  switch (action.type) {
+    case UPDATE_LAYER_VISIBILITY:
+      return {...state, [action.layerName]: action.visible};
     default:
       return state;
   }
@@ -288,6 +306,7 @@ function vehicles(state = [], action) {
 export const reducer = combineReducers({
   arrivals,
   fetchingArrivals,
+  layerVisibility,
   locationClicked,
   mapViewInset,
   routeShapes,
