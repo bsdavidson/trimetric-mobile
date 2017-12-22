@@ -20,6 +20,7 @@ import {feature, lineString} from "@turf/helpers";
 import VehiclesLayer from "./vehicles_layer";
 import StopsLayer from "./stops_layer";
 import RouteShapesLayer from "./route_shapes_layer";
+import ArrivalShapesLayer from "./arrival_shapes_layer";
 import SelectedLayer from "./selected_layer";
 import SelectedItemsView from "./selected_items_view";
 import LayersMenu from "./layers_menu";
@@ -284,6 +285,7 @@ export class App extends Component {
         ref={this.handleMapRef}
         style={styles.map}>
         <RouteShapesLayer />
+        <ArrivalShapesLayer />
         <StopsLayer />
         <VehiclesLayer />
         <SelectedLayer />

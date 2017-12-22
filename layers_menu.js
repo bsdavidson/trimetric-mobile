@@ -55,8 +55,8 @@ class LayersMenu extends Component {
         <View style={styles.options}>
           <Text style={styles.optionsTitle}>Visible Features</Text>
 
-          {OPTIONS.map(o => (
-            <View style={styles.option}>
+          {OPTIONS.map((o, i) => (
+            <View key={i} style={styles.option}>
               <Text style={styles.optionTitle}>{o.label}</Text>
               <Switch
                 value={this.props.layerVisibility[o.key]}
@@ -110,10 +110,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     top: 20,
-    zIndex: 99
+    zIndex: 99,
+    elevation: 4
   },
   buttonIcon: {
-    elevation: 4,
     height: 86,
     shadowColor: "#000",
     shadowOffset: {width: 0, height: 4},

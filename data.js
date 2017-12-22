@@ -21,7 +21,7 @@ const MESSAGE_TYPE_TO_ACTION = {
   vehicles: updateVehicles
 };
 
-const BASE_URL = "http://10.0.1.6:8181";
+const BASE_URL = "http://10.8.0.3:8181";
 
 function buildQuery(params) {
   return Object.keys(params)
