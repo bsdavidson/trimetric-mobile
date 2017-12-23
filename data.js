@@ -8,6 +8,7 @@ import {
   updateLocation,
   updateRoutes,
   updateStops,
+  updateTotals,
   updateVehicles
 } from "./actions";
 
@@ -18,10 +19,11 @@ const MESSAGE_TYPE_TO_ACTION = {
   routes: updateRoutes,
   route_shapes: updateRouteShapes,
   stops: updateStops,
-  vehicles: updateVehicles
+  vehicles: updateVehicles,
+  totals: updateTotals
 };
 
-const BASE_URL = "http://10.8.0.3:8181";
+const BASE_URL = "http://10.8.0.2:8181";
 
 function buildQuery(params) {
   return Object.keys(params)

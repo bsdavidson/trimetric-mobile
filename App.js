@@ -17,6 +17,7 @@ import {connect} from "react-redux";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {feature, lineString} from "@turf/helpers";
 
+import DimensionsListener from "./dimension_listener";
 import VehiclesLayer from "./vehicles_layer";
 import StopsLayer from "./stops_layer";
 import RouteShapesLayer from "./route_shapes_layer";
@@ -24,6 +25,9 @@ import ArrivalShapesLayer from "./arrival_shapes_layer";
 import SelectedLayer from "./selected_layer";
 import SelectedItemsView from "./selected_items_view";
 import LayersMenu from "./layers_menu";
+import Intro from "./intro";
+import StatMenu from "./stat_menu";
+
 import {
   updateSelectedItems,
   selectItemIndex,
@@ -68,10 +72,6 @@ export class App extends Component {
       pressedBox: null
     };
 
-    this.stopLen = 0;
-    this.vehicleLen = 0;
-    this.lineLen = 0;
-    this.loading = true;
     this.zoomLevelTimeout = null;
     this.cameraTimeout = null;
     this.handleSelectedItemsResize = this.handleSelectedItemsResize.bind(this);
@@ -82,31 +82,6 @@ export class App extends Component {
     this.renderInfoModal = this.renderInfoModal.bind(this);
     this.selectedItemCameraMove = this.selectedItemCameraMove.bind(this);
     this.moveCameraToArrival = this.moveCameraToArrival.bind(this);
-  }
-
-  componentDidUpdate() {
-    let stopsLoaded = false;
-    let linesLoaded = false;
-    let vehiclesLoaded = false;
-    let stopLen = this.props.stopPoints.features.length;
-    let lineLen = this.props.routeShapes.features.length;
-    let vehicleLen = this.props.vehiclePoints.features.length;
-    if (stopLen > 0 && stopLen === this.stopLen) {
-      stopsLoaded = true;
-    }
-    if (vehicleLen > 0 && vehicleLen === this.vehicleLen) {
-      vehiclesLoaded = true;
-    }
-    if (lineLen > 0 && lineLen === this.lineLen) {
-      linesLoaded = true;
-    }
-
-    this.stopLen = stopLen;
-    this.lineLen = lineLen;
-    this.vehicleLen = vehicleLen;
-    if (stopsLoaded && linesLoaded && vehiclesLoaded) {
-      this.loading = false;
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -252,28 +227,7 @@ export class App extends Component {
   }
 
   render() {
-    let page = this.loading ? (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-        <View>
-          <Text>Reticulated Splines: {this.stopLen}</Text>
-        </View>
-        <View>
-          <Text>Aligned Polyfills: {this.vehicleLen}</Text>
-        </View>
-        <View>
-          <Text>Rendered Quentiles: {this.lineLen}</Text>
-        </View>
-      </View>
-    ) : (
+    let page = !this.props.loaded ? null : (
       <Mapbox.MapView
         styleURL={Mapbox.StyleURL.Light}
         zoomLevel={13}
@@ -297,6 +251,9 @@ export class App extends Component {
         {page}
         {this.renderInfoModal()}
         <LayersMenu />
+        <StatMenu />
+        <DimensionsListener />
+        <Intro />
       </View>
     );
   }
@@ -410,6 +367,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
+    loaded: state.loaded,
     layerVisibility: state.layerVisibility,
     mapViewInset: state.mapViewInset,
     routeShapes: state.routeShapes,

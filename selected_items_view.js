@@ -478,7 +478,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     backgroundColor: "#FFFFFF",
-    transform: [{perspective: 1000}]
+    transform: [{perspective: 1000}],
+    zIndex: 55
   },
   header: {
     borderColor: "rgba(0, 0, 0, 0.1)",

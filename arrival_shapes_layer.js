@@ -11,11 +11,8 @@ function tripShape(selectedArrival) {
     selectedArrival && selectedArrival.item && selectedArrival.item.trip_shape;
   if (!trip) {
     return {
-      type: "Feature",
-      geometry: {
-        type: "LineString",
-        coordinates: []
-      }
+      type: "FeatureCollection",
+      features: []
     };
   }
   return {

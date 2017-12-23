@@ -17,6 +17,10 @@ function getRouteTypeIcon(routeType) {
   return ROUTE_TYPE_ICONS[routeType] || "bus";
 }
 
+function getRouteShapes(state) {
+  return state.routeShapes;
+}
+
 function getVehicles(state) {
   return state.vehicles;
 }
@@ -177,6 +181,46 @@ export const getSelectedItem = createSelector(
         break;
     }
     return null;
+  }
+);
+
+export const getRouteShapeFeatures = createSelector(
+  getRouteShapes,
+  routeShapes => {
+    if (!routeShapes) {
+      return {type: "FeatureCollection", features: []};
+    }
+    let featureIndexes = {};
+    let features = [];
+
+    routeShapes.forEach(s => {
+      if (!s) {
+        return;
+      }
+      let idx = featureIndexes[s.color];
+      if (idx === undefined) {
+        idx = features.length;
+        featureIndexes[s.color] = idx;
+        features.push({
+          type: "Feature",
+          properties: {
+            color: "#" + s.color,
+            route_id: s.route_id
+          },
+          geometry: {
+            type: "MultiLineString",
+            coordinates: []
+          }
+        });
+      }
+      features[idx].geometry.coordinates.push(
+        s.points.map(p => {
+          return [p.lng, p.lat];
+        })
+      );
+    });
+
+    return {type: "FeatureCollection", features: features};
   }
 );
 

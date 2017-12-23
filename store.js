@@ -1,4 +1,6 @@
 import {createStore, combineReducers} from "redux";
+import {Dimensions} from "react-native";
+
 // import {douglasPeucker} from "./helpers/geom.js";
 import {
   LocationTypes,
@@ -8,13 +10,16 @@ import {
   SET_MAP_VIEW_INSET,
   START_FETCHING_ARRIVALS,
   UPDATE_ARRIVALS,
+  UPDATE_DIMENSIONS,
   UPDATE_LAYER_VISIBILITY,
+  UPDATE_LOADING_STATUS_LOADED,
   UPDATE_LOCATION,
   UPDATE_ROUTES,
   UPDATE_STOPS,
   UPDATE_SELECTED_ITEMS,
   UPDATE_VEHICLES,
-  UPDATE_ROUTE_SHAPES
+  UPDATE_ROUTE_SHAPES,
+  UPDATE_TOTALS
 } from "./actions";
 import {featureCollection, geometry} from "@turf/helpers";
 
@@ -89,6 +94,15 @@ function layerVisibility(state = DEFAULT_LAYERS, action) {
   }
 }
 
+function loaded(state = false, action) {
+  switch (action.type) {
+    case UPDATE_LOADING_STATUS_LOADED:
+      return true;
+    default:
+      return state;
+  }
+}
+
 function fetchingArrivals(state = false, action) {
   switch (action.type) {
     case START_FETCHING_ARRIVALS:
@@ -100,48 +114,10 @@ function fetchingArrivals(state = false, action) {
   }
 }
 
-function routeShapes(
-  state = {type: "FeatureCollection", features: []},
-  action
-) {
+function routeShapes(state = null, action) {
   switch (action.type) {
-    case UPDATE_ROUTE_SHAPES: {
-      let featureIndexes = {};
-      let features = state.features.slice();
-
-      features.forEach((f, i) => {
-        featureIndexes[f.properties.color] = i;
-      });
-
-      action.routeShapes.forEach(s => {
-        if (!s) {
-          return;
-        }
-        let idx = featureIndexes[s.color];
-        if (idx === undefined) {
-          idx = features.length;
-          featureIndexes[s.color] = idx;
-          features.push({
-            type: "Feature",
-            properties: {
-              color: "#" + s.color,
-              route_id: s.route_id
-            },
-            geometry: {
-              type: "MultiLineString",
-              coordinates: []
-            }
-          });
-        }
-        features[idx].geometry.coordinates.push(
-          s.points.map(p => {
-            return [p.lng, p.lat];
-          })
-        );
-      });
-
-      return {type: "FeatureCollection", features: features};
-    }
+    case UPDATE_ROUTE_SHAPES:
+      return action.routeShapes;
     default:
       return state;
   }
@@ -180,10 +156,33 @@ function locationClicked(state = null, action) {
   }
 }
 
+const DEFAULT_DIMENSIONS = {
+  window: Dimensions.get("window"),
+  screen: Dimensions.get("screen")
+};
+
+function dimensions(state = DEFAULT_DIMENSIONS, action) {
+  switch (action.type) {
+    case UPDATE_DIMENSIONS:
+      return action.dimensions;
+    default:
+      return state;
+  }
+}
+
 function routes(state = [], action) {
   switch (action.type) {
     case UPDATE_ROUTES:
       return action.routes;
+    default:
+      return state;
+  }
+}
+
+function totals(state = null, action) {
+  switch (action.type) {
+    case UPDATE_TOTALS:
+      return action.totals;
     default:
       return state;
   }
@@ -305,15 +304,18 @@ function vehicles(state = [], action) {
 
 export const reducer = combineReducers({
   arrivals,
+  dimensions,
   fetchingArrivals,
   layerVisibility,
   locationClicked,
+  loaded,
   mapViewInset,
   routeShapes,
   routes,
   selectedArrival,
   selectedItemIndex,
   selectedItems,
+  totals,
   stops,
   vehicles
 });

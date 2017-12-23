@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {lineString} from "@turf/helpers";
 
 import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./App";
+import {getRouteShapeFeatures} from "./selectors";
 
 function RouteShapesLayer(props) {
   const {routeShapes, visible, selectedArrival} = props;
@@ -25,7 +26,7 @@ function RouteShapesLayer(props) {
 function mapStateToProps(state) {
   return {
     visible: state.layerVisibility.routeShapes && !state.selectedArrival,
-    routeShapes: state.routeShapes,
+    routeShapes: getRouteShapeFeatures(state),
     selectedArrival: state.selectedArrival
   };
 }

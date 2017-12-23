@@ -109,17 +109,17 @@ const styles = StyleSheet.create({
     padding: 5,
     position: "absolute",
     right: 0,
-    top: 20,
+    top: 15,
     zIndex: 99,
     elevation: 4
   },
   buttonIcon: {
-    height: 86,
+    height: 66,
     shadowColor: "#000",
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    width: 86
+    width: 66
   },
   options: {
     flex: 1,

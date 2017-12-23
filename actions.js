@@ -4,12 +4,15 @@ export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
+export const UPDATE_DIMENSIONS = "UPDATE_DIMENSIONS";
 export const UPDATE_LAYER_VISIBILITY = "UPDATE_LAYER_VISIBILITY";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
+export const UPDATE_LOADING_STATUS_LOADED = "UPDATE_LOADING_STATUS_LOADED";
 export const UPDATE_ROUTES = "UPDATE_ROUTES";
 export const UPDATE_ROUTE_SHAPES = "UPDATE_ROUTE_SHAPES";
 export const UPDATE_STOPS = "UPDATE_STOPS";
 export const UPDATE_SELECTED_ITEMS = "UPDATE_SELECTED_ITEMS";
+export const UPDATE_TOTALS = "UPDATE_TOTALS";
 export const UPDATE_VEHICLES = "UPDATE_VEHICLES";
 
 export const LocationTypes = {
@@ -38,6 +41,12 @@ export function clearSelection() {
   };
 }
 
+export function setLoadingStatusLoaded() {
+  return {
+    type: UPDATE_LOADING_STATUS_LOADED
+  };
+}
+
 export function selectItemIndex(itemIndex) {
   return {
     type: SELECT_ITEM,
@@ -62,6 +71,13 @@ export function updateArrivals(arrivals) {
   return {
     type: UPDATE_ARRIVALS,
     arrivals
+  };
+}
+
+export function updateDimensions(dimensions) {
+  return {
+    type: UPDATE_DIMENSIONS,
+    dimensions
   };
 }
 
@@ -118,5 +134,12 @@ export function updateVehicles(vehicles) {
   return {
     type: UPDATE_VEHICLES,
     vehicles
+  };
+}
+
+export function updateTotals(totals) {
+  return {
+    type: UPDATE_TOTALS,
+    totals
   };
 }
