@@ -10,7 +10,7 @@ class DimensionsListener extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange() {
+  handleChange(e) {
     this.props.onDimensionsUpdate(e);
   }
 

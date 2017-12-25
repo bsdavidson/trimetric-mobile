@@ -23,7 +23,7 @@ const MESSAGE_TYPE_TO_ACTION = {
   totals: updateTotals
 };
 
-const BASE_URL = "http://10.8.0.2:8181";
+const BASE_URL = "http://10.0.0.69:8181";
 
 function buildQuery(params) {
   return Object.keys(params)

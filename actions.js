@@ -3,6 +3,7 @@ export const SELECT_ITEM = "SELECT_ITEM";
 export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
+export const TOGGLE_INFO_MODAL_VISIBILITY = "TOGGLE_INFO_MODAL_VISIBILITY";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
 export const UPDATE_DIMENSIONS = "UPDATE_DIMENSIONS";
 export const UPDATE_LAYER_VISIBILITY = "UPDATE_LAYER_VISIBILITY";
@@ -64,6 +65,12 @@ export function setMapViewInset(bottom) {
 export function startFetchingArrivals() {
   return {
     type: START_FETCHING_ARRIVALS
+  };
+}
+
+export function toggleInfoModalVisibility() {
+  return {
+    type: TOGGLE_INFO_MODAL_VISIBILITY
   };
 }
 

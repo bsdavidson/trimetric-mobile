@@ -17,7 +17,7 @@ function RouteShapesLayer(props) {
       <Mapbox.LineLayer
         id="route_shapes_layer"
         belowLayerID={MIN_LABEL_LAYER_ID}
-        style={[mapStyles.layer, {visibility: visible ? "visible" : "hidden"}]}
+        style={[mapStyles.layer, {visibility: visible ? "visible" : "none"}]}
       />
     </Mapbox.ShapeSource>
   );

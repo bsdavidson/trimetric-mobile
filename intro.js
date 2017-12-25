@@ -247,7 +247,8 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -8},
     shadowOpacity: 0.4,
     shadowRadius: 6,
-    top: 105
+    top: 105,
+    zIndex: 100
   },
   screen: {
     alignItems: "center",

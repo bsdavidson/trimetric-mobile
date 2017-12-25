@@ -14,6 +14,7 @@ import {
   UPDATE_LAYER_VISIBILITY,
   UPDATE_LOADING_STATUS_LOADED,
   UPDATE_LOCATION,
+  TOGGLE_INFO_MODAL_VISIBILITY,
   UPDATE_ROUTES,
   UPDATE_STOPS,
   UPDATE_SELECTED_ITEMS,
@@ -82,7 +83,8 @@ const DEFAULT_LAYERS = {
   buses: true,
   trains: true,
   stops: true,
-  vehicleLabels: true
+  vehicleLabels: true,
+  buildings: false
 };
 
 function layerVisibility(state = DEFAULT_LAYERS, action) {
@@ -118,6 +120,15 @@ function routeShapes(state = null, action) {
   switch (action.type) {
     case UPDATE_ROUTE_SHAPES:
       return action.routeShapes;
+    default:
+      return state;
+  }
+}
+
+function infoModalVisible(state = false, action) {
+  switch (action.type) {
+    case TOGGLE_INFO_MODAL_VISIBILITY:
+      return !state;
     default:
       return state;
   }
@@ -306,6 +317,7 @@ export const reducer = combineReducers({
   arrivals,
   dimensions,
   fetchingArrivals,
+  infoModalVisible,
   layerVisibility,
   locationClicked,
   loaded,

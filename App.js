@@ -10,6 +10,7 @@ import {
   View,
   ActivityIndicator,
   Dimensions,
+  PixelRatio,
   TouchableOpacity,
   Switch
 } from "react-native";
@@ -17,16 +18,17 @@ import {connect} from "react-redux";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {feature, lineString} from "@turf/helpers";
 
-import DimensionsListener from "./dimension_listener";
-import VehiclesLayer from "./vehicles_layer";
-import StopsLayer from "./stops_layer";
-import RouteShapesLayer from "./route_shapes_layer";
 import ArrivalShapesLayer from "./arrival_shapes_layer";
-import SelectedLayer from "./selected_layer";
-import SelectedItemsView from "./selected_items_view";
-import LayersMenu from "./layers_menu";
+import DimensionsListener from "./dimension_listener";
+import InfoModal from "./info_modal";
 import Intro from "./intro";
+import LayersMenu from "./layers_menu";
+import RouteShapesLayer from "./route_shapes_layer";
+import SelectedItemsView from "./selected_items_view";
+import SelectedLayer from "./selected_layer";
 import StatMenu from "./stat_menu";
+import StopsLayer from "./stops_layer";
+import VehiclesLayer from "./vehicles_layer";
 
 import {
   updateSelectedItems,
@@ -74,14 +76,14 @@ export class App extends Component {
 
     this.zoomLevelTimeout = null;
     this.cameraTimeout = null;
-    this.handleSelectedItemsResize = this.handleSelectedItemsResize.bind(this);
+    this.handleLongPress = this.handleLongPress.bind(this);
     this.handleMapRef = this.handleMapRef.bind(this);
     this.handlePress = this.handlePress.bind(this);
-    this.handleLongPress = this.handleLongPress.bind(this);
     this.handleRegionDidChange = this.handleRegionDidChange.bind(this);
-    this.renderInfoModal = this.renderInfoModal.bind(this);
-    this.selectedItemCameraMove = this.selectedItemCameraMove.bind(this);
+    this.handleSelectedItemsResize = this.handleSelectedItemsResize.bind(this);
     this.moveCameraToArrival = this.moveCameraToArrival.bind(this);
+    this.renderSelectedItemsMenu = this.renderSelectedItemsMenu.bind(this);
+    this.selectedItemCameraMove = this.selectedItemCameraMove.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -214,7 +216,7 @@ export class App extends Component {
     }, Platform.OS === "ios" ? 100 : 0);
   }
 
-  renderInfoModal() {
+  renderSelectedItemsMenu() {
     if (this.props.selectedItemsInfo.length === 0) {
       return null;
     }
@@ -227,31 +229,50 @@ export class App extends Component {
   }
 
   render() {
-    let page = !this.props.loaded ? null : (
-      <Mapbox.MapView
-        styleURL={Mapbox.StyleURL.Light}
-        zoomLevel={13}
-        centerCoordinate={[-122.6865, 45.508]}
-        contentInset={this.props.mapViewInset}
-        onRegionDidChange={this.handleRegionDidChange}
-        onPress={this.handlePress}
-        onLongPress={this.handleLongPress}
-        ref={this.handleMapRef}
-        style={styles.map}>
-        <RouteShapesLayer />
-        <ArrivalShapesLayer />
-        <StopsLayer />
-        <VehiclesLayer />
-        <SelectedLayer />
-      </Mapbox.MapView>
-    );
+    let page = null;
+    if (this.props.loaded) {
+      page = (
+        <Mapbox.MapView
+          styleURL={Mapbox.StyleURL.Light}
+          zoomLevel={13}
+          centerCoordinate={[-122.6865, 45.508]}
+          contentInset={this.props.mapViewInset}
+          onRegionDidChange={this.handleRegionDidChange}
+          onPress={this.handlePress}
+          onLongPress={this.handleLongPress}
+          ref={this.handleMapRef}
+          style={[styles.map]}>
+          <Mapbox.VectorSource>
+            <Mapbox.FillExtrusionLayer
+              id="building3d"
+              sourceLayerID="building"
+              style={[
+                mapStyles.building,
+                {
+                  visibility: this.props.layerVisibility.buildings
+                    ? "visible"
+                    : "none"
+                }
+              ]}
+            />
+          </Mapbox.VectorSource>
+
+          <RouteShapesLayer />
+          <ArrivalShapesLayer />
+          <StopsLayer />
+          <VehiclesLayer />
+          <SelectedLayer />
+        </Mapbox.MapView>
+      );
+    }
 
     return (
       <View style={styles.map}>
         {page}
-        {this.renderInfoModal()}
-        <LayersMenu />
         <StatMenu />
+        <LayersMenu />
+        {this.renderSelectedItemsMenu()}
+        <InfoModal />
         <DimensionsListener />
         <Intro />
       </View>
@@ -344,7 +365,7 @@ export class App extends Component {
 
 const mapStyles = Mapbox.StyleSheet.create({
   building: {
-    fillExtrusionOpacity: 1,
+    fillExtrusionOpacity: 0.5,
     fillExtrusionHeight: Mapbox.StyleSheet.identity("height"),
     fillExtrusionBase: Mapbox.StyleSheet.identity("min_height"),
     fillExtrusionColor: "#FFFFFF"
