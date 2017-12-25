@@ -44,11 +44,14 @@ class LayersMenu extends Component {
   }
 
   render() {
+    if (!this.props.display) {
+      return null;
+    }
     if (!this.state.visible) {
       return (
         <TouchableOpacity
           onPress={this.handleTogglePress}
-          style={styles.button}>
+          style={[styles.button, {bottom: this.props.bottom}]}>
           <Image style={styles.buttonIcon} source={layersIcon} />
         </TouchableOpacity>
       );
@@ -87,6 +90,7 @@ class LayersMenu extends Component {
 
 function mapStateToProps(state) {
   return {
+    selectedItemsViewHeight: state.selectedItemsViewHeight,
     layerVisibility: state.layerVisibility,
     dimensions: state.dimensions
   };
@@ -124,8 +128,7 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingRight: 0,
     position: "absolute",
-    right: 0,
-    top: 40,
+    right: -8,
     zIndex: 90
   },
   buttonIcon: {

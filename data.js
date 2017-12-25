@@ -1,6 +1,7 @@
 // @ts-check
 
 import {
+  setConnectingStatusConnected,
   LocationTypes,
   startFetchingArrivals,
   updateArrivals,
@@ -55,6 +56,7 @@ export class DataService {
 
     this.connection.onopen = () => {
       console.log("WebSocket Connected");
+      this.store.dispatch(setConnectingStatusConnected());
     };
 
     this.connection.onclose = () => {

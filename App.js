@@ -229,6 +229,8 @@ export class App extends Component {
   }
 
   render() {
+    const mapBottom = Math.max(this.props.selectedItemsViewHeight, 35);
+
     let page = null;
     if (this.props.loaded) {
       page = (
@@ -236,7 +238,7 @@ export class App extends Component {
           styleURL={Mapbox.StyleURL.Light}
           zoomLevel={13}
           centerCoordinate={[-122.6865, 45.508]}
-          contentInset={this.props.mapViewInset}
+          contentInset={[0, 0, mapBottom, 0]}
           onRegionDidChange={this.handleRegionDidChange}
           onPress={this.handlePress}
           onLongPress={this.handleLongPress}
@@ -270,7 +272,10 @@ export class App extends Component {
       <View style={styles.map}>
         {page}
         <StatMenu />
-        <LayersMenu />
+        <LayersMenu
+          display={this.props.selectedItemsViewHeight < 130}
+          bottom={mapBottom + (this.props.selectedItemsViewHeight ? 0 : 40)}
+        />
         {this.renderSelectedItemsMenu()}
         <InfoModal />
         <DimensionsListener />
@@ -390,7 +395,7 @@ function mapStateToProps(state) {
   return {
     loaded: state.loaded,
     layerVisibility: state.layerVisibility,
-    mapViewInset: state.mapViewInset,
+    selectedItemsViewHeight: state.selectedItemsViewHeight,
     routeShapes: state.routeShapes,
     selectedArrival: state.selectedArrival,
     selectedArrivalVehicleInfo: getVehicleInfoFromArrival(state),

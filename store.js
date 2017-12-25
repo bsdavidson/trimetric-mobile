@@ -3,24 +3,25 @@ import {Dimensions} from "react-native";
 
 // import {douglasPeucker} from "./helpers/geom.js";
 import {
-  LocationTypes,
   CLEAR_SELECTION,
-  SELECT_ITEM,
+  LocationTypes,
   SELECT_ARRIVAL,
-  SET_MAP_VIEW_INSET,
+  SELECT_ITEM,
+  SET_SELECTED_ITEMS_VIEW_HEIGHT,
   START_FETCHING_ARRIVALS,
+  TOGGLE_INFO_MODAL_VISIBILITY,
   UPDATE_ARRIVALS,
+  UPDATE_CONNECTING_STATUS_CONNECTED,
   UPDATE_DIMENSIONS,
   UPDATE_LAYER_VISIBILITY,
   UPDATE_LOADING_STATUS_LOADED,
   UPDATE_LOCATION,
-  TOGGLE_INFO_MODAL_VISIBILITY,
   UPDATE_ROUTES,
-  UPDATE_STOPS,
-  UPDATE_SELECTED_ITEMS,
-  UPDATE_VEHICLES,
   UPDATE_ROUTE_SHAPES,
-  UPDATE_TOTALS
+  UPDATE_SELECTED_ITEMS,
+  UPDATE_STOPS,
+  UPDATE_TOTALS,
+  UPDATE_VEHICLES
 } from "./actions";
 import {featureCollection, geometry} from "@turf/helpers";
 
@@ -73,6 +74,15 @@ function arrivals(state = [], action) {
     case UPDATE_ARRIVALS:
       return action.arrivals;
 
+    default:
+      return state;
+  }
+}
+
+function connected(state = false, action) {
+  switch (action.type) {
+    case UPDATE_CONNECTING_STATUS_CONNECTED:
+      return true;
     default:
       return state;
   }
@@ -277,10 +287,10 @@ function selectedItemIndex(state = null, action) {
   }
 }
 
-function mapViewInset(state = [0, 0, 0, 0], action) {
+function selectedItemsViewHeight(state = 0, action) {
   switch (action.type) {
-    case SET_MAP_VIEW_INSET:
-      return [0, 0, action.bottom, 0];
+    case SET_SELECTED_ITEMS_VIEW_HEIGHT:
+      return action.height;
     default:
       return state;
   }
@@ -315,20 +325,21 @@ function vehicles(state = [], action) {
 
 export const reducer = combineReducers({
   arrivals,
+  connected,
   dimensions,
   fetchingArrivals,
   infoModalVisible,
   layerVisibility,
-  locationClicked,
   loaded,
-  mapViewInset,
+  locationClicked,
   routeShapes,
   routes,
   selectedArrival,
   selectedItemIndex,
   selectedItems,
-  totals,
+  selectedItemsViewHeight,
   stops,
+  totals,
   vehicles
 });
 

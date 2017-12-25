@@ -23,7 +23,11 @@ import {
   View
 } from "react-native";
 
-import {clearSelection, selectItemIndex, setMapViewInset} from "./actions";
+import {
+  clearSelection,
+  selectItemIndex,
+  setSelectedItemsViewHeight
+} from "./actions";
 import Arrivals from "./arrivals";
 import VehicleInfo from "./vehicle_info";
 import tram from "./assets/tram.png";
@@ -94,6 +98,16 @@ class SelectedItemsView extends Component {
         this.close();
       }
     }
+    if (this.props.data.length !== nextProps.data.length) {
+      this.props.onResize(
+        HEADER_HEIGHT +
+          (nextProps.data.length > 1 ? HEADER_PAGINATION_HEIGHT : 0)
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.onResize(0);
   }
 
   getItemLayout(data, index) {
@@ -196,11 +210,11 @@ class SelectedItemsView extends Component {
       pageNav.push(
         <TouchableOpacity
           key={"pgnav-" + i}
-          style={style}
+          style={styles.pageItem}
           onPress={() => {
             this.handlePagePress(i);
           }}>
-          <View>{image}</View>
+          <View style={style}>{image}</View>
         </TouchableOpacity>
       );
     }
@@ -249,7 +263,10 @@ class SelectedItemsView extends Component {
     });
 
     // Trigger layout resize
-    this.props.onResize(0);
+    this.props.onResize(
+      HEADER_HEIGHT +
+        (this.props.data.length > 1 ? HEADER_PAGINATION_HEIGHT : 0)
+    );
   }
 
   renderHeaderItem({item}) {
@@ -342,12 +359,11 @@ class SelectedItemsView extends Component {
                 marginRight: 8,
                 paddingLeft: 6,
                 paddingRight: 6,
-                backgroundColor: "#dddddd",
                 borderRadius: 24
               }}>
               <Text
                 style={{
-                  color: "#FFFFFF",
+                  color: "#AAAAAA",
                   fontSize: 24,
                   lineHeight: 24,
                   fontWeight: "bold"
@@ -382,7 +398,7 @@ function mapDispatchToProps(dispatch, ownProps) {
       }
     },
     onResize: size => {
-      dispatch(setMapViewInset(size));
+      dispatch(setSelectedItemsViewHeight(size));
       if (ownProps.onResize) {
         ownProps.onResize();
       }
@@ -479,7 +495,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#FFFFFF",
     transform: [{perspective: 1000}],
-    zIndex: 55
+    zIndex: 60
   },
   header: {
     borderColor: "rgba(0, 0, 0, 0.1)",
@@ -507,21 +523,21 @@ const styles = StyleSheet.create({
     position: "relative",
     maxHeight: 25,
     height: 25,
-    backgroundColor: "#44FFFF",
+    backgroundColor: "#efefef",
     marginLeft: 10,
     marginRight: 10
   },
-  inactive: {
+  pageItem: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#fefefe",
     justifyContent: "center",
     flex: 1
   },
+  inactive: {
+    opacity: 0.2
+  },
   active: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#DDDDDD",
-    flex: 1
+    opacity: 1
   },
   itemDescription: {
     height: 100,

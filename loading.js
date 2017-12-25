@@ -11,6 +11,8 @@ class Loading extends Component {
     this.state = {
       loading: true
     };
+
+    this.loadingStatus = 0;
   }
 
   componentDidUpdate() {
@@ -20,6 +22,21 @@ class Loading extends Component {
     if (!this.props.totals) {
       return;
     }
+
+    let thingsLoaded =
+      this.props.stopPoints.features.length +
+      this.props.vehiclePoints.features.length +
+      (this.props.routeShapes && this.props.routeShapes.length);
+    let totalThingsToLoad =
+      this.props.totals.stops +
+      this.props.totals.vehicles +
+      this.props.totals.route_shapes;
+
+    this.loadingStatus = Math.min(
+      Math.floor(thingsLoaded / totalThingsToLoad * 100),
+      100
+    );
+
     if (this.props.stopPoints.features.length < this.props.totals.stops) {
       return;
     }
@@ -40,6 +57,19 @@ class Loading extends Component {
   }
 
   render() {
+    if (!this.props.connected) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            animating={this.state.loading}
+            size="small"
+            color="#FFFFFF"
+          />
+          <Text style={[styles.text]}>Connecting to server...</Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <ActivityIndicator
@@ -50,6 +80,7 @@ class Loading extends Component {
 
         <Text style={[styles.text, {opacity: this.state.loading ? 1 : 0}]}>
           Loading GTFS data...
+          <Text style={{color: "#FFFFFF"}}>{this.loadingStatus}%</Text>
         </Text>
       </View>
     );
@@ -79,6 +110,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
+    connected: state.connected,
     totals: state.totals,
     routeShapes: state.routeShapes,
     stopPoints: getStopPoints(state),

@@ -1,18 +1,20 @@
 export const CLEAR_SELECTION = "CLEAR_SELECTION";
-export const SELECT_ITEM = "SELECT_ITEM";
 export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
-export const SET_MAP_VIEW_INSET = "SET_MAP_VIEW_INSET";
+export const SELECT_ITEM = "SELECT_ITEM";
+export const SET_SELECTED_ITEMS_VIEW_HEIGHT = "SET_SELECTED_ITEMS_VIEW_HEIGHT";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const TOGGLE_INFO_MODAL_VISIBILITY = "TOGGLE_INFO_MODAL_VISIBILITY";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
+export const UPDATE_CONNECTING_STATUS_CONNECTED =
+  "UPDATE_CONNECTING_STATUS_CONNECTED";
 export const UPDATE_DIMENSIONS = "UPDATE_DIMENSIONS";
 export const UPDATE_LAYER_VISIBILITY = "UPDATE_LAYER_VISIBILITY";
-export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const UPDATE_LOADING_STATUS_LOADED = "UPDATE_LOADING_STATUS_LOADED";
+export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const UPDATE_ROUTES = "UPDATE_ROUTES";
 export const UPDATE_ROUTE_SHAPES = "UPDATE_ROUTE_SHAPES";
-export const UPDATE_STOPS = "UPDATE_STOPS";
 export const UPDATE_SELECTED_ITEMS = "UPDATE_SELECTED_ITEMS";
+export const UPDATE_STOPS = "UPDATE_STOPS";
 export const UPDATE_TOTALS = "UPDATE_TOTALS";
 export const UPDATE_VEHICLES = "UPDATE_VEHICLES";
 
@@ -42,6 +44,12 @@ export function clearSelection() {
   };
 }
 
+export function setConnectingStatusConnected() {
+  return {
+    type: UPDATE_CONNECTING_STATUS_CONNECTED
+  };
+}
+
 export function setLoadingStatusLoaded() {
   return {
     type: UPDATE_LOADING_STATUS_LOADED
@@ -55,10 +63,10 @@ export function selectItemIndex(itemIndex) {
   };
 }
 
-export function setMapViewInset(bottom) {
+export function setSelectedItemsViewHeight(height) {
   return {
-    type: SET_MAP_VIEW_INSET,
-    bottom
+    type: SET_SELECTED_ITEMS_VIEW_HEIGHT,
+    height
   };
 }
 
