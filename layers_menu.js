@@ -1,11 +1,13 @@
 import React, {Component} from "react";
 import {
-  StyleSheet,
-  Text,
   Image,
-  View,
+  PixelRatio,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
   TouchableOpacity,
-  Switch
+  View
 } from "react-native";
 import {connect} from "react-redux";
 
@@ -17,8 +19,14 @@ const OPTIONS = [
   {label: "Stops", key: "stops"},
   {label: "Buses", key: "buses"},
   {label: "Trains", key: "trains"},
-  {label: "Vehicle Labels", key: "vehicleLabels"}
+  {label: "Vehicle Labels", key: "vehicleLabels"},
+  {label: "3D Buildings", key: "buildings"}
 ];
+
+const OPTION_MARGIN = 20;
+const OPTION_WIDTH = 170;
+const CONTAINER_PADDING = 15;
+const MIN_SCREEN_HEIGHT = 400;
 
 class LayersMenu extends Component {
   constructor(props) {
@@ -45,16 +53,20 @@ class LayersMenu extends Component {
         </TouchableOpacity>
       );
     }
+    const {height} = this.props.dimensions.screen;
+    const columns = height < MIN_SCREEN_HEIGHT ? 2 : 1;
+    const width = CONTAINER_PADDING + (OPTION_WIDTH + OPTION_MARGIN) * columns;
+
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {width}]}>
         <TouchableOpacity
           style={styles.closeButton}
           onPress={this.handleTogglePress}>
           <Text style={styles.closeButtonIcon}>&#x00D7;</Text>
         </TouchableOpacity>
-        <View style={styles.options}>
-          <Text style={styles.optionsTitle}>Visible Features</Text>
 
+        <Text style={styles.title}>Visible Features</Text>
+        <View style={styles.optionContainer}>
           {OPTIONS.map((o, i) => (
             <View key={i} style={styles.option}>
               <Text style={styles.optionTitle}>{o.label}</Text>
@@ -75,7 +87,8 @@ class LayersMenu extends Component {
 
 function mapStateToProps(state) {
   return {
-    layerVisibility: state.layerVisibility
+    layerVisibility: state.layerVisibility,
+    dimensions: state.dimensions
   };
 }
 
@@ -94,8 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 6,
     elevation: 4,
-    minHeight: 200,
-    minWidth: 200,
+    maxHeight: "100%",
+    padding: CONTAINER_PADDING,
+    paddingRight: 0,
     position: "absolute",
     right: 35,
     shadowColor: "#000",
@@ -106,48 +120,43 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 5,
+    marginRight: 0,
     padding: 5,
+    paddingRight: 0,
     position: "absolute",
     right: 0,
-    top: 15,
-    zIndex: 99,
-    elevation: 4
+    top: 40,
+    zIndex: 90
   },
   buttonIcon: {
     height: 66,
+    opacity: 0.6,
     shadowColor: "#000",
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.2,
     shadowRadius: 4,
     width: 66
   },
-  options: {
-    flex: 1,
-    marginTop: 15,
-    marginLeft: 10
-  },
-  optionsTitle: {
+  title: {
     color: "#AAAAAA",
-    fontSize: 14,
-    marginBottom: 10
+    fontSize: 14
   },
   option: {
     alignItems: "center",
     flexDirection: "row",
-    marginTop: 8,
-    marginBottom: 8
+    marginRight: OPTION_MARGIN,
+    marginTop: 10,
+    width: OPTION_WIDTH
+  },
+  optionContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap"
   },
   optionTitle: {
     color: "#666667",
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-start"
+    flex: 1
   },
-  optionSwitch: {
-    alignItems: "center",
-    justifyContent: "flex-end",
-    marginRight: 10
-  },
+  optionSwitch: {},
   closeButton: {
     flex: 0,
     position: "absolute",
