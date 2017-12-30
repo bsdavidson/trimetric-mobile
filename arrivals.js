@@ -10,8 +10,17 @@ import {
   TouchableOpacity
 } from "react-native";
 import {selectArrival} from "./actions";
-import {getSelectedItem, getVehicleInfoFromArrival} from "./selectors";
+import {
+  getSelectedItem,
+  getVehicleInfoFromArrival,
+  filterArrivalsForStop
+} from "./selectors";
 
+export function parseArrivalTime(time) {
+  let parts = time.split(":").map(p => parseInt(p, 10));
+  parts[0] = parts[0] % 24;
+  return Moment(parts.join(":"), "HH:mm:ss");
+}
 class Arrivals extends Component {
   constructor(props) {
     super(props);
@@ -34,7 +43,11 @@ class Arrivals extends Component {
         onPress={() => {
           this.handleArrivalPress(arrival);
         }}>
-        <View style={styles.arrivalItem}>
+        <View
+          style={[
+            styles.arrivalItem,
+            {borderWidth: 1, borderRadius: 4, padding: 4}
+          ]}>
           <View style={{padding: 10}}>
             <Text style={{fontSize: 22}}>{arrival.item.route_id}</Text>
             <Text style={{fontSize: 12, textAlign: "center"}}>
@@ -48,7 +61,7 @@ class Arrivals extends Component {
             <Text>Stop ID: {arrival.item.stop_id}</Text>
             <Text>
               Arrival Time:{" "}
-              {Moment(arrival.item.arrival_time, "HH:mm:ss").fromNow()}
+              {parseArrivalTime(arrival.item.arrival_time).fromNow()}
             </Text>
             <Text style={{fontSize: 12}}>
               {arrival.item.vehicle_position.lat} {" / "}{" "}
@@ -64,9 +77,10 @@ class Arrivals extends Component {
     if (!this.props.selectedItem) {
       return null;
     }
-    let arrivalsForStop = this.props.arrivals.filter(a => {
-      return this.props.selectedItem.item.properties.stop_id === a.stop_id;
-    });
+    let arrivalsForStop = filterArrivalsForStop(
+      this.props.selectedItem.item.properties.stop_id,
+      this.props.arrivals
+    );
 
     if (
       arrivalsForStop.length === 0 &&
@@ -79,7 +93,9 @@ class Arrivals extends Component {
             {this.props.fetchingArrivals ? (
               <ActivityIndicator size="large" color="#0000ff" />
             ) : (
-              <Text>No upcoming arrivals</Text>
+              <View style={{flex: 1, alignItems: "center"}}>
+                <Text>No upcoming arrivals</Text>
+              </View>
             )}
           </View>
         </View>
@@ -132,7 +148,7 @@ const styles = StyleSheet.create({
     minHeight: 100,
     flexDirection: "row",
     flex: 1,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#cccccc"
   }
 });

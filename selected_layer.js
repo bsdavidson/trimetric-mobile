@@ -2,17 +2,18 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {Platform, StyleSheet, Text, View} from "react-native";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
+import {getSelectedItem} from "./selectors";
 
 import {MIN_LABEL_LAYER_ID} from "./App";
 
 function SelectedLayer(props) {
   const {selectedItem} = props;
-  if (!selectedItem) {
+  if (!selectedItem || selectedItem.type === "vehicle") {
     return null;
   }
   return (
     <View>
-      <Mapbox.ShapeSource id="pressed_points_source" shape={selectedItem}>
+      <Mapbox.ShapeSource id="pressed_points_source" shape={selectedItem.item}>
         <Mapbox.CircleLayer
           id="pressed_points_layer"
           style={mapStyles.pressedPointsLayer}
@@ -25,7 +26,7 @@ function SelectedLayer(props) {
 
 function mapStateToProps(state) {
   return {
-    selectedItem: state.selectedItems.features[0]
+    selectedItem: getSelectedItem(state)
   };
 }
 

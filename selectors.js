@@ -13,6 +13,16 @@ export const ROUTE_TYPE_ICONS = {
   7: "funicular"
 };
 
+export function filterArrivalsForStop(stopID, arrivals) {
+  return arrivals.filter(a => {
+    return stopID === a.stop_id;
+  });
+}
+
+function getArrivals(state) {
+  return state.arrivals;
+}
+
 function getRouteTypeIcon(routeType) {
   return ROUTE_TYPE_ICONS[routeType] || "bus";
 }
@@ -123,7 +133,8 @@ export const getSelectedItemsInfo = createSelector(
   getStops,
   getVehicles,
   getSelectedItems,
-  (stops, vehicles, items) => {
+  getArrivals,
+  (stops, vehicles, items, arrivals) => {
     if (items.length === 0) {
       return [];
     }
@@ -142,7 +153,11 @@ export const getSelectedItemsInfo = createSelector(
         case "stop":
           for (let i = 0; i < stops.length; i++) {
             if (stops[i].id === item.properties.stop_id) {
-              itemsInfo.push({type: "stop", stop: stops[i]});
+              itemsInfo.push({
+                type: "stop",
+                stop: stops[i],
+                arrivals: filterArrivalsForStop(stops[i].id, arrivals)
+              });
               break;
             }
           }

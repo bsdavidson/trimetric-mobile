@@ -61,7 +61,7 @@ class LayersMenu extends Component {
     const width = CONTAINER_PADDING + (OPTION_WIDTH + OPTION_MARGIN) * columns;
 
     return (
-      <View style={[styles.container, {width}]}>
+      <View style={[styles.container, {width, bottom: this.props.bottom + 20}]}>
         <TouchableOpacity
           style={styles.closeButton}
           onPress={this.handleTogglePress}>
@@ -119,8 +119,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.4,
-    shadowRadius: 6,
-    top: 45
+    shadowRadius: 6
   },
   button: {
     margin: 5,

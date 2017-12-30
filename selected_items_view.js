@@ -23,6 +23,8 @@ import {
   View
 } from "react-native";
 
+import {parseArrivalTime} from "./arrivals";
+
 import {
   clearSelection,
   selectItemIndex,
@@ -277,6 +279,7 @@ class SelectedItemsView extends Component {
           onPress={this.handleIconTap}
           stop={item.stop}
           selectedArrival={this.props ? this.props.selectedArrival : null}
+          arrivals={item.arrivals}
         />
       );
     }
@@ -412,7 +415,31 @@ function mapDispatchToProps(dispatch, ownProps) {
 export default connect(mapStateToProps, mapDispatchToProps)(SelectedItemsView);
 
 function StopItem(props) {
-  let {width, onPress, stop, selectedArrival} = props;
+  let {width, onPress, stop, selectedArrival, arrivals} = props;
+
+  let nextArrival;
+  if (arrivals.length > 0) {
+    nextArrival = (
+      <Text
+        style={{
+          color: "#999999",
+          fontSize: 13
+        }}>
+        Next arrival {parseArrivalTime(arrivals[0].arrival_time).fromNow()}
+      </Text>
+    );
+  } else {
+    nextArrival = (
+      <Text
+        style={{
+          color: "#999999",
+          fontSize: 13
+        }}>
+        No arrivals within the next hour
+      </Text>
+    );
+  }
+
   return (
     <View
       style={{
@@ -429,16 +456,20 @@ function StopItem(props) {
               {stop.name}
             </Text>
           </View>
-          <View style={{flexDirection: "row", marginTop: 5}}>
+          <View
+            style={{flexDirection: "row", alignItems: "center", marginTop: 5}}>
             <Image style={styles.itemImage} source={stopImage} />
-            <Text
-              style={{
-                color: "#999999",
-                fontSize: 13,
-                paddingTop: 5
-              }}>
-              {stop.desc}
-            </Text>
+            <View>
+              <Text
+                style={{
+                  color: "#999999",
+                  fontSize: 13,
+                  paddingTop: 5
+                }}>
+                {stop.direction}bound (Stop ID: {stop.id})
+              </Text>
+              {nextArrival}
+            </View>
           </View>
         </View>
       </TouchableOpacity>
