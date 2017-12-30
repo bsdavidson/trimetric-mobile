@@ -1,8 +1,11 @@
 import React, {Component} from "react";
-import {Platform, StyleSheet, Text, View} from "react-native";
+import {Platform, StyleSheet, Text, View, PixelRatio} from "react-native";
 import {connect} from "react-redux";
 
 import Mapbox from "@mapbox/react-native-mapbox-gl";
+
+import bus from "./assets/bus.png";
+import tram from "./assets/tram.png";
 
 import {MIN_LABEL_LAYER_ID, INCLUDE_ALL, EXCLUDE_ALL} from "./App";
 import {getVehiclePoints, getSelectedItem} from "./selectors";
@@ -37,6 +40,7 @@ function VehiclesLayer(props) {
   if (!vehiclePoints) {
     return null;
   }
+
   return (
     <View>
       <Mapbox.ShapeSource
@@ -51,16 +55,6 @@ function VehiclesLayer(props) {
             mapStyles.vehicleSymbolsLayer,
             {textField: labelsVisible ? "{route_id}" : ""}
           ]}
-          belowLayerID={MIN_LABEL_LAYER_ID}
-          filter={filter}
-        />
-      </Mapbox.ShapeSource>
-
-      <Mapbox.ShapeSource id="vehicle_points_source" shape={vehiclePoints}>
-        <Mapbox.CircleLayer
-          id="vehicle_points_layer"
-          maxZoomLevel={13}
-          style={mapStyles.vehiclePointsLayer}
           belowLayerID={MIN_LABEL_LAYER_ID}
           filter={filter}
         />
@@ -101,7 +95,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(VehiclesLayer);
-
+// const iconScale = Platform.OS === "android" ? PixelRatio.get() : 1;
 const mapStyles = Mapbox.StyleSheet.create({
   vehicleSymbolsLayer: {
     iconImage: "{icon}",
@@ -113,31 +107,17 @@ const mapStyles = Mapbox.StyleSheet.create({
     textHaloColor: "#FFFFFF",
     textHaloWidth: 3,
     iconSize: Mapbox.StyleSheet.camera(
+      // {
+      //   0: 0 * iconScale,
+      //   9: 0.02 * iconScale,
+      //   13: 0.05 * iconScale,
+      //   18: 0.15 * iconScale
+      // },
       {
         0: 0,
         9: 0.04,
         13: 0.1,
         18: 0.3
-      },
-      Mapbox.InterpolationMode.Linear
-    )
-  },
-  vehiclePointsLayer: {
-    circleColor: Mapbox.StyleSheet.source(
-      {
-        0: "#FF00FF",
-        3: "#FF000F"
-      },
-      "routeType",
-      Mapbox.InterpolationMode.Categorical
-    ),
-    circleOpacity: 0.0,
-    circleRadius: Mapbox.StyleSheet.camera(
-      {
-        0: 0,
-        9: 2,
-        10: 2.4,
-        13: 6
       },
       Mapbox.InterpolationMode.Linear
     )
