@@ -13,6 +13,18 @@ export const ROUTE_TYPE_ICONS = {
   7: "funicular"
 };
 
+export function parseColor(hex) {
+  console.log("parse", hex[0]);
+  if (hex[0] === "#") {
+    hex = hex.slice(1);
+  }
+  if (!hex) {
+    return [0, 0, 0, 192];
+  }
+  let color = parseInt(hex, 16);
+  return [(color >> 16) & 255, (color >> 8) & 255, color & 255, 255];
+}
+
 export function filterArrivalsForStop(stopID, arrivals) {
   return arrivals.filter(a => {
     return stopID === a.stop_id;
@@ -118,7 +130,8 @@ export const getVehiclePoints = createSelector(getVehicles, vehicles => {
         icon: getRouteTypeIcon(v.route_type),
         vehicle_id: v.vehicle.id,
         route_id: v.trip.route_id || "",
-        stop_id: v.stop_id
+        stop_id: v.stop_id,
+        bearing: v.position.bearing
       },
       geometry: {
         type: "Point",

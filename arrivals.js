@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   FlatList,
+  Image,
   ActivityIndicator,
   TouchableOpacity
 } from "react-native";
@@ -13,14 +14,25 @@ import {selectArrival} from "./actions";
 import {
   getSelectedItem,
   getVehicleInfoFromArrival,
-  filterArrivalsForStop
+  filterArrivalsForStop,
+  parseColor,
+  ROUTE_TYPE_ICONS
 } from "./selectors";
+
+import tram from "./assets/tram.png";
+import bus from "./assets/bus.png";
 
 export function parseArrivalTime(time) {
   let parts = time.split(":").map(p => parseInt(p, 10));
+  // Time can exceed 24 hours for arrival times
   parts[0] = parts[0] % 24;
   return Moment(parts.join(":"), "HH:mm:ss");
 }
+
+const VEHICLE_IMAGE = {
+  0: tram,
+  3: bus
+};
 class Arrivals extends Component {
   constructor(props) {
     super(props);
@@ -38,6 +50,56 @@ class Arrivals extends Component {
   }
 
   renderArrival(arrival) {
+    let bgColor = parseColor(
+      arrival.item.route_color ? `#${arrival.item.route_color}` : "#cccccc"
+    );
+    let color = [50, 50, 50, 1];
+    bgColor[3] = 0.3;
+    let vehicleType =
+      ROUTE_TYPE_ICONS[arrival.item.route_type][0].toUpperCase() +
+      ROUTE_TYPE_ICONS[arrival.item.route_type].slice(1);
+
+    // Cap the number of upcomping arrivals
+    if (arrival.item.nextArrivals.length < 3) {
+      arrival.item.nextArrivals[3] = 0;
+    } else {
+      arrival.item.nextArrivals.length = 3;
+    }
+
+    let nextArrivals = (
+      <View style={[styles.nextArrivals, {borderColor: `rgba(${bgColor})`}]}>
+        {arrival.item.nextArrivals.map((a, i) => {
+          if (!arrival.item.nextArrivals[i]) {
+            return (
+              <View style={styles.nextArrival}>
+                <Text style={styles.nextArrivalTime} />
+              </View>
+            );
+          }
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                this.handleArrivalPress({item: a});
+              }}
+              style={[
+                styles.nextArrival,
+                {
+                  borderLeftWidth: i === 0 ? 0 : 1,
+                  borderColor: `rgba(${bgColor})`
+                }
+              ]}
+              key={i}>
+              <Text style={styles.nextArrivalTime}>
+                {parseArrivalTime(a.arrival_time).fromNow(false)}
+              </Text>
+              <Text style={styles.nextArrivalScheduled}>
+                {a.vehicle_id ? null : "(scheduled)"}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
     return (
       <TouchableOpacity
         onPress={() => {
@@ -46,27 +108,51 @@ class Arrivals extends Component {
         <View
           style={[
             styles.arrivalItem,
-            {borderWidth: 1, borderRadius: 4, padding: 4}
+            {
+              paddingLeft: 0,
+              borderColor: `rgba(${bgColor})`
+            }
           ]}>
-          <View style={{padding: 10}}>
-            <Text style={{fontSize: 22}}>{arrival.item.route_id}</Text>
-            <Text style={{fontSize: 12, textAlign: "center"}}>
-              {arrival.item.vehicle_id}
+          <View
+            style={[
+              styles.arrivalItemRouteID,
+              {backgroundColor: `rgba(${bgColor})`}
+            ]}>
+            <Text
+              style={[
+                styles.arrivalItemRouteIDText,
+                {color: `rgba(${color})`}
+              ]}>
+              {arrival.item.route_id}
             </Text>
+            <View style={styles.arrivalItemRouteIDImage}>
+              <Image
+                style={styles.itemImage}
+                source={VEHICLE_IMAGE[arrival.item.route_type]}
+              />
+            </View>
           </View>
-          <View>
-            <Text style={{fontSize: 18}}>{arrival.item.route_long_name}</Text>
-            <Text style={{fontSize: 14}}>{arrival.item.headsign}</Text>
 
-            <Text>Stop ID: {arrival.item.stop_id}</Text>
-            <Text>
-              Arrival Time:{" "}
+          <View style={styles.arrivalItemSchedule}>
+            <Text
+              style={[
+                styles.arrivalItemScheduleText,
+                {
+                  backgroundColor: `rgba(${bgColor})`,
+                  color: `rgba(${color})`
+                }
+              ]}>
+              {arrival.item.route_long_name}
+              {" to "}
+              {arrival.item.headsign}
+            </Text>
+            <Text style={styles.arrivalItemScheduleTime}>
+              {arrival.item.vehicle_id
+                ? `${vehicleType} arrives`
+                : `${vehicleType} scheduled to arrive`}{" "}
               {parseArrivalTime(arrival.item.arrival_time).fromNow()}
             </Text>
-            <Text style={{fontSize: 12}}>
-              {arrival.item.vehicle_position.lat} {" / "}{" "}
-              {arrival.item.vehicle_position.lng}{" "}
-            </Text>
+            {nextArrivals}
           </View>
         </View>
       </TouchableOpacity>
@@ -101,13 +187,32 @@ class Arrivals extends Component {
         </View>
       );
     }
+
+    let arrivalsMap = {};
+    arrivalsForStop.forEach(a => {
+      if (!arrivalsMap[a.route_id]) {
+        arrivalsMap[a.route_id] = a;
+        arrivalsMap[a.route_id].nextArrivals = [];
+        return;
+      }
+      arrivalsMap[a.route_id].nextArrivals.push(a);
+    });
+    let arrivalsData = Object.keys(arrivalsMap).map(k => {
+      return arrivalsMap[k];
+    });
+
     return (
-      <FlatList
-        style={styles.arrivalList}
-        data={arrivalsForStop}
-        renderItem={this.renderArrival}
-        keyExtractor={(item, index) => String(index)}
-      />
+      <View style={styles.arrivalList}>
+        <View style={styles.arrivalListTitle}>
+          <Text>Upcoming Arrivals</Text>
+        </View>
+        <FlatList
+          style={{paddingTop: 5}}
+          data={arrivalsData}
+          renderItem={this.renderArrival}
+          keyExtractor={(item, index) => String(index)}
+        />
+      </View>
     );
   }
 }
@@ -136,19 +241,89 @@ const styles = StyleSheet.create({
   arrivalList: {
     flex: 1
   },
-
+  arrivalListTitle: {
+    backgroundColor: "#CCCCCC",
+    borderRadius: 4,
+    marginBottom: 0,
+    padding: 5
+  },
   arrivalItem: {
-    backgroundColor: "#FFFFFF",
-    // justifyContent: "center",
+    // height: 70,
     alignItems: "center",
-    height: 100,
-    paddingLeft: 10,
-    paddingRight: 10,
-    marginBottom: 7,
-    minHeight: 100,
-    flexDirection: "row",
-    flex: 1,
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 0,
+    borderColor: "#cccccc",
     borderWidth: 0,
-    borderColor: "#cccccc"
+    flex: 1,
+    flexDirection: "row",
+    marginBottom: 0,
+    minHeight: 83,
+    padding: 4,
+    paddingLeft: 10,
+    paddingRight: 0
+  },
+  arrivalItemRouteID: {
+    alignItems: "center",
+    borderRadius: 4,
+    borderTopRightRadius: 0,
+    justifyContent: "center",
+    marginRight: 0,
+    padding: 0,
+    width: 45
+  },
+  arrivalItemRouteIDText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 1
+  },
+  arrivalItemRouteIDImage: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center"
+  },
+  arrivalItemSchedule: {
+    alignSelf: "flex-start",
+    flex: 1
+  },
+  arrivalItemScheduleText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    padding: 5
+  },
+  arrivalItemScheduleTime: {
+    fontSize: 12,
+    marginLeft: 5,
+    marginTop: 5
+  },
+  itemImage: {
+    height: 25,
+    marginTop: 0,
+    padding: 0,
+    paddingRight: 10,
+    resizeMode: "contain",
+    width: 25
+  },
+  nextArrivals: {
+    borderRadius: 2,
+    borderWidth: 0,
+    flexDirection: "row",
+    marginLeft: 4
+  },
+  nextArrival: {
+    flex: 1,
+    opacity: 0.5,
+    padding: 2
+  },
+  nextArrivalTime: {
+    color: "#222222",
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "left"
+  },
+  nextArrivalScheduled: {
+    color: "#222222",
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "left"
   }
 });

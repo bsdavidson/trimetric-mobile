@@ -353,27 +353,9 @@ class SelectedItemsView extends Component {
           />
           {header}
           <TouchableOpacity
-            style={{zIndex: 99, flex: 0, position: "absolute", right: 0}}
+            style={styles.drawerClose}
             onPress={this.props.onClearSelection}>
-            <View
-              style={{
-                padding: 2,
-                margin: 5,
-                marginRight: 8,
-                paddingLeft: 6,
-                paddingRight: 6,
-                borderRadius: 24
-              }}>
-              <Text
-                style={{
-                  color: "#AAAAAA",
-                  fontSize: 24,
-                  lineHeight: 24,
-                  fontWeight: "bold"
-                }}>
-                &#x00D7;
-              </Text>
-            </View>
+            <Text style={styles.drawerCloseIcon}>&#x00D7;</Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.detailsView]}>{detailsView}</View>
@@ -420,52 +402,31 @@ function StopItem(props) {
   let nextArrival;
   if (arrivals.length > 0) {
     nextArrival = (
-      <Text
-        style={{
-          color: "#999999",
-          fontSize: 13
-        }}>
+      <Text style={styles.nextArrivalText}>
         Next arrival {parseArrivalTime(arrivals[0].arrival_time).fromNow()}
       </Text>
     );
   } else {
     nextArrival = (
-      <Text
-        style={{
-          color: "#999999",
-          fontSize: 13
-        }}>
+      <Text style={styles.nextArrivalText}>
         No arrivals within the next hour
       </Text>
     );
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        width
-      }}>
+    <View style={[styles.stopItem, {width}]}>
       <TouchableOpacity onPress={onPress}>
         <View key={stop.name} style={[styles.itemDescription]}>
           <View>
-            <Text
-              numberOfLines={1}
-              style={{fontSize: 18, paddingRight: 20, paddingLeft: 4}}>
+            <Text numberOfLines={1} style={styles.itemDescriptionText}>
               {stop.name}
             </Text>
           </View>
-          <View
-            style={{flexDirection: "row", alignItems: "center", marginTop: 5}}>
+          <View style={styles.itemDescriptionIcon}>
             <Image style={styles.itemImage} source={stopImage} />
             <View>
-              <Text
-                style={{
-                  color: "#999999",
-                  fontSize: 13,
-                  paddingTop: 5
-                }}>
+              <Text style={styles.itemStopInformation}>
                 {stop.direction}bound (Stop ID: {stop.id})
               </Text>
               {nextArrival}
@@ -480,33 +441,21 @@ function StopItem(props) {
 function VehicleItem(props) {
   let {width, vehicle, onPress, onClear, stopInfo} = props;
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        width
-      }}>
+    <View style={[styles.vehicleItem, {width}]}>
       <View key={vehicle.vehicle.id} style={[styles.itemDescription]}>
         <View>
-          <Text style={{fontSize: 18, paddingRight: 20}}>
-            {vehicle.vehicle.label}
-          </Text>
-          <View style={{flexDirection: "row", marginTop: 5}}>
+          <Text style={styles.vehicleItemLabel}>{vehicle.vehicle.label}</Text>
+          <View style={styles.vehicleItemIcon}>
             <Image
               style={styles.itemImage}
               source={VEHICLE_IMAGE[vehicle.route_type]}
             />
-            <View style={{flexDirection: "column"}}>
-              <Text
-                style={{
-                  color: "#999999",
-                  fontSize: 13,
-                  paddingTop: 5,
-                  paddingLeft: 5
-                }}>
+            <View style={styles.vehicleItemInformation}>
+              <Text style={styles.vehicleItemInformationText}>
+                {vehicle.vehicle.id}{" "}
                 {CURRENT_VEHICLE_STATUS[vehicle.current_status]} {stopInfo.name}
               </Text>
-              <Text style={{fontSize: 10, padding: 5, paddingTop: 0}}>
+              <Text style={styles.itemVehicleUpdatedText}>
                 Updated: {Moment.unix(vehicle.timestamp).fromNow()}
               </Text>
             </View>
@@ -528,6 +477,24 @@ const styles = StyleSheet.create({
     transform: [{perspective: 1000}],
     zIndex: 60
   },
+  drawerClose: {
+    borderRadius: 24,
+    flex: 0,
+    margin: 5,
+    marginRight: 8,
+    padding: 2,
+    paddingLeft: 6,
+    paddingRight: 6,
+    position: "absolute",
+    right: 0,
+    zIndex: 99
+  },
+  drawerCloseIcon: {
+    color: "#AAAAAA",
+    fontSize: 24,
+    fontWeight: "bold",
+    lineHeight: 24
+  },
   header: {
     borderColor: "rgba(0, 0, 0, 0.1)",
     borderTopWidth: 1,
@@ -537,7 +504,7 @@ const styles = StyleSheet.create({
     padding: 1
   },
   headerView: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     borderColor: "#CCCCCC"
   },
   detailsView: {
@@ -570,6 +537,10 @@ const styles = StyleSheet.create({
   active: {
     opacity: 1
   },
+  nextArrivalText: {
+    color: "#999999",
+    fontSize: 13
+  },
   itemDescription: {
     height: 100,
     padding: 10,
@@ -577,21 +548,69 @@ const styles = StyleSheet.create({
     minHeight: 100,
     flex: 0
   },
+  itemDescriptionIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5
+  },
+  itemDescriptionText: {
+    fontSize: 18,
+    paddingRight: 20,
+    paddingLeft: 4
+  },
 
+  itemStopInformation: {
+    color: "#444444",
+    fontSize: 13,
+    paddingTop: 5
+  },
+
+  itemVehicleUpdatedText: {
+    color: "#acacac",
+    fontSize: 10,
+    padding: 5,
+    paddingTop: 0
+  },
   itemImage: {
+    height: 25,
     marginTop: 0,
     padding: 0,
     paddingRight: 10,
-    width: 25,
     resizeMode: "contain",
-    height: 25
+    width: 25
   },
   pageIcon: {
+    alignItems: "center",
+    height: 15,
     margin: 0,
     padding: 10,
-    width: 15,
     resizeMode: "contain",
-    height: 15,
-    alignItems: "center"
+    width: 15
+  },
+  stopItem: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  vehicleItem: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  vehicleItemLabel: {
+    fontSize: 18,
+    paddingRight: 20
+  },
+  vehicleItemIcon: {
+    flexDirection: "row",
+    marginTop: 5
+  },
+  vehicleItemInformationText: {
+    color: "#222222",
+    fontSize: 14,
+    paddingLeft: 5,
+    paddingTop: 0
+  },
+  vehicleItemInformation: {
+    flexDirection: "column",
+    justifyContent: "flex-start"
   }
 });

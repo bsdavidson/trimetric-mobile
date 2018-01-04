@@ -49,7 +49,7 @@ Mapbox.setAccessToken(
   "pk.eyJ1IjoiYnNkYXZpZHNvbiIsImEiOiJjamExeWFwb3A5aWRlMndzNHBtNW40dDhlIn0.YQwDCQqvNFVwT8JlOBPvwg"
 );
 
-const TOUCH_HALF_SIZE = 44 / 2;
+const TOUCH_HALF_SIZE = 10 / 2;
 
 // This is the first layer ID containing labels from MapBox's light style.
 // All Trimetric layers should appear beneath this. The JavaScript SDK allows
