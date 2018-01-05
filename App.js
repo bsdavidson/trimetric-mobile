@@ -29,6 +29,7 @@ import SelectedLayer from "./selected_layer";
 import StatMenu from "./stat_menu";
 import StopsLayer from "./stops_layer";
 import VehiclesLayer from "./vehicles_layer";
+import DataService from "./data";
 
 import {
   updateSelectedItems,
@@ -270,6 +271,8 @@ export class App extends Component {
 
     return (
       <View style={styles.map}>
+        <DataService />
+
         {page}
         <StatMenu />
         <LayersMenu

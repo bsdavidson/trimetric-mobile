@@ -71,7 +71,7 @@ class Arrivals extends Component {
         {arrival.item.nextArrivals.map((a, i) => {
           if (!arrival.item.nextArrivals[i]) {
             return (
-              <View style={styles.nextArrival}>
+              <View key={i} style={styles.nextArrival}>
                 <Text style={styles.nextArrivalTime} />
               </View>
             );

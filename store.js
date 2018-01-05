@@ -1,3 +1,5 @@
+import {persistStore, persistCombineReducers} from "redux-persist";
+import FilesystemStorage from "redux-persist-filesystem-storage";
 import {createStore, combineReducers} from "redux";
 import {Dimensions} from "react-native";
 
@@ -299,7 +301,7 @@ function selectedItemsViewHeight(state = 0, action) {
 function stops(state = [], action) {
   switch (action.type) {
     case UPDATE_STOPS:
-      return state.concat(action.stops);
+      return action.stops;
 
     default:
       return state;
@@ -323,7 +325,7 @@ function vehicles(state = [], action) {
   }
 }
 
-export const reducer = combineReducers({
+const reducers = {
   arrivals,
   connected,
   dimensions,
@@ -341,9 +343,15 @@ export const reducer = combineReducers({
   stops,
   totals,
   vehicles
-});
+};
 
-export const store = createStore(
-  reducer,
-  window.devToolsExtension && window.devToolsExtension()
+export const reducer = persistCombineReducers(
+  {
+    key: "root",
+    storage: FilesystemStorage,
+    whitelist: ["layerVisibility", "routeShapes", "routes", "stops", "totals"]
+  },
+  reducers
 );
+export const store = createStore(reducer);
+export const persistor = persistStore(store);

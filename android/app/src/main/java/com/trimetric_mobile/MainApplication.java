@@ -3,8 +3,8 @@ package com.trimetric_mobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.mapbox.rctmgl.RCTMGLPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -23,11 +23,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new ReactNativeConfigPackage(),
-          new RCTMGLPackage()
-      );
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new RCTMGLPackage(), new RNFetchBlobPackage());
     }
 
     @Override
@@ -45,5 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    long size = 50L * 1024L * 1024L; // 50 MB
+    com.facebook.react.modules.storage.ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
   }
 }

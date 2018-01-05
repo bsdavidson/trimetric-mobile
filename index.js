@@ -1,18 +1,26 @@
-import {AppRegistry} from "react-native";
+import {AppRegistry, View, Text} from "react-native";
+import {PersistGate} from "redux-persist/es/integration/react";
 import React, {Component} from "react";
 import {Provider} from "react-redux";
 
 import App from "./App";
-import {DataService} from "./data";
-import {store} from "./store";
-
-const dataService = new DataService(store);
-dataService.start();
+import {store, persistor} from "./store";
 
 function AppWithStore() {
   return (
     <Provider store={store}>
-      <App />
+      <PersistGate
+        loading={
+          <View style={{flex: 1, alignItems: "center"}}>
+            <Text style={{marginTop: 40}}>Hydrating</Text>
+          </View>
+        }
+        onBeforeLift={() => {
+          console.log("Before the gate is lifted");
+        }}
+        persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
   );
 }

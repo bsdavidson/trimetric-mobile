@@ -14,7 +14,6 @@ export const ROUTE_TYPE_ICONS = {
 };
 
 export function parseColor(hex) {
-  console.log("parse", hex[0]);
   if (hex[0] === "#") {
     hex = hex.slice(1);
   }

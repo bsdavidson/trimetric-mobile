@@ -98,7 +98,9 @@ export default connect(mapStateToProps)(VehiclesLayer);
 // const iconScale = Platform.OS === "android" ? PixelRatio.get() : 1;
 const mapStyles = Mapbox.StyleSheet.create({
   vehicleSymbolsLayer: {
+    // iconRotate: Mapbox.StyleSheet.identity("bearing"),
     iconImage: "{icon}",
+    // iconRotationAlignment: 0,
     iconAllowOverlap: true,
     // textAllowOverlap: true,
     textOptional: true,

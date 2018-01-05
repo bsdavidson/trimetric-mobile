@@ -20,6 +20,7 @@ import mapIcon from "./assets/map.png";
 import trainIcon from "./assets/tram.png";
 import stopIcon from "./assets/stop.png";
 import {updateLayerVisibility} from "./actions";
+import {getStorageValue, setStorageValue} from "./data";
 
 class Intro extends Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class Intro extends Component {
     this.state = {
       visible: true,
       screenIndex: 0,
-      scrollTween: new Animated.Value(0)
+      scrollTween: new Animated.Value(0),
+      seenIntro: 0
     };
     this.screenWidth = Dimensions.get("window").width;
     this.handleResetPress = this.handleResetPress.bind(this);
@@ -36,12 +38,29 @@ class Intro extends Component {
     this.handleNextPress = this.handleNextPress.bind(this);
   }
 
+  componentWillMount() {
+    getStorageValue("seen_intro").then(v => {
+      if (v) {
+        this.setState({seenIntro: true});
+      }
+    });
+  }
+
   componentDidMount() {
     this.setScreenIndex(0);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.screenIndex === 3) {
+      setStorageValue("seen_intro", "1");
+    }
+  }
+
   componentDidUpdate() {
-    if (this.state.screenIndex > 3 && this.props.loaded && this.state.visible) {
+    if (
+      (this.state.screenIndex > 3 && this.props.loaded && this.state.visible) ||
+      (this.props.loaded && this.state.seenIntro && this.state.visible)
+    ) {
       this.setState({
         visible: false
       });

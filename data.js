@@ -1,4 +1,8 @@
 // @ts-check
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {AsyncStorage} from "react-native";
+import Moment from "moment";
 
 import {
   setConnectingStatusConnected,
@@ -25,6 +29,7 @@ const MESSAGE_TYPE_TO_ACTION = {
 };
 
 const BASE_URL = "http://10.0.0.69:8181";
+// const BASE_URL = "http://10.47.109.180:8181";
 
 function buildQuery(params) {
   return Object.keys(params)
@@ -32,35 +37,84 @@ function buildQuery(params) {
     .join("&");
 }
 
-export class DataService {
-  constructor(store) {
-    this.store = store;
+export function setStorageValue(key, value) {
+  AsyncStorage.setItem(key, JSON.stringify(value));
+}
+
+export function getStorageValue(key) {
+  return AsyncStorage.getItem(key).then(v => {
+    if (!v) {
+      return null;
+    }
+    return JSON.parse(v);
+  });
+}
+
+export class DataService extends Component {
+  constructor(props) {
+    super(props);
+    this.store = null;
     this.running = false;
     this.timeoutID = null;
-    this.selectedStop = null;
-    this.selectedItems = [];
-    this.getStopListFromSelectedStops = this.getStopListFromSelectedStops.bind(
-      this
-    );
-    this.handleStopChange = this.handleStopChange.bind(this);
-    this.handleStoreChange = this.handleStoreChange.bind(this);
-    this.connect();
-    this.unsubscribe = this.store.subscribe(this.handleStoreChange);
+    this.connectTimeout = null;
+    this.updateLocalStorage = false;
   }
 
-  connect() {
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedItems !== prevProps.selectedItems) {
+      this.update();
+      this.props.onSelectedItemsChange();
+    }
+    if (
+      this.updateLocalStorage &&
+      this.props.totals &&
+      this.props.routeShapes &&
+      this.props.totals.stops <= this.props.stops.length &&
+      this.props.totals.routes <= this.props.routes.length &&
+      this.props.totals.route_shapes <= this.props.routeShapes.length
+    ) {
+      setStorageValue("last_static_fetch", Moment());
+      this.updateLocalStorage = false;
+    }
+  }
+
+  componentWillMount() {
+    this.connect();
+  }
+
+  componentWillUnmount() {
+    this.running = false;
+    clearTimeout(this.timeoutID);
+  }
+
+  componentDidMount() {
+    this.running = true;
+    this.update();
+  }
+
+  async connect() {
+    let lf = await getStorageValue("last_static_fetch");
+    let now = Moment();
+    if (!lf || now.isAfter(Moment(lf).add(1, "day"))) {
+      this.updateLocalStorage = true;
+      this.connectWS(true);
+      return;
+    }
+
+    this.connectWS(false);
+  }
+
+  connectWS(getStatic) {
     const url = `${BASE_URL}/ws`.replace(/^http(s?)/, "ws$1");
     console.log("Connecting to: ", url);
 
-    this.connection = new WebSocket(url + "?chunkify=true");
+    this.connection = new WebSocket(
+      `${url}?${buildQuery({chunkify: false, static: getStatic})}`
+    );
+    this.connection.onopen = this.props.onConnect();
 
-    this.connection.onopen = () => {
-      console.log("WebSocket Connected");
-      this.store.dispatch(setConnectingStatusConnected());
-    };
-
-    this.connection.onclose = () => {
-      console.warn("WebSocket Disconnected");
+    this.connection.onclose = e => {
+      console.warn("WebSocket Disconnected", e.code, e.reason, e);
       setTimeout(() => {
         this.connect();
       }, 1000);
@@ -73,11 +127,11 @@ export class DataService {
         console.warn("WebSocket JSON Error:", err);
         return;
       }
-
-      this.handleMessage(parsedMsg);
+      this.props.onMessage(parsedMsg);
     };
+
     this.connection.onerror = err => {
-      console.warn("WebSocket Error:", err.toString());
+      console.warn("WebSocket Error:", err.message, err);
     };
   }
 
@@ -92,38 +146,9 @@ export class DataService {
     return fetch(url)
       .then(response => response.json())
       .then(arrivals => {
-        this.store.dispatch(updateArrivals(arrivals));
+        this.props.onArrivalsUpdate(arrivals);
         return arrivals;
       });
-  }
-
-  handleMessage(message) {
-    let action = MESSAGE_TYPE_TO_ACTION[message.type];
-    if (!action) {
-      return;
-    }
-    this.store.dispatch(action(message.data));
-  }
-
-  handleStopChange(stop) {
-    if (!stop) {
-      this.selectedStop = null;
-      return;
-    }
-    this.selectedStop = stop;
-    this.store.dispatch(
-      updateLocation(LocationTypes.STOP, stop.id, stop.lat, stop.lng, false)
-    );
-  }
-
-  start() {
-    this.running = true;
-    this.update();
-  }
-
-  stop() {
-    this.running = false;
-    clearTimeout(this.timeoutID);
   }
 
   timeout() {
@@ -134,7 +159,7 @@ export class DataService {
   }
 
   getStopListFromSelectedStops() {
-    let {selectedItems} = this.store.getState();
+    selectedItems = this.props.selectedItems;
     if (!selectedItems) {
       return [];
     }
@@ -148,18 +173,6 @@ export class DataService {
       }
     });
     return stopIDs;
-  }
-
-  handleStoreChange() {
-    if (!this.store) {
-      return;
-    }
-    let {selectedItems} = this.store.getState();
-    if (selectedItems !== this.selectedItems) {
-      this.selectedItems = selectedItems;
-      this.update();
-      this.store.dispatch(startFetchingArrivals());
-    }
   }
 
   update() {
@@ -179,4 +192,51 @@ export class DataService {
         throw err;
       });
   }
+
+  render() {
+    return null;
+  }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onSelectedItemsChange: () => {
+      dispatch(startFetchingArrivals());
+    },
+    onMessage: message => {
+      let action = MESSAGE_TYPE_TO_ACTION[message.type];
+      console.log("ws message", message.type);
+      if (!action) {
+        return;
+      }
+      dispatch(action(message.data));
+    },
+    onConnect: () => {
+      dispatch(setConnectingStatusConnected());
+    },
+    onArrivalsUpdate: arrivals => {
+      dispatch(updateArrivals(arrivals));
+    },
+    updateStops: stops => {
+      dispatch(updateStops(stops));
+    },
+    updateRoutes: routes => {
+      dispatch(updateRoutes(routes));
+    },
+    updateRouteShapes: routeShapes => {
+      dispatch(updateRouteShapes(routeShapes));
+    }
+  };
+}
+
+function mapStateToProps(state) {
+  return {
+    routes: state.routes,
+    routeShapes: state.routeShapes,
+    selectedItems: state.selectedItems,
+    stops: state.stops,
+    totals: state.totals
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DataService);

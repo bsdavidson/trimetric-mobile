@@ -11,10 +11,11 @@
     "moment": "^2.19.3",
     "react": "16.0.0",
     "react-native": "^0.51.0",
-    "react-native-config": "^0.10.0",
     "react-native-elements": "^0.18.5",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
+    "redux-persist": "^5.4.0",
+    "redux-persist-filesystem-storage": "^1.1.1",
     "reselect": "^3.0.1",
     "turf": "^3.0.14"
   },
