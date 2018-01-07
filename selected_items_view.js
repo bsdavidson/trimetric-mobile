@@ -67,7 +67,7 @@ class SelectedItemsView extends Component {
       isOpen: false,
       layoutHeight: null,
       layoutWidth: null,
-      marginTop: screenHeight * 0.3,
+      marginTop: screenHeight * 0.4,
       openTween: new Animated.Value(0),
       screenHeight,
       screenWidth,
@@ -170,7 +170,7 @@ class SelectedItemsView extends Component {
       layoutHeight,
       screenWidth,
       screenHeight,
-      marginTop: screenHeight * 0.3
+      marginTop: screenHeight * 0.4
     });
 
     // Fixes a bug that causes the drawer nav to sit on boundaries when the
@@ -398,12 +398,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(SelectedItemsView);
 
 function StopItem(props) {
   let {width, onPress, stop, selectedArrival, arrivals} = props;
-
   let nextArrival;
   if (arrivals.length > 0) {
     nextArrival = (
       <Text style={styles.nextArrivalText}>
-        Next arrival {parseArrivalTime(arrivals[0].arrival_time).fromNow()}
+        Next arrival{" "}
+        {parseArrivalTime(arrivals[0].date, arrivals[0].arrival_time).fromNow()}
       </Text>
     );
   } else {

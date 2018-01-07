@@ -1,14 +1,15 @@
 // @ts-check
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {AsyncStorage} from "react-native";
-import Moment from "moment";
+import moment from "moment";
 
 import {
   setConnectingStatusConnected,
+  setConnectingStatusDisconnected,
   LocationTypes,
   startFetchingArrivals,
   updateArrivals,
+  updateLastStaticFetch,
   updateRouteShapes,
   updateLocation,
   updateRoutes,
@@ -28,26 +29,13 @@ const MESSAGE_TYPE_TO_ACTION = {
   totals: updateTotals
 };
 
-const BASE_URL = "http://10.0.0.69:8181";
-// const BASE_URL = "http://10.47.109.180:8181";
+// const BASE_URL = "http://10.0.0.69:8181";
+const BASE_URL = "https://trimetric.briand.co";
 
 function buildQuery(params) {
   return Object.keys(params)
     .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
     .join("&");
-}
-
-export function setStorageValue(key, value) {
-  AsyncStorage.setItem(key, JSON.stringify(value));
-}
-
-export function getStorageValue(key) {
-  return AsyncStorage.getItem(key).then(v => {
-    if (!v) {
-      return null;
-    }
-    return JSON.parse(v);
-  });
 }
 
 export class DataService extends Component {
@@ -73,7 +61,7 @@ export class DataService extends Component {
       this.props.totals.routes <= this.props.routes.length &&
       this.props.totals.route_shapes <= this.props.routeShapes.length
     ) {
-      setStorageValue("last_static_fetch", Moment());
+      this.props.updateLastStaticFetch(moment().unix());
       this.updateLocalStorage = false;
     }
   }
@@ -92,10 +80,12 @@ export class DataService extends Component {
     this.update();
   }
 
-  async connect() {
-    let lf = await getStorageValue("last_static_fetch");
-    let now = Moment();
-    if (!lf || now.isAfter(Moment(lf).add(1, "day"))) {
+  connect() {
+    let now = moment();
+    if (
+      !this.props.lastStaticFetch ||
+      now.isAfter(moment.unix(this.props.lastStaticFetch).add(1, "day"))
+    ) {
       this.updateLocalStorage = true;
       this.connectWS(true);
       return;
@@ -114,6 +104,7 @@ export class DataService extends Component {
     this.connection.onopen = this.props.onConnect();
 
     this.connection.onclose = e => {
+      this.props.onDisconnect();
       console.warn("WebSocket Disconnected", e.code, e.reason, e);
       setTimeout(() => {
         this.connect();
@@ -131,6 +122,7 @@ export class DataService extends Component {
     };
 
     this.connection.onerror = err => {
+      this.props.onDisconnect();
       console.warn("WebSocket Error:", err.message, err);
     };
   }
@@ -214,6 +206,9 @@ function mapDispatchToProps(dispatch) {
     onConnect: () => {
       dispatch(setConnectingStatusConnected());
     },
+    onDisconnect: () => {
+      dispatch(setConnectingStatusDisconnected());
+    },
     onArrivalsUpdate: arrivals => {
       dispatch(updateArrivals(arrivals));
     },
@@ -225,12 +220,16 @@ function mapDispatchToProps(dispatch) {
     },
     updateRouteShapes: routeShapes => {
       dispatch(updateRouteShapes(routeShapes));
+    },
+    updateLastStaticFetch: lastStaticFetch => {
+      dispatch(updateLastStaticFetch(lastStaticFetch));
     }
   };
 }
 
 function mapStateToProps(state) {
   return {
+    lastStaticFetch: state.lastStaticFetch,
     routes: state.routes,
     routeShapes: state.routeShapes,
     selectedItems: state.selectedItems,

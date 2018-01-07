@@ -1,13 +1,17 @@
 export const CLEAR_SELECTION = "CLEAR_SELECTION";
 export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SELECT_ITEM = "SELECT_ITEM";
+export const SEEN_INTRO = "SEEN_INTRO";
 export const SET_SELECTED_ITEMS_VIEW_HEIGHT = "SET_SELECTED_ITEMS_VIEW_HEIGHT";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const TOGGLE_INFO_MODAL_VISIBILITY = "TOGGLE_INFO_MODAL_VISIBILITY";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
 export const UPDATE_CONNECTING_STATUS_CONNECTED =
   "UPDATE_CONNECTING_STATUS_CONNECTED";
+export const UPDATE_CONNECTING_STATUS_DISCONNECTED =
+  "UPDATE_CONNECTING_STATUS_DISCONNECTED";
 export const UPDATE_DIMENSIONS = "UPDATE_DIMENSIONS";
+export const UPDATE_LAST_STATIC_FETCH = "UPDATE_LAST_STATIC_FETCH";
 export const UPDATE_LAYER_VISIBILITY = "UPDATE_LAYER_VISIBILITY";
 export const UPDATE_LOADING_STATUS_LOADED = "UPDATE_LOADING_STATUS_LOADED";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
@@ -31,6 +35,12 @@ export function clearLocation() {
   };
 }
 
+export function setSeenIntroSeen() {
+  return {
+    type: SEEN_INTRO
+  };
+}
+
 export function selectArrival(arrival) {
   return {
     type: SELECT_ARRIVAL,
@@ -47,6 +57,12 @@ export function clearSelection() {
 export function setConnectingStatusConnected() {
   return {
     type: UPDATE_CONNECTING_STATUS_CONNECTED
+  };
+}
+
+export function setConnectingStatusDisconnected() {
+  return {
+    type: UPDATE_CONNECTING_STATUS_DISCONNECTED
   };
 }
 
@@ -93,6 +109,13 @@ export function updateDimensions(dimensions) {
   return {
     type: UPDATE_DIMENSIONS,
     dimensions
+  };
+}
+
+export function updateLastStaticFetch(lastStaticFetch) {
+  return {
+    type: UPDATE_LAST_STATIC_FETCH,
+    lastStaticFetch
   };
 }
 

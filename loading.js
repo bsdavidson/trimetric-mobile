@@ -22,15 +22,11 @@ class Loading extends Component {
     if (!this.props.totals) {
       return;
     }
-
     let thingsLoaded =
       this.props.stopPoints.features.length +
-      this.props.vehiclePoints.features.length +
       (this.props.routeShapes && this.props.routeShapes.length);
     let totalThingsToLoad =
-      this.props.totals.stops +
-      this.props.totals.vehicles +
-      this.props.totals.route_shapes;
+      this.props.totals.stops + this.props.totals.route_shapes;
 
     this.loadingStatus = Math.min(
       Math.floor(thingsLoaded / totalThingsToLoad * 100),
@@ -40,9 +36,7 @@ class Loading extends Component {
     if (this.props.stopPoints.features.length < this.props.totals.stops) {
       return;
     }
-    if (this.props.vehiclePoints.features.length < this.props.totals.vehicles) {
-      return;
-    }
+
     if (
       !this.props.routeShapes ||
       this.props.routeShapes.length < this.props.totals.route_shapes
@@ -80,7 +74,7 @@ class Loading extends Component {
 
         <Text style={[styles.text, {opacity: this.state.loading ? 1 : 0}]}>
           Loading GTFS data...
-          <Text style={{color: "#FFFFFF"}}>{this.loadingStatus}%</Text>
+          {/* <Text style={{color: "#FFFFFF"}}>{this.loadingStatus}%</Text> */}
         </Text>
       </View>
     );
@@ -113,8 +107,7 @@ function mapStateToProps(state) {
     connected: state.connected,
     totals: state.totals,
     routeShapes: state.routeShapes,
-    stopPoints: getStopPoints(state),
-    vehiclePoints: getVehiclePoints(state)
+    stopPoints: getStopPoints(state)
   };
 }
 

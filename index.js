@@ -3,6 +3,7 @@ import {PersistGate} from "redux-persist/es/integration/react";
 import React, {Component} from "react";
 import {Provider} from "react-redux";
 
+import Intro from "./intro";
 import App from "./App";
 import {store, persistor} from "./store";
 
@@ -10,11 +11,7 @@ function AppWithStore() {
   return (
     <Provider store={store}>
       <PersistGate
-        loading={
-          <View style={{flex: 1, alignItems: "center"}}>
-            <Text style={{marginTop: 40}}>Hydrating</Text>
-          </View>
-        }
+        loading={<Intro skipTips={true} />}
         onBeforeLift={() => {
           console.log("Before the gate is lifted");
         }}

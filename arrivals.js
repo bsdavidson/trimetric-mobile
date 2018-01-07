@@ -2,13 +2,13 @@ import React, {Component} from "react";
 import Moment from "moment";
 import {connect} from "react-redux";
 import {
-  Text,
-  View,
-  StyleSheet,
+  ActivityIndicator,
   FlatList,
   Image,
-  ActivityIndicator,
-  TouchableOpacity
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 import {selectArrival} from "./actions";
 import {
@@ -22,11 +22,14 @@ import {
 import tram from "./assets/tram.png";
 import bus from "./assets/bus.png";
 
-export function parseArrivalTime(time) {
-  let parts = time.split(":").map(p => parseInt(p, 10));
+export function parseArrivalTime(date, arrivaltime) {
+  let parts = arrivaltime.split(":").map(p => parseInt(p, 10));
   // Time can exceed 24 hours for arrival times
-  parts[0] = parts[0] % 24;
-  return Moment(parts.join(":"), "HH:mm:ss");
+  date = Moment(date.replace(/Z$/, ""));
+  date.add(parts[0], "hours");
+  date.add(parts[1], "minutes");
+  date.add(parts[2], "seconds");
+  return date;
 }
 
 const VEHICLE_IMAGE = {
@@ -90,7 +93,7 @@ class Arrivals extends Component {
               ]}
               key={i}>
               <Text style={styles.nextArrivalTime}>
-                {parseArrivalTime(a.arrival_time).fromNow(false)}
+                {parseArrivalTime(a.date, a.arrival_time).fromNow(false)}
               </Text>
               <Text style={styles.nextArrivalScheduled}>
                 {a.vehicle_id ? null : "(scheduled)"}
@@ -150,7 +153,10 @@ class Arrivals extends Component {
               {arrival.item.vehicle_id
                 ? `${vehicleType} arrives`
                 : `${vehicleType} scheduled to arrive`}{" "}
-              {parseArrivalTime(arrival.item.arrival_time).fromNow()}
+              {parseArrivalTime(
+                arrival.item.date,
+                arrival.item.arrival_time
+              ).fromNow()}
             </Text>
             {nextArrivals}
           </View>

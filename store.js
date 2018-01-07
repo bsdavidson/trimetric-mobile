@@ -9,12 +9,15 @@ import {
   LocationTypes,
   SELECT_ARRIVAL,
   SELECT_ITEM,
+  SEEN_INTRO,
   SET_SELECTED_ITEMS_VIEW_HEIGHT,
   START_FETCHING_ARRIVALS,
   TOGGLE_INFO_MODAL_VISIBILITY,
   UPDATE_ARRIVALS,
   UPDATE_CONNECTING_STATUS_CONNECTED,
+  UPDATE_CONNECTING_STATUS_DISCONNECTED,
   UPDATE_DIMENSIONS,
+  UPDATE_LAST_STATIC_FETCH,
   UPDATE_LAYER_VISIBILITY,
   UPDATE_LOADING_STATUS_LOADED,
   UPDATE_LOCATION,
@@ -85,6 +88,22 @@ function connected(state = false, action) {
   switch (action.type) {
     case UPDATE_CONNECTING_STATUS_CONNECTED:
       return true;
+    case UPDATE_CONNECTING_STATUS_DISCONNECTED:
+      return false;
+    default:
+      return state;
+  }
+}
+
+const DEFAULT_DIMENSIONS = {
+  window: Dimensions.get("window"),
+  screen: Dimensions.get("screen")
+};
+
+function dimensions(state = DEFAULT_DIMENSIONS, action) {
+  switch (action.type) {
+    case UPDATE_DIMENSIONS:
+      return action.dimensions;
     default:
       return state;
   }
@@ -98,6 +117,15 @@ const DEFAULT_LAYERS = {
   vehicleLabels: true,
   buildings: false
 };
+
+function lastStaticFetch(state = null, action) {
+  switch (action.type) {
+    case UPDATE_LAST_STATIC_FETCH:
+      return action.lastStaticFetch;
+    default:
+      return state;
+  }
+}
 
 function layerVisibility(state = DEFAULT_LAYERS, action) {
   switch (action.type) {
@@ -179,33 +207,10 @@ function locationClicked(state = null, action) {
   }
 }
 
-const DEFAULT_DIMENSIONS = {
-  window: Dimensions.get("window"),
-  screen: Dimensions.get("screen")
-};
-
-function dimensions(state = DEFAULT_DIMENSIONS, action) {
-  switch (action.type) {
-    case UPDATE_DIMENSIONS:
-      return action.dimensions;
-    default:
-      return state;
-  }
-}
-
 function routes(state = [], action) {
   switch (action.type) {
     case UPDATE_ROUTES:
       return action.routes;
-    default:
-      return state;
-  }
-}
-
-function totals(state = null, action) {
-  switch (action.type) {
-    case UPDATE_TOTALS:
-      return action.totals;
     default:
       return state;
   }
@@ -265,6 +270,15 @@ function selectedItems(state = DEFAULT_SELECT_ITEM_STATE, action) {
   }
 }
 
+function seenIntro(state = false, action) {
+  switch (action.type) {
+    case SEEN_INTRO:
+      return true;
+    default:
+      return state;
+  }
+}
+
 function selectedArrival(state = null, action) {
   switch (action.type) {
     case SELECT_ARRIVAL:
@@ -308,6 +322,15 @@ function stops(state = [], action) {
   }
 }
 
+function totals(state = null, action) {
+  switch (action.type) {
+    case UPDATE_TOTALS:
+      return action.totals;
+    default:
+      return state;
+  }
+}
+
 function vehicles(state = [], action) {
   switch (action.type) {
     case UPDATE_VEHICLES: {
@@ -331,11 +354,13 @@ const reducers = {
   dimensions,
   fetchingArrivals,
   infoModalVisible,
+  lastStaticFetch,
   layerVisibility,
   loaded,
   locationClicked,
   routeShapes,
   routes,
+  seenIntro,
   selectedArrival,
   selectedItemIndex,
   selectedItems,
@@ -349,7 +374,15 @@ export const reducer = persistCombineReducers(
   {
     key: "root",
     storage: FilesystemStorage,
-    whitelist: ["layerVisibility", "routeShapes", "routes", "stops", "totals"]
+    whitelist: [
+      "lastStaticFetch",
+      "layerVisibility",
+      "routeShapes",
+      "routes",
+      "seenIntro",
+      "stops",
+      "totals"
+    ]
   },
   reducers
 );

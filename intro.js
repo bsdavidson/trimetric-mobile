@@ -19,8 +19,7 @@ import busIcon from "./assets/bus.png";
 import mapIcon from "./assets/map.png";
 import trainIcon from "./assets/tram.png";
 import stopIcon from "./assets/stop.png";
-import {updateLayerVisibility} from "./actions";
-import {getStorageValue, setStorageValue} from "./data";
+import {updateLayerVisibility, setSeenIntroSeen} from "./actions";
 
 class Intro extends Component {
   constructor(props) {
@@ -29,21 +28,12 @@ class Intro extends Component {
     this.state = {
       visible: true,
       screenIndex: 0,
-      scrollTween: new Animated.Value(0),
-      seenIntro: 0
+      scrollTween: new Animated.Value(0)
     };
     this.screenWidth = Dimensions.get("window").width;
     this.handleResetPress = this.handleResetPress.bind(this);
     this.handleTogglePress = this.handleTogglePress.bind(this);
     this.handleNextPress = this.handleNextPress.bind(this);
-  }
-
-  componentWillMount() {
-    getStorageValue("seen_intro").then(v => {
-      if (v) {
-        this.setState({seenIntro: true});
-      }
-    });
   }
 
   componentDidMount() {
@@ -52,14 +42,14 @@ class Intro extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.screenIndex === 3) {
-      setStorageValue("seen_intro", "1");
+      this.props.onSeenIntro();
     }
   }
 
   componentDidUpdate() {
     if (
       (this.state.screenIndex > 3 && this.props.loaded && this.state.visible) ||
-      (this.props.loaded && this.state.seenIntro && this.state.visible)
+      (this.props.loaded && this.props.seenIntro && this.state.visible)
     ) {
       this.setState({
         visible: false
@@ -104,6 +94,9 @@ class Intro extends Component {
   }
 
   renderScreens(screenWidth) {
+    if (this.props.skipTips || this.props.seenIntro) {
+      return null;
+    }
     return (
       <Animated.View
         style={{
@@ -223,12 +216,6 @@ class Intro extends Component {
         <StatusBar barStyle="light-content" />
         {this.renderTitle()}
         {this.renderScreens(screenWidth)}
-
-        <TouchableOpacity
-          style={{position: "absolute", left: 10, bottom: 10}}
-          onPress={this.handleResetPress}>
-          <Text>Reset</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -236,9 +223,10 @@ class Intro extends Component {
 
 function mapStateToProps(state) {
   return {
-    layerVisibility: state.layerVisibility,
     dimensions: state.dimensions,
-    loaded: state.loaded
+    layerVisibility: state.layerVisibility,
+    loaded: state.loaded,
+    seenIntro: state.seenIntro
   };
 }
 
@@ -246,6 +234,9 @@ function mapDispatchToProps(dispatch) {
   return {
     onUpdateLayerVisibility: (layerName, value) => {
       dispatch(updateLayerVisibility(layerName, value));
+    },
+    onSeenIntro: () => {
+      dispatch(setSeenIntroSeen());
     }
   };
 }
