@@ -2,6 +2,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import moment from "moment";
+import pako from "pako";
 
 import {
   setConnectingStatusConnected,
@@ -99,8 +100,13 @@ export class DataService extends Component {
     console.log("Connecting to: ", url);
 
     this.connection = new WebSocket(
-      `${url}?${buildQuery({chunkify: false, static: getStatic})}`
+      `${url}?${buildQuery({
+        chunkify: false,
+        static: getStatic,
+        compress: true
+      })}`
     );
+    this.connection.binaryType = "arraybuffer";
     this.connection.onopen = this.props.onConnect();
 
     this.connection.onclose = e => {
@@ -113,9 +119,9 @@ export class DataService extends Component {
 
     this.connection.onmessage = message => {
       try {
-        var parsedMsg = JSON.parse(message.data);
+        var parsedMsg = JSON.parse(pako.inflate(message.data, {to: "string"}));
       } catch (err) {
-        console.warn("WebSocket JSON Error:", err);
+        console.log("WebSocket JSON Error:", err);
         return;
       }
       this.props.onMessage(parsedMsg);

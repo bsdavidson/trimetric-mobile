@@ -56,7 +56,7 @@ const TOUCH_HALF_SIZE = 10 / 2;
 // All Trimetric layers should appear beneath this. The JavaScript SDK allows
 // this to be queried dynamically using map.getStyle().layers, but the react native
 // map doesn't seem to expose that.
-export const MIN_LABEL_LAYER_ID = "road-label-small";
+export const MIN_LABEL_LAYER_ID = "place-city-sm";
 // Setting a filter to match a non-existing attribute effectivly hides all the
 // elements in the layer.
 export const EXCLUDE_ALL = ["==", "non_existing_attribute", "1"];

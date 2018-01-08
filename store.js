@@ -348,6 +348,15 @@ function vehicles(state = [], action) {
   }
 }
 
+function receivedVehicles(state = false, action) {
+  switch (action.type) {
+    case UPDATE_VEHICLES:
+      return true;
+    default:
+      return state;
+  }
+}
+
 const reducers = {
   arrivals,
   connected,
@@ -358,6 +367,7 @@ const reducers = {
   layerVisibility,
   loaded,
   locationClicked,
+  receivedVehicles,
   routeShapes,
   routes,
   seenIntro,

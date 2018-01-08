@@ -44,6 +44,10 @@ class Loading extends Component {
       return;
     }
 
+    if (!this.props.receivedVehicles) {
+      return;
+    }
+
     this.props.onLoadComplete();
     this.setState({
       loading: false
@@ -106,6 +110,7 @@ function mapStateToProps(state) {
   return {
     connected: state.connected,
     totals: state.totals,
+    receivedVehicles: state.receivedVehicles,
     routeShapes: state.routeShapes,
     stopPoints: getStopPoints(state)
   };
