@@ -83,13 +83,25 @@ export const getStopInfoFromSelectedItem = createSelector(
   getSelectedItems,
   getSelectedItemIndex,
   getStops,
-  (selectedItems, idx, stops) => {
+  getVehicles, // Added to force update when data for selected vehicle changes
+  (selectedItems, idx, stops, vehicles) => {
     let item = selectedItems[idx];
     if (!item) {
       return null;
     }
+    let stopID = item.properties.stop_id;
+
+    if (item.properties.type === "vehicle") {
+      for (let i = 0; i < vehicles.length; i++) {
+        if (vehicles[i].vehicle.id === item.properties.vehicle_id) {
+          stopID = vehicles[i].stop_id;
+          break;
+        }
+      }
+    }
+
     for (let i = 0; i < stops.length; i++) {
-      if (stops[i].id === item.properties.stop_id) {
+      if (stops[i].id === stopID) {
         return stops[i];
       }
     }
