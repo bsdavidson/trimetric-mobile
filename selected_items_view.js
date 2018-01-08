@@ -100,7 +100,10 @@ class SelectedItemsView extends Component {
         this.close();
       }
     }
-    if (this.props.data.length !== nextProps.data.length) {
+    if (
+      this.props.data.length !== nextProps.data.length &&
+      !this.state.isOpen
+    ) {
       this.props.onResize(
         HEADER_HEIGHT +
           (nextProps.data.length > 1 ? HEADER_PAGINATION_HEIGHT : 0)
