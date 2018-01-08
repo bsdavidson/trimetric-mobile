@@ -80,10 +80,7 @@ class Arrivals extends Component {
             );
           }
           return (
-            <TouchableOpacity
-              onPress={() => {
-                this.handleArrivalPress({item: a});
-              }}
+            <View
               style={[
                 styles.nextArrival,
                 {
@@ -98,7 +95,7 @@ class Arrivals extends Component {
               <Text style={styles.nextArrivalScheduled}>
                 {a.vehicle_id ? null : "(scheduled)"}
               </Text>
-            </TouchableOpacity>
+            </View>
           );
         })}
       </View>

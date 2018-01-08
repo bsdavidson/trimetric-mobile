@@ -3,6 +3,7 @@ export const SELECT_ARRIVAL = "SELECT_ARRIVAL";
 export const SELECT_ITEM = "SELECT_ITEM";
 export const SEEN_INTRO = "SEEN_INTRO";
 export const SET_SELECTED_ITEMS_VIEW_HEIGHT = "SET_SELECTED_ITEMS_VIEW_HEIGHT";
+export const SET_UNFOLLOW = "SET_UNFOLLOW";
 export const START_FETCHING_ARRIVALS = "START_FETCHING_ARRIVALS";
 export const TOGGLE_INFO_MODAL_VISIBILITY = "TOGGLE_INFO_MODAL_VISIBILITY";
 export const UPDATE_ARRIVALS = "UPDATE_ARRIVALS";
@@ -95,6 +96,12 @@ export function startFetchingArrivals() {
 export function toggleInfoModalVisibility() {
   return {
     type: TOGGLE_INFO_MODAL_VISIBILITY
+  };
+}
+
+export function unfollow() {
+  return {
+    type: SET_UNFOLLOW
   };
 }
 

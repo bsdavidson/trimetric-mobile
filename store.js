@@ -11,6 +11,7 @@ import {
   SELECT_ITEM,
   SEEN_INTRO,
   SET_SELECTED_ITEMS_VIEW_HEIGHT,
+  SET_UNFOLLOW,
   START_FETCHING_ARRIVALS,
   TOGGLE_INFO_MODAL_VISIBILITY,
   UPDATE_ARRIVALS,
@@ -150,6 +151,20 @@ function fetchingArrivals(state = false, action) {
     case START_FETCHING_ARRIVALS:
       return true;
     case UPDATE_ARRIVALS:
+      return false;
+    default:
+      return state;
+  }
+}
+
+function following(state = false, action) {
+  switch (action.type) {
+    case SELECT_ARRIVAL:
+    case SELECT_ITEM:
+    case UPDATE_SELECTED_ITEMS:
+      return true;
+    case CLEAR_SELECTION:
+    case SET_UNFOLLOW:
       return false;
     default:
       return state;
@@ -362,6 +377,7 @@ const reducers = {
   connected,
   dimensions,
   fetchingArrivals,
+  following,
   infoModalVisible,
   lastStaticFetch,
   layerVisibility,

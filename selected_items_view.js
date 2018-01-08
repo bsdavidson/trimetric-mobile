@@ -291,6 +291,7 @@ class SelectedItemsView extends Component {
           onPress={this.handleIconTap}
           vehicle={item.vehicle}
           stopInfo={this.props.selectedVehicleStopInfo}
+          following={this.props.following}
         />
       );
     }
@@ -366,6 +367,7 @@ class SelectedItemsView extends Component {
 
 function mapStateToProps(state) {
   return {
+    following: state.following,
     selectedItem: getSelectedItem(state),
     selectedItemIndex: state.selectedItemIndex,
     selectedArrival: state.selectedArrival,
@@ -415,31 +417,29 @@ function StopItem(props) {
   }
 
   return (
-    <View style={[styles.stopItem, {width}]}>
-      <TouchableOpacity onPress={onPress}>
-        <View key={stop.name} style={[styles.itemDescription]}>
+    <TouchableOpacity style={[styles.stopItem, {width}]} onPress={onPress}>
+      <View key={stop.name} style={[styles.itemDescription]}>
+        <View>
+          <Text numberOfLines={1} style={styles.itemDescriptionText}>
+            {stop.name}
+          </Text>
+        </View>
+        <View style={styles.itemDescriptionIcon}>
+          <Image style={styles.itemImage} source={stopImage} />
           <View>
-            <Text numberOfLines={1} style={styles.itemDescriptionText}>
-              {stop.name}
+            <Text style={styles.itemStopInformation}>
+              {stop.direction}bound (Stop ID: {stop.id})
             </Text>
-          </View>
-          <View style={styles.itemDescriptionIcon}>
-            <Image style={styles.itemImage} source={stopImage} />
-            <View>
-              <Text style={styles.itemStopInformation}>
-                {stop.direction}bound (Stop ID: {stop.id})
-              </Text>
-              {nextArrival}
-            </View>
+            {nextArrival}
           </View>
         </View>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 
 function VehicleItem(props) {
-  let {width, vehicle, onPress, onClear, stopInfo} = props;
+  let {width, vehicle, onPress, onClear, stopInfo, following} = props;
   return (
     <View style={[styles.vehicleItem, {width}]}>
       <View key={vehicle.vehicle.id} style={[styles.itemDescription]}>
@@ -447,7 +447,14 @@ function VehicleItem(props) {
           <Text style={styles.vehicleItemLabel}>{vehicle.vehicle.label}</Text>
           <View style={styles.vehicleItemIcon}>
             <Image
-              style={styles.itemImage}
+              style={[
+                styles.itemImage,
+                {
+                  borderWidth: following ? 2 : 0,
+                  borderRadius: 10,
+                  borderColor: "#rgba(0, 255,255,0.7)"
+                }
+              ]}
               source={VEHICLE_IMAGE[vehicle.route_type]}
             />
             <View style={styles.vehicleItemInformation}>

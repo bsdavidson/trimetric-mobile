@@ -12,7 +12,8 @@ import {
   Dimensions,
   PixelRatio,
   TouchableOpacity,
-  Switch
+  Switch,
+  TouchableWithoutFeedback
 } from "react-native";
 import {connect} from "react-redux";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
@@ -34,7 +35,8 @@ import DataService from "./data";
 import {
   updateSelectedItems,
   selectItemIndex,
-  updateLayerVisibility
+  updateLayerVisibility,
+  unfollow
 } from "./actions";
 import {
   getVehiclePoints,
@@ -97,6 +99,12 @@ export class App extends Component {
   }
 
   handleRegionDidChange(event) {
+    if (!event.properties.animated) {
+      // Set when the user intentially drags the map. In this case, we want to turn
+      // off follow mode to prevent the map from snapping back to the selected
+      // item.
+      this.props.onMoveMap();
+    }
     clearTimeout(this.zoomLevelTimeout);
     this.zoomLevelTimeout = setTimeout(() => {
       this.setState({
@@ -183,12 +191,17 @@ export class App extends Component {
     });
   }
 
+  // Handles camera positioning when the selected items menu is opened/closed
   handleSelectedItemsResize() {
     if (
       !this.mapRef ||
       !this.props.selectedItem ||
       !this.props.selectedItem.position
     ) {
+      return;
+    }
+
+    if (!this.props.following) {
       return;
     }
 
@@ -307,6 +320,10 @@ export class App extends Component {
       return;
     }
 
+    if (!nextProps.following) {
+      return false;
+    }
+
     this.mapRef.setCamera({
       centerCoordinate: nextProps.selectedItem.position,
       zoom: 16,
@@ -350,6 +367,10 @@ export class App extends Component {
       return false;
     }
 
+    if (!nextProps.following) {
+      return;
+    }
+
     if (!nextProps.selectedArrivalVehicleInfo) {
       return false;
     }
@@ -390,12 +411,16 @@ function mapDispatchToProps(dispatch) {
   return {
     onSelectItems: items => {
       dispatch(updateSelectedItems(items));
+    },
+    onMoveMap: () => {
+      dispatch(unfollow());
     }
   };
 }
 
 function mapStateToProps(state) {
   return {
+    following: state.following,
     loaded: state.loaded,
     layerVisibility: state.layerVisibility,
     selectedItemsViewHeight: state.selectedItemsViewHeight,

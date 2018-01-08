@@ -34,6 +34,10 @@ function getArrivals(state) {
   return state.arrivals;
 }
 
+function getFollowing(state) {
+  return state.following;
+}
+
 function getRouteTypeIcon(routeType) {
   return ROUTE_TYPE_ICONS[routeType] || "bus";
 }
@@ -158,7 +162,8 @@ export const getSelectedItemsInfo = createSelector(
   getVehicles,
   getSelectedItems,
   getArrivals,
-  (stops, vehicles, items, arrivals) => {
+  getFollowing,
+  (stops, vehicles, items, arrivals, following) => {
     if (items.length === 0) {
       return [];
     }
