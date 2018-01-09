@@ -76,6 +76,8 @@ class SelectedItemsView extends Component {
 
     this.headerListRef = null;
     this.scrollTimeout = null;
+    this.headerScrollTimeout = null;
+
     this.calculatePageIndex = this.calculatePageIndex.bind(this);
     this.handleHeaderListRef = this.handleHeaderListRef.bind(this);
     this.handleHeaderScroll = this.handleHeaderScroll.bind(this);
@@ -84,6 +86,7 @@ class SelectedItemsView extends Component {
     this.renderHeaderItem = this.renderHeaderItem.bind(this);
     this.headerPagination = this.headerPagination.bind(this);
     this.getItemLayout = this.getItemLayout.bind(this);
+    this.handleVehicleHeaderPress = this.handleVehicleHeaderPress.bind(this);
   }
 
   calculatePageIndex(itemWidth, currentOffset) {
@@ -184,12 +187,16 @@ class SelectedItemsView extends Component {
   }
 
   handleHeaderScroll(e) {
+    // adding timeout so we dont spam onSelectItemIndex when jumping across many items.
+    clearTimeout(this.headerScrollTimeout);
     let idx = this.calculatePageIndex(
       e.nativeEvent.layoutMeasurement.width,
       e.nativeEvent.contentOffset.x
     );
     if (idx !== this.props.selectedItemIndex) {
-      this.props.onSelectItemIndex(idx);
+      this.headerScrollTimeout = setTimeout(() => {
+        this.props.onSelectItemIndex(idx);
+      }, 100);
     }
   }
 
@@ -199,6 +206,10 @@ class SelectedItemsView extends Component {
 
   handlePagePress(index) {
     this.headerListRef.scrollToOffset({offset: index * this.state.screenWidth});
+  }
+
+  handleVehicleHeaderPress() {
+    this.props.onSelectItemIndex(this.props.selectedItemIndex);
   }
 
   headerPagination(data, index) {
@@ -291,7 +302,7 @@ class SelectedItemsView extends Component {
       return (
         <VehicleItem
           width={this.state.layoutWidth}
-          onPress={this.handleIconTap}
+          onPress={this.handleVehicleHeaderPress}
           vehicle={item.vehicle}
           stopInfo={this.props.selectedVehicleStopInfo}
           following={this.props.following}
@@ -444,7 +455,7 @@ function StopItem(props) {
 function VehicleItem(props) {
   let {width, vehicle, onPress, onClear, stopInfo, following} = props;
   return (
-    <View style={[styles.vehicleItem, {width}]}>
+    <TouchableOpacity style={[styles.vehicleItem, {width}]} onPress={onPress}>
       <View key={vehicle.vehicle.id} style={[styles.itemDescription]}>
         <View>
           <Text style={styles.vehicleItemLabel}>{vehicle.vehicle.label}</Text>
@@ -472,7 +483,7 @@ function VehicleItem(props) {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

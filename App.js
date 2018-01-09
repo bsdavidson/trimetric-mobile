@@ -99,7 +99,7 @@ export class App extends Component {
   }
 
   handleRegionDidChange(event) {
-    if (!event.properties.animated) {
+    if (!event.properties.animated && this.props.following) {
       // Set when the user intentially drags the map. In this case, we want to turn
       // off follow mode to prevent the map from snapping back to the selected
       // item.
@@ -244,7 +244,6 @@ export class App extends Component {
 
   render() {
     const mapBottom = Math.max(this.props.selectedItemsViewHeight, 35);
-
     let page = null;
     if (this.props.loaded) {
       page = (
@@ -285,7 +284,6 @@ export class App extends Component {
     return (
       <View style={styles.map}>
         <DataService />
-
         {page}
         <StatMenu />
         <LayersMenu
@@ -301,27 +299,27 @@ export class App extends Component {
   }
 
   selectedItemCameraMove(nextProps) {
-    if (!nextProps.selectedItem) {
-      return false;
-    }
-    if (this.props.selectedItem === nextProps.selectedItem) {
-      return false;
-    }
-    if (!nextProps.selectedItem.position) {
+    if (
+      !nextProps.following ||
+      !nextProps.selectedItem ||
+      !nextProps.selectedItem.position
+    ) {
       return false;
     }
 
     if (
-      this.props.selectedItem &&
-      this.props.selectedItem.position[0] ===
-        nextProps.selectedItem.position[0] &&
-      this.props.selectedItem.position[1] === nextProps.selectedItem.position[1]
+      this.props.following &&
+      nextProps.following && // If we were not following, but changed to following,
+      // we want to ignore the fact that the item didn't change since this would
+      // indicate that we dragged away from an item but then reselected it.
+      (this.props.selectedItem === nextProps.selectedItem ||
+        (this.props.selectedItem &&
+          this.props.selectedItem.position[0] ===
+            nextProps.selectedItem.position[0] &&
+          this.props.selectedItem.position[1] ===
+            nextProps.selectedItem.position[1]))
     ) {
       return;
-    }
-
-    if (!nextProps.following) {
-      return false;
     }
 
     this.mapRef.setCamera({
@@ -336,15 +334,19 @@ export class App extends Component {
     let ne = [Math.max(pos1[0], pos2[0]), Math.max(pos1[1], pos2[1])];
     let sw = [Math.min(pos1[0], pos2[0]), Math.min(pos1[1], pos2[1])];
 
+    // Android has a bug with the content inset that causes setting the camera
+    // to a bounds to get pushed off screen. Temp workaround is to just set it
+    // to a point. :(
     Platform.OS === "android"
       ? this.mapRef.setCamera({
           centerCoordinate: pos1,
-          zoom: 14,
+          zoom: 16,
           duration: 600,
           paddingLeft: 0,
           paddingRight: 0,
           paddingTop: 0,
-          paddingBottom: 0
+          paddingBottom: 0,
+          mode: Mapbox.CameraModes.Flight
         })
       : this.mapRef.setCamera({
           bounds: {

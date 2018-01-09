@@ -72,19 +72,20 @@ const styles = StyleSheet.create({
   infoButton: {
     flex: 0,
     position: "absolute",
-    right: 0,
+    right: 5,
     zIndex: 99
   },
   infoButtonIcon: {
     color: "#EFEFEF",
     fontFamily: "Allerta Stencil",
     fontSize: 22,
-    marginRight: 16,
+    marginRight: 20,
     marginTop: 4
   },
   text: {
     color: "#ecf0f1",
     fontSize: 16,
-    padding: 8
+    padding: 8,
+    paddingLeft: 15
   }
 });

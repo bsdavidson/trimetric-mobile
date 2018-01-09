@@ -45,6 +45,7 @@ class Arrivals extends Component {
   }
 
   handleArrivalPress(arrival) {
+    console.log("arrival", arrival);
     this.props.onArrivalPress(arrival);
   }
 
@@ -84,8 +85,8 @@ class Arrivals extends Component {
               style={[
                 styles.nextArrival,
                 {
-                  borderLeftWidth: i === 0 ? 0 : 1,
-                  borderColor: `rgba(${bgColor})`
+                  // borderLeftWidth: i === 0 ? 0 : 1,
+                  // borderColor: `rgba(${bgColor})`
                 }
               ]}
               key={i}>
@@ -155,6 +156,7 @@ class Arrivals extends Component {
                 arrival.item.arrival_time
               ).fromNow()}
             </Text>
+            <Text style={[styles.nextArrivalsHeader]}>Future arrivals:</Text>
             {nextArrivals}
           </View>
         </View>
@@ -294,9 +296,11 @@ const styles = StyleSheet.create({
     padding: 5
   },
   arrivalItemScheduleTime: {
-    fontSize: 12,
+    fontSize: 14,
+    fontWeight: "bold",
     marginLeft: 5,
-    marginTop: 5
+    marginTop: 5,
+    marginBottom: 5
   },
   itemImage: {
     height: 25,
@@ -311,6 +315,12 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     flexDirection: "row",
     marginLeft: 4
+  },
+  nextArrivalsHeader: {
+    padding: 3,
+    paddingBottom: 0,
+    fontSize: 11,
+    paddingLeft: 5
   },
   nextArrival: {
     flex: 1,
