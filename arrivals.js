@@ -45,7 +45,6 @@ class Arrivals extends Component {
   }
 
   handleArrivalPress(arrival) {
-    console.log("arrival", arrival);
     this.props.onArrivalPress(arrival);
   }
 

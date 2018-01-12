@@ -10,12 +10,7 @@ import {store, persistor} from "./store";
 function AppWithStore() {
   return (
     <Provider store={store}>
-      <PersistGate
-        loading={<Intro skipTips={true} />}
-        onBeforeLift={() => {
-          console.log("Before the gate is lifted");
-        }}
-        persistor={persistor}>
+      <PersistGate loading={<Intro skipTips={true} />} persistor={persistor}>
         <App />
       </PersistGate>
     </Provider>

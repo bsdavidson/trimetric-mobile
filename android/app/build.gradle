@@ -95,14 +95,12 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
-
     defaultConfig {
         applicationId "com.trimetric_mobile"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.0"
+        versionCode 6
+        versionName "1.0.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

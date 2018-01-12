@@ -203,7 +203,6 @@ function mapDispatchToProps(dispatch) {
     },
     onMessage: message => {
       let action = MESSAGE_TYPE_TO_ACTION[message.type];
-      console.log("ws message", message.type);
       if (!action) {
         return;
       }

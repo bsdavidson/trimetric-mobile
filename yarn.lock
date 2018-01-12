@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@mapbox/react-native-mapbox-gl@^6.0.2-rc1":
-  version "6.0.2-rc1"
-  resolved "https://registry.yarnpkg.com/@mapbox/react-native-mapbox-gl/-/react-native-mapbox-gl-6.0.2-rc1.tgz#214e7c560e9746dbf22cb85b5959076e345758e4"
+"@mapbox/react-native-mapbox-gl@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@mapbox/react-native-mapbox-gl/-/react-native-mapbox-gl-6.0.2.tgz#056c663a4a128416d1abbdebaa801a7fd1416ff3"
   dependencies:
     "@turf/helpers" "4.6.0"
 
