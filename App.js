@@ -18,6 +18,7 @@ import {
 import {connect} from "react-redux";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {feature, lineString} from "@turf/helpers";
+import {bboxPolygon} from "turf";
 
 import ArrivalShapesLayer from "./arrival_shapes_layer";
 import DimensionsListener from "./dimension_listener";
@@ -65,6 +66,8 @@ export const EXCLUDE_ALL = ["==", "non_existing_attribute", "1"];
 // By filtering using a != against a non-existing attrib
 // effectivly shows all
 export const INCLUDE_ALL = ["!=", "non_existing_attribute", "1"];
+const BOTTOM_STATS_BAR_HEIGHT =
+  Platform.OS === "android" ? PixelRatio.getPixelSizeForLayoutSize(40) : 40;
 
 export class App extends Component {
   constructor(props) {
@@ -74,7 +77,8 @@ export class App extends Component {
     this.state = {
       zoomLevel: 0,
       pressedPoints: {type: "FeatureCollection", features: []},
-      pressedBox: null
+      pressedBox: null,
+      visibleBoxPoly: {}
     };
 
     this.zoomLevelTimeout = null;
@@ -99,7 +103,7 @@ export class App extends Component {
   }
 
   handleRegionDidChange(event) {
-    if (!event.properties.animated && this.props.following) {
+    if (event.properties.isUserInteraction && this.props.following) {
       // Set when the user intentially drags the map. In this case, we want to turn
       // off follow mode to prevent the map from snapping back to the selected
       // item.
@@ -175,12 +179,10 @@ export class App extends Component {
   }
 
   async handleLongPress(e) {
-    console.log("Long Press");
     await this.mapRef.setCamera({
       bounds: {
         ne: [-122.67752, 45.515785],
         sw: [-122.6775214, 45.5209311],
-
         paddingLeft: 0,
         paddingRight: 0,
         paddingTop: 0,
@@ -243,8 +245,18 @@ export class App extends Component {
   }
 
   render() {
-    const mapBottom = Math.max(this.props.selectedItemsViewHeight, 35);
+    const mapBottom = Math.max(
+      Platform.OS === "android"
+        ? Math.floor(
+            PixelRatio.getPixelSizeForLayoutSize(
+              this.props.selectedItemsViewHeight
+            )
+          )
+        : this.props.selectedItemsViewHeight,
+      BOTTOM_STATS_BAR_HEIGHT
+    );
     let page = null;
+
     if (this.props.loaded) {
       page = (
         <Mapbox.MapView
@@ -271,7 +283,6 @@ export class App extends Component {
               ]}
             />
           </Mapbox.VectorSource>
-
           <RouteShapesLayer />
           <ArrivalShapesLayer />
           <StopsLayer />
@@ -282,13 +293,16 @@ export class App extends Component {
     }
 
     return (
-      <View style={styles.map}>
+      <View style={styles.container}>
         <DataService />
         {page}
         <StatMenu />
         <LayersMenu
-          display={this.props.selectedItemsViewHeight < 130}
-          bottom={mapBottom + (this.props.selectedItemsViewHeight ? 0 : 40)}
+          display={this.props.selectedItemsViewHeight < 150}
+          bottom={Math.max(
+            this.props.selectedItemsViewHeight,
+            PixelRatio.getPixelSizeForLayoutSize(30)
+          )}
         />
         {this.renderSelectedItemsMenu()}
         <InfoModal />
@@ -300,6 +314,7 @@ export class App extends Component {
 
   selectedItemCameraMove(nextProps) {
     if (
+      nextProps.selectedArrival ||
       !nextProps.following ||
       !nextProps.selectedItem ||
       !nextProps.selectedItem.position
@@ -317,7 +332,9 @@ export class App extends Component {
           this.props.selectedItem.position[0] ===
             nextProps.selectedItem.position[0] &&
           this.props.selectedItem.position[1] ===
-            nextProps.selectedItem.position[1]))
+            nextProps.selectedItem.position[1] &&
+          this.props.selectedItemsViewHeight ===
+            nextProps.selectedItemsViewHeight))
     ) {
       return;
     }
@@ -335,27 +352,42 @@ export class App extends Component {
     let sw = [Math.min(pos1[0], pos2[0]), Math.min(pos1[1], pos2[1])];
 
     // Android has a bug with the content inset that causes setting the camera
-    // to a bounds to get pushed off screen. Temp workaround is to just set it
-    // to a point. :(
+    // to a bounds to get pushed off screen. The workaround involes adding a
+    // a stop point to reset the view to center after it sets the zoom and
+    // position.
     Platform.OS === "android"
       ? this.mapRef.setCamera({
-          centerCoordinate: pos1,
-          zoom: 16,
-          duration: 600,
-          paddingLeft: 0,
-          paddingRight: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          mode: Mapbox.CameraModes.Flight
+          stops: [
+            {
+              bounds: {
+                ne: ne,
+                sw: sw,
+                paddingLeft: 80,
+                paddingRight: 80,
+                paddingTop: 80,
+                paddingBottom: 80
+              },
+              duration: 1,
+              mode: Mapbox.CameraModes.Flight
+            },
+            // height greater than 200 means the drawer is open, which is when
+            // the bug occurs.
+            this.props.selectedItemsViewHeight > 200
+              ? {
+                  centerCoordinate: [(ne[0] + sw[0]) / 2, (ne[1] + sw[1]) / 2],
+                  duration: 1
+                }
+              : {}
+          ]
         })
       : this.mapRef.setCamera({
           bounds: {
             ne: ne,
             sw: sw,
-            paddingLeft: 40,
-            paddingRight: 40,
-            paddingTop: 40,
-            paddingBottom: 40
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 20,
+            paddingBottom: 20
           },
           duration: 600,
           mode: Mapbox.CameraModes.Flight
@@ -365,22 +397,23 @@ export class App extends Component {
   }
 
   selectedArrivalCameraMove(nextProps) {
-    if (!nextProps.selectedArrival) {
-      return false;
-    }
-
-    if (!nextProps.following) {
-      return;
-    }
-
-    if (!nextProps.selectedArrivalVehicleInfo) {
+    if (
+      !nextProps.selectedArrival ||
+      !nextProps.following ||
+      !nextProps.selectedArrivalVehicleInfo ||
+      !nextProps.selectedItem
+    ) {
       return false;
     }
 
     if (
-      this.props.selectedArrivalVehicleInfo &&
-      this.props.selectedArrivalVehicleInfo.position.lng ===
-        nextProps.selectedArrivalVehicleInfo.position.lng
+      this.props.following &&
+      nextProps.following && // If we were not following, but changed to following,
+      // we want to ignore the fact that the item didn't change since this would
+      // indicate that we dragged away from an item but then reselected it.
+      (this.props.selectedArrivalVehicleInfo &&
+        this.props.selectedArrivalVehicleInfo.position.lng ===
+          nextProps.selectedArrivalVehicleInfo.position.lng)
     ) {
       return false;
     }
@@ -390,6 +423,9 @@ export class App extends Component {
       nextProps.selectedArrivalVehicleInfo.position.lat
     ];
     let pos2 = nextProps.selectedItem.position;
+    if (!pos1 || !pos2) {
+      return false;
+    }
     this.moveCameraToArrival(pos1, pos2);
   }
 }
@@ -404,6 +440,9 @@ const mapStyles = Mapbox.StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   map: {
     flex: 1
   }

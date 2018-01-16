@@ -50,6 +50,7 @@ const CURRENT_VEHICLE_STATUS = {
 const MAP_AREA_OFFSET = 250;
 const HEADER_HEIGHT = 100;
 const HEADER_PAGINATION_HEIGHT = 25;
+const BOTTOM_STATS_BAR_HEIGHT = 40;
 const STATUS_BAR_OFFSET = Platform.OS === "android" ? 24 : 0;
 
 function keyExtractor(item, index) {
@@ -258,10 +259,6 @@ class SelectedItemsView extends Component {
     });
 
     let height = this.state.screenHeight - this.state.marginTop;
-    if (Platform.OS === "android") {
-      // Android uses a different pixel measurement than ios
-      height = Math.floor(PixelRatio.getPixelSizeForLayoutSize(height));
-    }
     this.props.onResize(height);
   }
 
@@ -278,10 +275,18 @@ class SelectedItemsView extends Component {
       isOpen: false
     });
 
+    let height =
+      HEADER_HEIGHT +
+      (this.props.data.length > 1
+        ? HEADER_PAGINATION_HEIGHT
+        : BOTTOM_STATS_BAR_HEIGHT);
+
     // Trigger layout resize
     this.props.onResize(
       HEADER_HEIGHT +
-        (this.props.data.length > 1 ? HEADER_PAGINATION_HEIGHT : 0)
+        (this.props.data.length > 1
+          ? HEADER_PAGINATION_HEIGHT
+          : BOTTOM_STATS_BAR_HEIGHT)
     );
   }
 
@@ -323,6 +328,7 @@ class SelectedItemsView extends Component {
         </View>
       );
     }
+
     let offset = Platform.OS === "android" ? 48 : 0;
     let viewStyle = {
       height: height,
