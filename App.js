@@ -245,6 +245,14 @@ export class App extends Component {
   }
 
   render() {
+    // mode is used to alter the content inset whenever the orientation changes.
+    // This forces a re-render in the map to prevent clipping/drawing issues
+    // that occur when the map should redraw but doeesn't because it's inputs
+    // haven't changed.
+    let mode =
+      this.props.dimensions.screen.width < this.props.dimensions.screen.height
+        ? 1
+        : 0;
     const mapBottom = Math.max(
       Platform.OS === "android"
         ? Math.floor(
@@ -256,14 +264,14 @@ export class App extends Component {
       BOTTOM_STATS_BAR_HEIGHT
     );
     let page = null;
-
+    console.log(mode, mapBottom);
     if (this.props.loaded) {
       page = (
         <Mapbox.MapView
           styleURL={Mapbox.StyleURL.Light}
           zoomLevel={13}
           centerCoordinate={[-122.6865, 45.508]}
-          contentInset={[0, 0, mapBottom, 0]}
+          contentInset={[mode, 0, mapBottom, 0]}
           onRegionDidChange={this.handleRegionDidChange}
           onPress={this.handlePress}
           onLongPress={this.handleLongPress}
@@ -353,8 +361,7 @@ export class App extends Component {
 
     // Android has a bug with the content inset that causes setting the camera
     // to a bounds to get pushed off screen. The workaround involes adding a
-    // a stop point to reset the view to center after it sets the zoom and
-    // position.
+    // a stop point to reset the view to center after it sets the zoom.
     Platform.OS === "android"
       ? this.mapRef.setCamera({
           stops: [
@@ -370,14 +377,10 @@ export class App extends Component {
               duration: 1,
               mode: Mapbox.CameraModes.Flight
             },
-            // height greater than 200 means the drawer is open, which is when
-            // the bug occurs.
-            this.props.selectedItemsViewHeight > 200
-              ? {
-                  centerCoordinate: [(ne[0] + sw[0]) / 2, (ne[1] + sw[1]) / 2],
-                  duration: 1
-                }
-              : {}
+            {
+              centerCoordinate: [(ne[0] + sw[0]) / 2, (ne[1] + sw[1]) / 2],
+              duration: 1
+            }
           ]
         })
       : this.mapRef.setCamera({
@@ -461,6 +464,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
+    dimensions: state.dimensions,
     following: state.following,
     loaded: state.loaded,
     layerVisibility: state.layerVisibility,

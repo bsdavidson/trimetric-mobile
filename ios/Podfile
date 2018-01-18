@@ -10,6 +10,7 @@ target 'trimetric_mobile' do
     # Comment out any unneeded subspecs to reduce bundle size.
     'Core',
     'DevSupport',
+    'CxxBridge',
     'RCTActionSheet',
     'RCTAnimation',
     'RCTBlob',
@@ -19,7 +20,7 @@ target 'trimetric_mobile' do
     'RCTNetwork',
     'RCTPushNotification',
     'RCTSettings',
-    'RCTTest',
+    # 'RCTTest',
     'RCTText',
     'RCTVibration',
     'RCTWebSocket',
@@ -30,4 +31,20 @@ target 'trimetric_mobile' do
   pod 'react-native-mapbox-gl', :path => '../node_modules/@mapbox/react-native-mapbox-gl'
   pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
 
+
+  # Third party deps podspec link
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'GLog', :podspec => '../node_modules/react-native/third-party-podspecs/GLog.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+
+
+end
+
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "React"
+      target.remove_from_project
+    end
+  end
 end

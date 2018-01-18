@@ -502,19 +502,21 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#FFFFFF",
     transform: [{perspective: 1000}],
-    zIndex: 60
+    zIndex: 60,
+    shadowColor: "#000",
+    shadowOffset: {width: 0, height: -1},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3
   },
   drawerClose: {
-    borderRadius: 24,
     flex: 0,
     margin: 5,
-    marginRight: 8,
-    padding: 2,
-    paddingLeft: 6,
-    paddingRight: 6,
+    marginRight: 5,
+    padding: 8,
     position: "absolute",
     right: 0,
-    zIndex: 99
+    zIndex: 200
   },
   drawerCloseIcon: {
     color: "#AAAAAA",
@@ -616,7 +618,8 @@ const styles = StyleSheet.create({
   },
   stopItem: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    maxWidth: "85%"
   },
   vehicleItem: {
     flex: 1,
