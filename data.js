@@ -97,8 +97,6 @@ export class DataService extends Component {
 
   connectWS(getStatic) {
     const url = `${BASE_URL}/ws`.replace(/^http(s?)/, "ws$1");
-    console.log("Connecting to: ", url);
-
     this.connection = new WebSocket(
       `${url}?${buildQuery({
         chunkify: false,
@@ -111,7 +109,7 @@ export class DataService extends Component {
 
     this.connection.onclose = e => {
       this.props.onDisconnect();
-      console.warn("WebSocket Disconnected", e.code, e.reason, e);
+      // console.warn("WebSocket Disconnected", e.code, e.reason, e);
       setTimeout(() => {
         this.connect();
       }, 1000);
@@ -121,7 +119,7 @@ export class DataService extends Component {
       try {
         var parsedMsg = JSON.parse(pako.inflate(message.data, {to: "string"}));
       } catch (err) {
-        console.log("WebSocket JSON Error:", err);
+        this.props.onDisconnect();
         return;
       }
       this.props.onMessage(parsedMsg);
@@ -129,7 +127,7 @@ export class DataService extends Component {
 
     this.connection.onerror = err => {
       this.props.onDisconnect();
-      console.warn("WebSocket Error:", err.message, err);
+      // console.warn("WebSocket Error:", err.message, err);
     };
   }
 

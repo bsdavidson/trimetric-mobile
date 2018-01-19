@@ -16,9 +16,7 @@ function keyExtractor(item, index) {
 class DataTable extends Component {
   constructor(porps) {
     super(porps);
-
     this.updateCounts = {};
-
     this.renderItem = this.renderItem.bind(this);
   }
 

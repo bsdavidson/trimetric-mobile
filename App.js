@@ -42,6 +42,7 @@ import {
 import {
   getVehiclePoints,
   getSelectedItemsInfo,
+  getVehicleInfoFromSelectedItem,
   getVehicleInfoFromArrival,
   getSelectedItem,
   getStopPoints
@@ -245,14 +246,6 @@ export class App extends Component {
   }
 
   render() {
-    // mode is used to alter the content inset whenever the orientation changes.
-    // This forces a re-render in the map to prevent clipping/drawing issues
-    // that occur when the map should redraw but doeesn't because it's inputs
-    // haven't changed.
-    let mode =
-      this.props.dimensions.screen.width < this.props.dimensions.screen.height
-        ? 1
-        : 0;
     const mapBottom = Math.max(
       Platform.OS === "android"
         ? Math.floor(
@@ -264,19 +257,31 @@ export class App extends Component {
       BOTTOM_STATS_BAR_HEIGHT
     );
     let page = null;
-    console.log(mode, mapBottom);
     if (this.props.loaded) {
       page = (
         <Mapbox.MapView
           styleURL={Mapbox.StyleURL.Light}
           zoomLevel={13}
           centerCoordinate={[-122.6865, 45.508]}
-          contentInset={[mode, 0, mapBottom, 0]}
+          contentInset={[0, 0, mapBottom, 0]}
           onRegionDidChange={this.handleRegionDidChange}
           onPress={this.handlePress}
           onLongPress={this.handleLongPress}
           ref={this.handleMapRef}
-          style={[styles.map]}>
+          style={[
+            styles.map,
+            {
+              // I'm setting the Width and Height here instead of using Flex
+              // to help mitigate a Mapbox bug when rotating the device. It
+              // helps, but isn't a fix as the bug can still occcur. Therefore
+              // in the release build, I disable landscape mode but will leave
+              // this here in case there is a need later.
+              width: Math.max(this.props.dimensions.screen.width, 300),
+              height: Math.max(this.props.dimensions.screen.height, 300),
+              maxWidth: Math.max(this.props.dimensions.screen.width, 300),
+              maxHeight: Math.max(this.props.dimensions.screen.height, 300)
+            }
+          ]}>
           <Mapbox.VectorSource>
             <Mapbox.FillExtrusionLayer
               id="building3d"
@@ -352,6 +357,7 @@ export class App extends Component {
       zoom: 16,
       duration: 600
     });
+
     return true;
   }
 
@@ -447,7 +453,10 @@ const styles = StyleSheet.create({
     flex: 1
   },
   map: {
-    flex: 1
+    flex: 0,
+    position: "absolute",
+    left: 0,
+    top: 0
   }
 });
 
@@ -470,6 +479,7 @@ function mapStateToProps(state) {
     layerVisibility: state.layerVisibility,
     selectedItemsViewHeight: state.selectedItemsViewHeight,
     routeShapes: state.routeShapes,
+    selectedVehicleInfo: getVehicleInfoFromSelectedItem(state),
     selectedArrival: state.selectedArrival,
     selectedArrivalVehicleInfo: getVehicleInfoFromArrival(state),
     selectedItem: getSelectedItem(state),

@@ -71,6 +71,9 @@ class Arrivals extends Component {
 
     let nextArrivals = (
       <View style={[styles.nextArrivals, {borderColor: `rgba(${bgColor})`}]}>
+        {arrival.item.nextArrivals[0] ? (
+          <Text style={[styles.nextArrivalsHeader]}>future arrivals:</Text>
+        ) : null}
         {arrival.item.nextArrivals.map((a, i) => {
           if (!arrival.item.nextArrivals[i]) {
             return (
@@ -155,7 +158,6 @@ class Arrivals extends Component {
                 arrival.item.arrival_time
               ).fromNow()}
             </Text>
-            <Text style={[styles.nextArrivalsHeader]}>Future arrivals:</Text>
             {nextArrivals}
           </View>
         </View>
@@ -316,10 +318,10 @@ const styles = StyleSheet.create({
     marginLeft: 4
   },
   nextArrivalsHeader: {
-    padding: 3,
+    padding: 2,
     paddingBottom: 0,
     fontSize: 11,
-    paddingLeft: 5
+    width: 60
   },
   nextArrival: {
     flex: 1,
