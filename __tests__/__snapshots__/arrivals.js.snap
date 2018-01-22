@@ -1,0 +1,427 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`arrivals 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#CCCCCC",
+        "borderRadius": 4,
+        "marginBottom": 0,
+        "padding": 5,
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+    >
+      Upcoming Arrivals
+    </Text>
+  </View>
+  <RCTScrollView
+    data={
+      Array [
+        Object {
+          "arrival_time": "16:22:00",
+          "date": "2018-01-19T00:00:00Z",
+          "departure_time": "16:22:00",
+          "headsign": "Portland",
+          "nextArrivals": Array [
+            Object {
+              "arrival_time": "16:52:00",
+              "date": "2018-01-19T00:00:00Z",
+              "departure_time": "16:52:00",
+              "headsign": "Portland",
+              "route_color": "",
+              "route_id": "51",
+              "route_long_name": "Vista",
+              "route_short_name": "51",
+              "route_text_color": "",
+              "route_type": 3,
+              "stop_id": "5016",
+              "trip_id": "7908834",
+              "trip_shape": Object {
+                "color": "",
+                "direction_id": 1,
+                "points": Array [
+                  Object {
+                    "lat": 45.490581,
+                    "lng": -122.709817,
+                  },
+                  Object {
+                    "lat": 45.490589,
+                    "lng": -122.710375,
+                  },
+                  Object {
+                    "lat": 45.516844,
+                    "lng": -122.678826,
+                  },
+                ],
+                "route_id": "51",
+                "trip_id": "7908834",
+              },
+              "vehicle_id": null,
+              "vehicle_label": null,
+              "vehicle_position": Object {
+                "bearing": 0,
+                "lat": 0,
+                "lng": 0,
+                "odometer": 0,
+                "speed": 0,
+              },
+            },
+            undefined,
+            undefined,
+            0,
+          ],
+          "route_color": "",
+          "route_id": "51",
+          "route_long_name": "Vista",
+          "route_short_name": "51",
+          "route_text_color": "",
+          "route_type": 3,
+          "stop_id": "5016",
+          "trip_id": "7908833",
+          "trip_shape": Object {
+            "color": "",
+            "direction_id": 1,
+            "points": Array [
+              Object {
+                "lat": 45.493347,
+                "lng": -122.70053,
+              },
+              Object {
+                "lat": 45.493347,
+                "lng": -122.700701,
+              },
+              Object {
+                "lat": 45.516844,
+                "lng": -122.678826,
+              },
+            ],
+            "route_id": "51",
+            "trip_id": "7908833",
+          },
+          "vehicle_id": null,
+          "vehicle_label": null,
+          "vehicle_position": Object {
+            "bearing": 0,
+            "lat": 0,
+            "lng": 0,
+            "odometer": 0,
+            "speed": 0,
+          },
+        },
+      ]
+    }
+    disableVirtualization={false}
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={false}
+    initialNumToRender={10}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={10}
+    numColumns={1}
+    onContentSizeChange={[Function]}
+    onEndReachedThreshold={2}
+    onLayout={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={Array []}
+    style={
+      Object {
+        "paddingTop": 5,
+      }
+    }
+    updateCellsBatchingPeriod={50}
+    viewabilityConfigCallbackPairs={Array []}
+    windowSize={21}
+  >
+    <View>
+      <View
+        onLayout={[Function]}
+        style={null}
+      >
+        <View
+          accessibilityComponentType={undefined}
+          accessibilityLabel={undefined}
+          accessibilityTraits={undefined}
+          accessible={true}
+          collapsable={undefined}
+          hasTVPreferredFocus={undefined}
+          hitSlop={undefined}
+          isTVSelectable={true}
+          nativeID={undefined}
+          onLayout={undefined}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "opacity": 1,
+            }
+          }
+          testID={undefined}
+          tvParallaxProperties={undefined}
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 0,
+                  "borderColor": "#cccccc",
+                  "borderWidth": 0,
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "marginBottom": 0,
+                  "minHeight": 83,
+                  "padding": 4,
+                  "paddingLeft": 10,
+                  "paddingRight": 0,
+                },
+                Object {
+                  "borderColor": "rgba(204,204,204,0.3)",
+                  "paddingLeft": 0,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "borderRadius": 4,
+                    "borderTopRightRadius": 0,
+                    "justifyContent": "center",
+                    "marginRight": 0,
+                    "padding": 0,
+                    "width": 45,
+                  },
+                  Object {
+                    "backgroundColor": "rgba(204,204,204,0.3)",
+                  },
+                ]
+              }
+            >
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "fontSize": 20,
+                      "fontWeight": "bold",
+                      "marginTop": 1,
+                    },
+                    Object {
+                      "color": "rgba(50,50,50,1)",
+                    },
+                  ]
+                }
+              >
+                51
+              </Text>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flex": 1,
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "testUri": "../../../assets/bus.png",
+                    }
+                  }
+                  style={
+                    Object {
+                      "height": 25,
+                      "marginTop": 0,
+                      "padding": 0,
+                      "paddingRight": 10,
+                      "resizeMode": "contain",
+                      "width": 25,
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignSelf": "flex-start",
+                  "flex": 1,
+                }
+              }
+            >
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "padding": 5,
+                    },
+                    Object {
+                      "backgroundColor": "rgba(204,204,204,0.3)",
+                      "color": "rgba(50,50,50,1)",
+                    },
+                  ]
+                }
+              >
+                Vista
+                 to 
+                Portland
+              </Text>
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                ellipsizeMode="tail"
+                style={
+                  Object {
+                    "fontSize": 14,
+                    "fontWeight": "bold",
+                    "marginBottom": 5,
+                    "marginLeft": 5,
+                    "marginTop": 5,
+                  }
+                }
+              >
+                Bus scheduled to arrive
+                 
+                in a minute
+              </Text>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "borderRadius": 2,
+                      "borderWidth": 0,
+                      "flexDirection": "row",
+                      "marginLeft": 4,
+                    },
+                    Object {
+                      "borderColor": "rgba(204,204,204,0.3)",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  accessible={true}
+                  allowFontScaling={true}
+                  ellipsizeMode="tail"
+                  style={
+                    Array [
+                      Object {
+                        "fontSize": 11,
+                        "padding": 2,
+                        "paddingBottom": 0,
+                        "width": 60,
+                      },
+                    ]
+                  }
+                >
+                  future arrivals:
+                </Text>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "flex": 1,
+                        "opacity": 0.5,
+                        "padding": 2,
+                      },
+                      Object {},
+                    ]
+                  }
+                >
+                  <Text
+                    accessible={true}
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    style={
+                      Object {
+                        "color": "#222222",
+                        "fontSize": 10,
+                        "fontWeight": "bold",
+                        "textAlign": "left",
+                      }
+                    }
+                  >
+                    in a minute
+                  </Text>
+                  <Text
+                    accessible={true}
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    style={
+                      Object {
+                        "color": "#222222",
+                        "fontSize": 10,
+                        "fontWeight": "bold",
+                        "textAlign": "left",
+                      }
+                    }
+                  >
+                    (scheduled)
+                  </Text>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "opacity": 0.5,
+                      "padding": 2,
+                    }
+                  }
+                >
+                  <Text
+                    accessible={true}
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    style={
+                      Object {
+                        "color": "#222222",
+                        "fontSize": 10,
+                        "fontWeight": "bold",
+                        "textAlign": "left",
+                      }
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;
+
+exports[`null 1`] = `null`;

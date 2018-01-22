@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders routeShapesLayer 1`] = `null`;
+
+exports[`renders routeShapesLayer 2`] = `
+<ShapeSource
+  id="route_shapes_source"
+  shape={
+    Object {
+      "features": Array [
+        Object {
+          "geometry": Object {
+            "coordinates": Array [
+              Array [
+                Array [
+                  -122.680501,
+                  45.53012,
+                ],
+                Array [
+                  -122.681354,
+                  45.530079,
+                ],
+                Array [
+                  -122.681105,
+                  45.530084,
+                ],
+              ],
+            ],
+            "type": "MultiLineString",
+          },
+          "properties": Object {
+            "color": "#CE0F69",
+            "route_id": "194",
+          },
+          "type": "Feature",
+        },
+        Object {
+          "geometry": Object {
+            "coordinates": Array [
+              Array [
+                Array [
+                  -122.671375,
+                  45.493955,
+                ],
+                Array [
+                  -122.671107,
+                  45.49395,
+                ],
+                Array [
+                  -122.698618,
+                  45.529861,
+                ],
+                Array [
+                  -122.698646,
+                  45.530509,
+                ],
+                Array [
+                  -122.698649,
+                  45.530616,
+                ],
+              ],
+              Array [
+                Array [
+                  -122.685036,
+                  45.514564,
+                ],
+                Array [
+                  -122.685257,
+                  45.514157,
+                ],
+                Array [
+                  -122.685323,
+                  45.514034,
+                ],
+                Array [
+                  -122.685339,
+                  45.514005,
+                ],
+              ],
+            ],
+            "type": "MultiLineString",
+          },
+          "properties": Object {
+            "color": "#84BD00",
+            "route_id": "193",
+          },
+          "type": "Feature",
+        },
+      ],
+      "type": "FeatureCollection",
+    }
+  }
+>
+  <LineLayer
+    belowLayerID="place-city-sm"
+    id="route_shapes_layer"
+    style={
+      Array [
+        Object {
+          "lineColor": undefined,
+          "lineOpacity": 1,
+          "lineWidth": 3,
+        },
+        Object {
+          "visibility": "visible",
+        },
+      ]
+    }
+  />
+</ShapeSource>
+`;

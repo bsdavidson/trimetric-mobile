@@ -6,7 +6,7 @@ import {getSelectedItem} from "./selectors";
 
 import {MIN_LABEL_LAYER_ID} from "./App";
 
-function SelectedLayer(props) {
+export function SelectedLayer(props) {
   const {selectedItem} = props;
   if (!selectedItem || selectedItem.type === "vehicle") {
     return null;

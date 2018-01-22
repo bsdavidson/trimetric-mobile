@@ -4,7 +4,7 @@ import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {connect} from "react-redux";
 import {lineString} from "@turf/helpers";
 
-import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./App";
+import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./constants";
 
 function tripShape(selectedArrival) {
   let trip =

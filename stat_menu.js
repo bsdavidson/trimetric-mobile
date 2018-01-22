@@ -12,7 +12,7 @@ import {connect} from "react-redux";
 
 import {toggleInfoModalVisibility} from "./actions";
 
-class StatMenu extends Component {
+export class StatMenu extends Component {
   constructor(props) {
     super(props);
     this.handleInfoPress = this.handleInfoPress.bind(this);

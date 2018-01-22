@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`loading_connected 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "flex-start",
+      "flex": 1,
+      "flexDirection": "row",
+      "justifyContent": "center",
+    }
+  }
+>
+  <ActivityIndicator
+    animating={true}
+    color="#FFFFFF"
+    hidesWhenStopped={true}
+    size="small"
+  />
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Array [
+        Object {
+          "color": "#ecf0f1",
+          "marginLeft": 10,
+        },
+        Object {
+          "opacity": 1,
+        },
+      ]
+    }
+  >
+    Loading GTFS data...
+  </Text>
+</View>
+`;
+
+exports[`loading_connecting 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "flex-start",
+      "flex": 1,
+      "flexDirection": "row",
+      "justifyContent": "center",
+    }
+  }
+>
+  <ActivityIndicator
+    animating={true}
+    color="#FFFFFF"
+    hidesWhenStopped={true}
+    size="small"
+  />
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Array [
+        Object {
+          "color": "#ecf0f1",
+          "marginLeft": 10,
+        },
+      ]
+    }
+  >
+    Connecting to server...
+  </Text>
+</View>
+`;

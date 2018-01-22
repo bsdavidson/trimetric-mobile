@@ -4,14 +4,15 @@ import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {connect} from "react-redux";
 import {lineString} from "@turf/helpers";
 
-import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./App";
+import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./constants";
 import {getRouteShapeFeatures} from "./selectors";
 
-function RouteShapesLayer(props) {
+export function RouteShapesLayer(props) {
   const {routeShapes, visible, selectedArrival} = props;
   if (!routeShapes) {
     return null;
   }
+
   return (
     <Mapbox.ShapeSource id="route_shapes_source" shape={routeShapes}>
       <Mapbox.LineLayer
@@ -23,7 +24,7 @@ function RouteShapesLayer(props) {
   );
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
     visible: state.layerVisibility.routeShapes && !state.selectedArrival,
     routeShapes: getRouteShapeFeatures(state),

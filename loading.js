@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 
 import {setLoadingStatusLoaded} from "./actions";
 
-class Loading extends Component {
+export class Loading extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -87,10 +87,10 @@ class Loading extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "flex-start",
-    flexDirection: "row"
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center"
   },
   text: {
     color: "#ecf0f1",
@@ -109,10 +109,10 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return {
     connected: state.connected,
-    totals: state.totals,
     receivedVehicles: state.receivedVehicles,
     routeShapes: state.routeShapes,
-    stopPoints: getStopPoints(state)
+    stopPoints: getStopPoints(state),
+    totals: state.totals
   };
 }
 

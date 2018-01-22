@@ -5,14 +5,14 @@ import moment from "moment";
 import pako from "pako";
 
 import {
+  LocationTypes,
   setConnectingStatusConnected,
   setConnectingStatusDisconnected,
-  LocationTypes,
   startFetchingArrivals,
   updateArrivals,
   updateLastStaticFetch,
-  updateRouteShapes,
   updateLocation,
+  updateRouteShapes,
   updateRoutes,
   updateStops,
   updateTotals,
@@ -23,11 +23,11 @@ const UPDATE_TIMEOUT = 10000;
 
 const MESSAGE_TYPE_TO_ACTION = {
   arrivals: updateArrivals,
-  routes: updateRoutes,
   route_shapes: updateRouteShapes,
+  routes: updateRoutes,
   stops: updateStops,
-  vehicles: updateVehicles,
-  totals: updateTotals
+  totals: updateTotals,
+  vehicles: updateVehicles
 };
 
 // const BASE_URL = "http://10.0.0.69:8181";
@@ -233,8 +233,8 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return {
     lastStaticFetch: state.lastStaticFetch,
-    routes: state.routes,
     routeShapes: state.routeShapes,
+    routes: state.routes,
     selectedItems: state.selectedItems,
     stops: state.stops,
     totals: state.totals

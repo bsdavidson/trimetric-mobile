@@ -1,0 +1,1081 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`selected_stop 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "bottom": 0,
+        "elevation": 3,
+        "flex": 1,
+        "left": 0,
+        "position": "absolute",
+        "shadowColor": "#000",
+        "shadowOffset": Object {
+          "height": -1,
+          "width": 0,
+        },
+        "shadowOpacity": 0.2,
+        "shadowRadius": 5,
+        "transform": Array [
+          Object {
+            "perspective": 1000,
+          },
+        ],
+        "width": "100%",
+        "zIndex": 60,
+      },
+      Object {
+        "bottom": -700.4,
+        "height": 800.4,
+        "transform": Array [
+          Object {
+            "translateY": 1,
+          },
+        ],
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "borderBottomWidth": 0,
+        "borderColor": "#CCCCCC",
+      }
+    }
+  >
+    <RCTScrollView
+      data={
+        Array [
+          Object {
+            "arrivals": Array [
+              Object {
+                "arrival_time": "14:12:07",
+                "date": "2018-01-22T00:00:00Z",
+                "departure_time": "14:12:07",
+                "headsign": "NE Dekum",
+                "nextArrivals": Array [
+                  Object {
+                    "arrival_time": "14:22:07",
+                    "date": "2018-01-22T00:00:00Z",
+                    "departure_time": "14:22:07",
+                    "headsign": "NE Dekum",
+                    "route_color": "",
+                    "route_id": "8",
+                    "route_long_name": "Jackson Park/NE 15th",
+                    "route_short_name": "8",
+                    "route_text_color": "",
+                    "route_type": 3,
+                    "stop_id": "7749",
+                    "trip_id": "7902198",
+                    "trip_shape": Object {
+                      "color": "",
+                      "direction_id": 1,
+                      "points": Array [
+                        Object {
+                          "lat": 45.496432,
+                          "lng": -122.682258,
+                        },
+                        Object {
+                          "lat": 45.571787,
+                          "lng": -122.660853,
+                        },
+                      ],
+                      "route_id": "8",
+                      "trip_id": "7902198",
+                    },
+                    "vehicle_id": "3142",
+                    "vehicle_label": "8  To NE Dekum",
+                    "vehicle_position": Object {
+                      "bearing": 208,
+                      "lat": 45.497105,
+                      "lng": -122.68317,
+                      "odometer": 0,
+                      "speed": 0,
+                    },
+                  },
+                  Object {
+                    "arrival_time": "14:32:07",
+                    "date": "2018-01-22T00:00:00Z",
+                    "departure_time": "14:32:07",
+                    "headsign": "NE Dekum",
+                    "route_color": "",
+                    "route_id": "8",
+                    "route_long_name": "Jackson Park/NE 15th",
+                    "route_short_name": "8",
+                    "route_text_color": "",
+                    "route_type": 3,
+                    "stop_id": "7749",
+                    "trip_id": "7902199",
+                    "trip_shape": Object {
+                      "color": "",
+                      "direction_id": 1,
+                      "points": Array [
+                        Object {
+                          "lat": 45.499398,
+                          "lng": -122.685589,
+                        },
+                        Object {
+                          "lat": 45.571787,
+                          "lng": -122.660853,
+                        },
+                      ],
+                      "route_id": "8",
+                      "trip_id": "7902199",
+                    },
+                    "vehicle_id": null,
+                    "vehicle_label": null,
+                    "vehicle_position": Object {
+                      "bearing": 0,
+                      "lat": 0,
+                      "lng": 0,
+                      "odometer": 0,
+                      "speed": 0,
+                    },
+                  },
+                  Object {
+                    "arrival_time": "14:42:44",
+                    "date": "2018-01-22T00:00:00Z",
+                    "departure_time": "14:42:44",
+                    "headsign": "NE Dekum",
+                    "route_color": "",
+                    "route_id": "8",
+                    "route_long_name": "Jackson Park/NE 15th",
+                    "route_short_name": "8",
+                    "route_text_color": "",
+                    "route_type": 3,
+                    "stop_id": "7749",
+                    "trip_id": "7902200",
+                    "trip_shape": Object {
+                      "color": "",
+                      "direction_id": 1,
+                      "points": Array [
+                        Object {
+                          "lat": 45.499398,
+                          "lng": -122.685589,
+                        },
+                        Object {
+                          "lat": 45.571787,
+                          "lng": -122.660853,
+                        },
+                      ],
+                      "route_id": "8",
+                      "trip_id": "7902200",
+                    },
+                    "vehicle_id": null,
+                    "vehicle_label": null,
+                    "vehicle_position": Object {
+                      "bearing": 0,
+                      "lat": 0,
+                      "lng": 0,
+                      "odometer": 0,
+                      "speed": 0,
+                    },
+                  },
+                ],
+                "route_color": "",
+                "route_id": "8",
+                "route_long_name": "Jackson Park/NE 15th",
+                "route_short_name": "8",
+                "route_text_color": "",
+                "route_type": 3,
+                "stop_id": "7749",
+                "trip_id": "7902197",
+                "trip_shape": Object {
+                  "color": "",
+                  "direction_id": 1,
+                  "points": Array [
+                    Object {
+                      "lat": 45.499398,
+                      "lng": -122.685589,
+                    },
+                    Object {
+                      "lat": 45.571787,
+                      "lng": -122.660853,
+                    },
+                  ],
+                  "route_id": "8",
+                  "trip_id": "7902197",
+                },
+                "vehicle_id": "2652",
+                "vehicle_label": "8  To NE Dekum",
+                "vehicle_position": Object {
+                  "bearing": 224,
+                  "lat": 45.498703,
+                  "lng": -122.68535,
+                  "odometer": 0,
+                  "speed": 0,
+                },
+              },
+              Object {
+                "arrival_time": "14:22:07",
+                "date": "2018-01-22T00:00:00Z",
+                "departure_time": "14:22:07",
+                "headsign": "NE Dekum",
+                "route_color": "",
+                "route_id": "8",
+                "route_long_name": "Jackson Park/NE 15th",
+                "route_short_name": "8",
+                "route_text_color": "",
+                "route_type": 3,
+                "stop_id": "7749",
+                "trip_id": "7902198",
+                "trip_shape": Object {
+                  "color": "",
+                  "direction_id": 1,
+                  "points": Array [
+                    Object {
+                      "lat": 45.496432,
+                      "lng": -122.682258,
+                    },
+                    Object {
+                      "lat": 45.571787,
+                      "lng": -122.660853,
+                    },
+                  ],
+                  "route_id": "8",
+                  "trip_id": "7902198",
+                },
+                "vehicle_id": "3142",
+                "vehicle_label": "8  To NE Dekum",
+                "vehicle_position": Object {
+                  "bearing": 208,
+                  "lat": 45.497105,
+                  "lng": -122.68317,
+                  "odometer": 0,
+                  "speed": 0,
+                },
+              },
+              Object {
+                "arrival_time": "14:32:07",
+                "date": "2018-01-22T00:00:00Z",
+                "departure_time": "14:32:07",
+                "headsign": "NE Dekum",
+                "route_color": "",
+                "route_id": "8",
+                "route_long_name": "Jackson Park/NE 15th",
+                "route_short_name": "8",
+                "route_text_color": "",
+                "route_type": 3,
+                "stop_id": "7749",
+                "trip_id": "7902199",
+                "trip_shape": Object {
+                  "color": "",
+                  "direction_id": 1,
+                  "points": Array [
+                    Object {
+                      "lat": 45.499398,
+                      "lng": -122.685589,
+                    },
+                    Object {
+                      "lat": 45.571787,
+                      "lng": -122.660853,
+                    },
+                  ],
+                  "route_id": "8",
+                  "trip_id": "7902199",
+                },
+                "vehicle_id": null,
+                "vehicle_label": null,
+                "vehicle_position": Object {
+                  "bearing": 0,
+                  "lat": 0,
+                  "lng": 0,
+                  "odometer": 0,
+                  "speed": 0,
+                },
+              },
+              Object {
+                "arrival_time": "14:42:44",
+                "date": "2018-01-22T00:00:00Z",
+                "departure_time": "14:42:44",
+                "headsign": "NE Dekum",
+                "route_color": "",
+                "route_id": "8",
+                "route_long_name": "Jackson Park/NE 15th",
+                "route_short_name": "8",
+                "route_text_color": "",
+                "route_type": 3,
+                "stop_id": "7749",
+                "trip_id": "7902200",
+                "trip_shape": Object {
+                  "color": "",
+                  "direction_id": 1,
+                  "points": Array [
+                    Object {
+                      "lat": 45.499398,
+                      "lng": -122.685589,
+                    },
+                    Object {
+                      "lat": 45.571787,
+                      "lng": -122.660853,
+                    },
+                  ],
+                  "route_id": "8",
+                  "trip_id": "7902200",
+                },
+                "vehicle_id": null,
+                "vehicle_label": null,
+                "vehicle_position": Object {
+                  "bearing": 0,
+                  "lat": 0,
+                  "lng": 0,
+                  "odometer": 0,
+                  "speed": 0,
+                },
+              },
+              Object {
+                "arrival_time": "14:52:44",
+                "date": "2018-01-22T00:00:00Z",
+                "departure_time": "14:52:44",
+                "headsign": "NE Dekum",
+                "route_color": "",
+                "route_id": "8",
+                "route_long_name": "Jackson Park/NE 15th",
+                "route_short_name": "8",
+                "route_text_color": "",
+                "route_type": 3,
+                "stop_id": "7749",
+                "trip_id": "7902201",
+                "trip_shape": Object {
+                  "color": "",
+                  "direction_id": 1,
+                  "points": Array [
+                    Object {
+                      "lat": 45.496432,
+                      "lng": -122.682258,
+                    },
+                    Object {
+                      "lat": 45.571787,
+                      "lng": -122.660853,
+                    },
+                  ],
+                  "route_id": "8",
+                  "trip_id": "7902201",
+                },
+                "vehicle_id": null,
+                "vehicle_label": null,
+                "vehicle_position": Object {
+                  "bearing": 0,
+                  "lat": 0,
+                  "lng": 0,
+                  "odometer": 0,
+                  "speed": 0,
+                },
+              },
+              Object {
+                "arrival_time": "15:02:44",
+                "date": "2018-01-22T00:00:00Z",
+                "departure_time": "15:02:44",
+                "headsign": "NE Dekum",
+                "route_color": "",
+                "route_id": "8",
+                "route_long_name": "Jackson Park/NE 15th",
+                "route_short_name": "8",
+                "route_text_color": "",
+                "route_type": 3,
+                "stop_id": "7749",
+                "trip_id": "7902202",
+                "trip_shape": Object {
+                  "color": "",
+                  "direction_id": 1,
+                  "points": Array [
+                    Object {
+                      "lat": 45.499398,
+                      "lng": -122.685589,
+                    },
+                    Object {
+                      "lat": 45.571787,
+                      "lng": -122.660853,
+                    },
+                  ],
+                  "route_id": "8",
+                  "trip_id": "7902202",
+                },
+                "vehicle_id": null,
+                "vehicle_label": null,
+                "vehicle_position": Object {
+                  "bearing": 0,
+                  "lat": 0,
+                  "lng": 0,
+                  "odometer": 0,
+                  "speed": 0,
+                },
+              },
+            ],
+            "stop": Object {
+              "code": "7749",
+              "desc": "Northbound stop in Portland (Stop ID 7749)",
+              "direction": "North",
+              "distance": 0,
+              "id": "7749",
+              "lat": 45.506859,
+              "lng": -122.684151,
+              "location_type": 0,
+              "name": "SW 6th & Broadway",
+              "parent_station": "",
+              "position": "Nearside",
+              "url": "http://trimet.org/#tracker/stop/7749",
+              "wheelchair_boarding": 0,
+              "zone_id": "B",
+            },
+            "type": "stop",
+          },
+        ]
+      }
+      disableVirtualization={false}
+      extraData={
+        Object {
+          "currentIndex": 0,
+          "isOpen": false,
+          "isScrolling": false,
+          "layoutHeight": null,
+          "layoutWidth": null,
+          "marginTop": 533.6,
+          "openTween": Value {
+            "value": 0,
+          },
+          "screenHeight": 1334,
+          "screenWidth": 750,
+        }
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      getItemLayout={[Function]}
+      horizontal={true}
+      initialNumToRender={10}
+      keyExtractor={[Function]}
+      maxToRenderPerBatch={10}
+      numColumns={1}
+      onContentSizeChange={[Function]}
+      onEndReachedThreshold={2}
+      onLayout={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      pagingEnabled={true}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      showsHorizontalScrollIndicator={false}
+      stickyHeaderIndices={Array []}
+      style={
+        Object {
+          "borderColor": "rgba(0, 0, 0, 0.1)",
+          "borderTopWidth": 1,
+          "bottom": 0,
+          "height": 100,
+          "maxHeight": 100,
+          "padding": 1,
+        }
+      }
+      updateCellsBatchingPeriod={50}
+      viewabilityConfigCallbackPairs={Array []}
+      windowSize={21}
+    >
+      <View>
+        <View
+          onLayout={undefined}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            accessibilityComponentType={undefined}
+            accessibilityLabel={undefined}
+            accessibilityTraits={undefined}
+            accessible={true}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "maxWidth": "85%",
+                  },
+                  Object {
+                    "width": null,
+                  },
+                ],
+                Object {
+                  "opacity": Value {
+                    "value": 1,
+                  },
+                },
+              ]
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 0,
+                    "height": 100,
+                    "justifyContent": "center",
+                    "minHeight": 100,
+                    "padding": 10,
+                  },
+                ]
+              }
+            >
+              <View>
+                <Text
+                  accessible={true}
+                  allowFontScaling={true}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  style={
+                    Object {
+                      "fontSize": 18,
+                      "paddingLeft": 4,
+                      "paddingRight": 20,
+                    }
+                  }
+                >
+                  SW 6th & Broadway
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "marginTop": 5,
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "testUri": "../../../assets/stop.png",
+                    }
+                  }
+                  style={
+                    Object {
+                      "height": 25,
+                      "marginTop": 0,
+                      "padding": 0,
+                      "paddingRight": 10,
+                      "resizeMode": "contain",
+                      "width": 25,
+                    }
+                  }
+                />
+                <View>
+                  <Text
+                    accessible={true}
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    style={
+                      Object {
+                        "color": "#444444",
+                        "fontSize": 13,
+                        "paddingTop": 5,
+                      }
+                    }
+                  >
+                    North
+                    bound (Stop ID: 
+                    7749
+                    )
+                  </Text>
+                  <Text
+                    accessible={true}
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    style={
+                      Object {
+                        "color": "#999999",
+                        "fontSize": 13,
+                      }
+                    }
+                  >
+                    Next arrival
+                     
+                    in a minute
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={undefined}
+      accessible={true}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "flex": 0,
+            "margin": 5,
+            "marginRight": 5,
+            "padding": 8,
+            "position": "absolute",
+            "right": 0,
+            "zIndex": 200,
+          },
+          Object {
+            "opacity": Value {
+              "value": 1,
+            },
+          },
+        ]
+      }
+      testID={undefined}
+      tvParallaxProperties={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#AAAAAA",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "lineHeight": 24,
+          }
+        }
+      >
+        ×
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "flex": 1,
+          "paddingBottom": 10,
+          "paddingLeft": 5,
+          "paddingRight": 5,
+          "paddingTop": 10,
+          "position": "relative",
+          "top": -8,
+        },
+      ]
+    }
+  >
+    <Arrivals
+      selectedStop={
+        Object {
+          "item": Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.68415115773678,
+                45.50685913695389,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "stop_id": "7749",
+              "type": "stop",
+            },
+            "type": "Feature",
+          },
+          "position": Array [
+            -122.68415115773678,
+            45.50685913695389,
+          ],
+          "type": "stop",
+        }
+      }
+    />
+  </View>
+</View>
+`;
+
+exports[`selected_vehicle 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "bottom": 0,
+        "elevation": 3,
+        "flex": 1,
+        "left": 0,
+        "position": "absolute",
+        "shadowColor": "#000",
+        "shadowOffset": Object {
+          "height": -1,
+          "width": 0,
+        },
+        "shadowOpacity": 0.2,
+        "shadowRadius": 5,
+        "transform": Array [
+          Object {
+            "perspective": 1000,
+          },
+        ],
+        "width": "100%",
+        "zIndex": 60,
+      },
+      Object {
+        "bottom": -700.4,
+        "height": 800.4,
+        "transform": Array [
+          Object {
+            "translateY": 1,
+          },
+        ],
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "borderBottomWidth": 0,
+        "borderColor": "#CCCCCC",
+      }
+    }
+  >
+    <RCTScrollView
+      data={
+        Array [
+          Object {
+            "type": "vehicle",
+            "vehicle": Object {
+              "congestion_level": 0,
+              "current_status": 1,
+              "current_stop_sequence": 1,
+              "occupancy_status": 0,
+              "position": Object {
+                "bearing": 331,
+                "lat": 45.50877,
+                "lng": -122.68381,
+                "odometer": 0,
+                "speed": 0,
+              },
+              "route_type": 0,
+              "stop_id": "13140",
+              "timestamp": 1516660571,
+              "trip": Object {
+                "route_id": "200",
+                "trip_id": "7918798",
+              },
+              "vehicle": Object {
+                "id": "206",
+                "label": "Green Line to Clackamas",
+              },
+            },
+          },
+        ]
+      }
+      disableVirtualization={false}
+      extraData={
+        Object {
+          "currentIndex": 0,
+          "isOpen": false,
+          "isScrolling": false,
+          "layoutHeight": null,
+          "layoutWidth": null,
+          "marginTop": 533.6,
+          "openTween": Value {
+            "value": 0,
+          },
+          "screenHeight": 1334,
+          "screenWidth": 750,
+        }
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      getItemLayout={[Function]}
+      horizontal={true}
+      initialNumToRender={10}
+      keyExtractor={[Function]}
+      maxToRenderPerBatch={10}
+      numColumns={1}
+      onContentSizeChange={[Function]}
+      onEndReachedThreshold={2}
+      onLayout={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      pagingEnabled={true}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      showsHorizontalScrollIndicator={false}
+      stickyHeaderIndices={Array []}
+      style={
+        Object {
+          "borderColor": "rgba(0, 0, 0, 0.1)",
+          "borderTopWidth": 1,
+          "bottom": 0,
+          "height": 100,
+          "maxHeight": 100,
+          "padding": 1,
+        }
+      }
+      updateCellsBatchingPeriod={50}
+      viewabilityConfigCallbackPairs={Array []}
+      windowSize={21}
+    >
+      <View>
+        <View
+          onLayout={undefined}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            accessibilityComponentType={undefined}
+            accessibilityLabel={undefined}
+            accessibilityTraits={undefined}
+            accessible={true}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                  },
+                  Object {
+                    "width": null,
+                  },
+                ],
+                Object {
+                  "opacity": Value {
+                    "value": 1,
+                  },
+                },
+              ]
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 0,
+                    "height": 100,
+                    "justifyContent": "center",
+                    "minHeight": 100,
+                    "padding": 10,
+                  },
+                ]
+              }
+            >
+              <View>
+                <Text
+                  accessible={true}
+                  allowFontScaling={true}
+                  ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "fontSize": 18,
+                      "paddingRight": 20,
+                    }
+                  }
+                >
+                  Green Line to Clackamas
+                </Text>
+                <View
+                  style={
+                    Object {
+                      "flexDirection": "row",
+                      "marginTop": 5,
+                    }
+                  }
+                >
+                  <Image
+                    source={
+                      Object {
+                        "testUri": "../../../assets/tram.png",
+                      }
+                    }
+                    style={
+                      Array [
+                        Object {
+                          "height": 25,
+                          "marginTop": 0,
+                          "padding": 0,
+                          "paddingRight": 10,
+                          "resizeMode": "contain",
+                          "width": 25,
+                        },
+                        Object {
+                          "borderColor": "#rgba(0, 255,255,0.7)",
+                          "borderRadius": 10,
+                          "borderWidth": 2,
+                        },
+                      ]
+                    }
+                  />
+                  <View
+                    style={
+                      Object {
+                        "flexDirection": "column",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <Text
+                      accessible={true}
+                      allowFontScaling={true}
+                      ellipsizeMode="tail"
+                      style={
+                        Object {
+                          "color": "#222222",
+                          "fontSize": 14,
+                          "paddingLeft": 5,
+                          "paddingTop": 0,
+                        }
+                      }
+                    >
+                      206
+                       
+                      Stopped at
+                       
+                      Jackson St Turnaround
+                    </Text>
+                    <Text
+                      accessible={true}
+                      allowFontScaling={true}
+                      ellipsizeMode="tail"
+                      style={
+                        Object {
+                          "color": "#acacac",
+                          "fontSize": 10,
+                          "padding": 5,
+                          "paddingTop": 0,
+                        }
+                      }
+                    >
+                      Updated: 
+                      seconds ago
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={undefined}
+      accessible={true}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "flex": 0,
+            "margin": 5,
+            "marginRight": 5,
+            "padding": 8,
+            "position": "absolute",
+            "right": 0,
+            "zIndex": 200,
+          },
+          Object {
+            "opacity": Value {
+              "value": 1,
+            },
+          },
+        ]
+      }
+      testID={undefined}
+      tvParallaxProperties={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#AAAAAA",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "lineHeight": 24,
+          }
+        }
+      >
+        ×
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "flex": 1,
+          "paddingBottom": 10,
+          "paddingLeft": 5,
+          "paddingRight": 5,
+          "paddingTop": 10,
+          "position": "relative",
+          "top": -8,
+        },
+      ]
+    }
+  />
+</View>
+`;

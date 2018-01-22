@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders stat bar 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#34495e",
+        "bottom": 0,
+        "height": 40,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "shadowColor": "#000",
+        "shadowOffset": Object {
+          "height": -2,
+          "width": 0,
+        },
+        "shadowOpacity": 0.2,
+        "shadowRadius": 2,
+        "zIndex": 51,
+      },
+    ]
+  }
+>
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Object {
+        "color": "#ecf0f1",
+        "fontSize": 16,
+        "padding": 8,
+        "paddingLeft": 15,
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      style={
+        Object {
+          "fontWeight": "bold",
+        }
+      }
+    >
+      1
+    </Text>
+     
+    active vehicles
+  </Text>
+  <View
+    accessibilityComponentType={undefined}
+    accessibilityLabel={undefined}
+    accessibilityTraits={undefined}
+    accessible={true}
+    collapsable={undefined}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
+    isTVSelectable={true}
+    nativeID={undefined}
+    onLayout={undefined}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "flex": 0,
+        "opacity": 1,
+        "position": "absolute",
+        "right": 5,
+        "zIndex": 99,
+      }
+    }
+    testID={undefined}
+    tvParallaxProperties={undefined}
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      style={
+        Object {
+          "color": "#EFEFEF",
+          "fontFamily": "Allerta Stencil",
+          "fontSize": 22,
+          "marginRight": 20,
+          "marginTop": 4,
+        }
+      }
+    >
+      ?
+    </Text>
+  </View>
+</View>
+`;

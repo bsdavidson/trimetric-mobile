@@ -14,6 +14,10 @@ import {connect} from "react-redux";
 import layersIcon from "./assets/layers.png";
 import {updateLayerVisibility} from "./actions";
 
+const CONTAINER_PADDING = 15;
+const MIN_SCREEN_HEIGHT = 400;
+const OPTION_MARGIN = 20;
+const OPTION_WIDTH = 170;
 const OPTIONS = [
   {label: "Route Lines", key: "routeShapes"},
   {label: "Stops", key: "stops"},
@@ -23,17 +27,12 @@ const OPTIONS = [
   {label: "3D Buildings", key: "buildings"}
 ];
 
-const OPTION_MARGIN = 20;
-const OPTION_WIDTH = 170;
-const CONTAINER_PADDING = 15;
-const MIN_SCREEN_HEIGHT = 400;
-
-class LayersMenu extends Component {
+export class LayersMenu extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      visible: false
+      visible: this.props.openState || false
     };
 
     this.handleTogglePress = this.handleTogglePress.bind(this);

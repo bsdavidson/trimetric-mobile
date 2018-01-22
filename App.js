@@ -2,6 +2,7 @@
  * @flow
  */
 import React, {Component} from "react";
+import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {
   Platform,
   StyleSheet,
@@ -16,7 +17,6 @@ import {
   TouchableWithoutFeedback
 } from "react-native";
 import {connect} from "react-redux";
-import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {feature, lineString} from "@turf/helpers";
 import {bboxPolygon} from "turf";
 
@@ -32,6 +32,7 @@ import StatMenu from "./stat_menu";
 import StopsLayer from "./stops_layer";
 import VehiclesLayer from "./vehicles_layer";
 import DataService from "./data";
+import {BOTTOM_STATS_BAR_HEIGHT} from "./constants";
 
 import {
   updateSelectedItems,
@@ -51,24 +52,10 @@ import {
 import {setTimeout} from "core-js/library/web/timers";
 
 Mapbox.setAccessToken(
-  "pk.eyJ1IjoiYnNkYXZpZHNvbiIsImEiOiJjamExeWFwb3A5aWRlMndzNHBtNW40dDhlIn0.YQwDCQqvNFVwT8JlOBPvwg"
+  "pk.eyJ1IjoiYnNkYXZpZHNvbiIsImEiOiJjamNsanhhcGowYmoxMnBtcjZlN3FvYTg3In0.yEf1hfjqmPi-BL9d00_sIw"
 );
 
 const TOUCH_HALF_SIZE = 10 / 2;
-
-// This is the first layer ID containing labels from MapBox's light style.
-// All Trimetric layers should appear beneath this. The JavaScript SDK allows
-// this to be queried dynamically using map.getStyle().layers, but the react native
-// map doesn't seem to expose that.
-export const MIN_LABEL_LAYER_ID = "place-city-sm";
-// Setting a filter to match a non-existing attribute effectivly hides all the
-// elements in the layer.
-export const EXCLUDE_ALL = ["==", "non_existing_attribute", "1"];
-// By filtering using a != against a non-existing attrib
-// effectivly shows all
-export const INCLUDE_ALL = ["!=", "non_existing_attribute", "1"];
-const BOTTOM_STATS_BAR_HEIGHT =
-  Platform.OS === "android" ? PixelRatio.getPixelSizeForLayoutSize(40) : 40;
 
 export class App extends Component {
   constructor(props) {
@@ -76,13 +63,12 @@ export class App extends Component {
 
     this.mapRef = null;
     this.state = {
-      zoomLevel: 0,
-      pressedPoints: {type: "FeatureCollection", features: []},
       pressedBox: null,
-      visibleBoxPoly: {}
+      pressedPoints: {type: "FeatureCollection", features: []},
+      visibleBoxPoly: {},
+      zoomLevel: 0
     };
 
-    this.zoomLevelTimeout = null;
     this.cameraTimeout = null;
     this.handleLongPress = this.handleLongPress.bind(this);
     this.handleMapRef = this.handleMapRef.bind(this);
@@ -92,6 +78,7 @@ export class App extends Component {
     this.moveCameraToArrival = this.moveCameraToArrival.bind(this);
     this.renderSelectedItemsMenu = this.renderSelectedItemsMenu.bind(this);
     this.selectedItemCameraMove = this.selectedItemCameraMove.bind(this);
+    this.zoomLevelTimeout = null;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -475,15 +462,15 @@ function mapStateToProps(state) {
   return {
     dimensions: state.dimensions,
     following: state.following,
-    loaded: state.loaded,
     layerVisibility: state.layerVisibility,
-    selectedItemsViewHeight: state.selectedItemsViewHeight,
+    loaded: state.loaded,
     routeShapes: state.routeShapes,
-    selectedVehicleInfo: getVehicleInfoFromSelectedItem(state),
     selectedArrival: state.selectedArrival,
     selectedArrivalVehicleInfo: getVehicleInfoFromArrival(state),
     selectedItem: getSelectedItem(state),
     selectedItemsInfo: getSelectedItemsInfo(state),
+    selectedItemsViewHeight: state.selectedItemsViewHeight,
+    selectedVehicleInfo: getVehicleInfoFromSelectedItem(state),
     stopPoints: getStopPoints(state),
     vehiclePoints: getVehiclePoints(state)
   };

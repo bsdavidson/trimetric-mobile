@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {Platform, StyleSheet, Text, View} from "react-native";
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 
-import {MIN_LABEL_LAYER_ID, INCLUDE_ALL, EXCLUDE_ALL} from "./App";
+import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./constants";
 import {getStopPoints, getSelectedItem} from "./selectors";
 
 function StopsLayer(props) {

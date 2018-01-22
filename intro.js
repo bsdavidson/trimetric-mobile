@@ -1,27 +1,27 @@
 import React, {Component} from "react";
 import {
-  StyleSheet,
-  Text,
   Animated,
-  Image,
-  View,
-  TouchableOpacity,
-  Switch,
+  Button,
   Dimensions,
+  Image,
   StatusBar,
-  Button
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 import {connect} from "react-redux";
 
 import Loading from "./loading";
-import layersIcon from "./assets/layers.png";
 import busIcon from "./assets/bus.png";
+import layersIcon from "./assets/layers.png";
 import mapIcon from "./assets/map.png";
-import trainIcon from "./assets/tram.png";
 import stopIcon from "./assets/stop.png";
+import trainIcon from "./assets/tram.png";
 import {updateLayerVisibility, setSeenIntroSeen} from "./actions";
 
-class Intro extends Component {
+export class Intro extends Component {
   constructor(props) {
     super(props);
 
@@ -30,10 +30,10 @@ class Intro extends Component {
       screenIndex: 0,
       scrollTween: new Animated.Value(0)
     };
-    this.screenWidth = Dimensions.get("window").width;
+    this.handleNextPress = this.handleNextPress.bind(this);
     this.handleResetPress = this.handleResetPress.bind(this);
     this.handleTogglePress = this.handleTogglePress.bind(this);
-    this.handleNextPress = this.handleNextPress.bind(this);
+    this.screenWidth = Dimensions.get("window").width;
   }
 
   componentDidMount() {
@@ -204,13 +204,13 @@ class Intro extends Component {
     return (
       <View
         style={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "100%",
           backgroundColor: "#34495e",
+          bottom: 0,
+          height: "100%",
+          left: 0,
+          position: "absolute",
+          right: 0,
+          top: 0,
           zIndex: 99
         }}>
         <StatusBar barStyle="light-content" />
@@ -248,11 +248,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 6,
     elevation: 4,
-    position: "absolute",
-    padding: 10,
-    right: 35,
     left: 35,
     maxWidth: 600,
+    padding: 10,
+    position: "absolute",
+    right: 35,
     shadowColor: "#000",
     shadowOffset: {width: 0, height: -8},
     shadowOpacity: 0.4,
@@ -263,45 +263,45 @@ const styles = StyleSheet.create({
   screen: {
     alignItems: "center",
     flex: 1,
-    padding: 30,
-    paddingBottom: 50,
     flexDirection: "column",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    padding: 30,
+    paddingBottom: 50
   },
   screenText: {
+    color: "#222222",
     fontSize: 16,
     marginTop: 15,
-    color: "#222222",
     textAlign: "center"
   },
   screenTextHeader: {
+    color: "#222222",
+    fontSize: 16,
     fontWeight: "bold",
     marginTop: 15,
-    fontSize: 16,
-    color: "#222222",
     textAlign: "center"
   },
   screenPage: {
-    borderRadius: 12,
+    alignItems: "center",
     backgroundColor: "#efefef",
+    borderRadius: 12,
     flex: 0,
     padding: 15,
     paddingLeft: 15,
     paddingRight: 15,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {width: 0, height: 8},
     shadowOpacity: 0.4,
     shadowRadius: 6
   },
   title: {
-    flex: 1,
     alignItems: "center",
+    flex: 1,
     justifyContent: "flex-end"
   },
   titleText: {
-    flex: 0,
     color: "#ecf0f1",
+    flex: 0,
     fontFamily: "Allerta Stencil",
     fontSize: 50,
     marginBottom: 20
@@ -314,33 +314,32 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   vehicleImage: {
+    flex: 1,
     height: 60,
-    width: 60,
     margin: 5,
     marginTop: 2,
-    flex: 1
+    width: 60
   },
   mapImage: {
-    height: 75,
-    width: 200,
-    margin: 5,
-    padding: 10,
-
-    marginTop: 2,
+    borderColor: "#AAAAAA",
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: "#AAAAAA"
+    height: 75,
+    margin: 5,
+    marginTop: 2,
+    padding: 10,
+    width: 200
   },
   stopImage: {
     height: 60,
-    width: 60,
     margin: 5,
-    marginTop: 2
+    marginTop: 2,
+    width: 60
   },
   layersImage: {
     height: 80,
-    width: 80,
     margin: 5,
-    marginTop: 2
+    marginTop: 2,
+    width: 80
   }
 });

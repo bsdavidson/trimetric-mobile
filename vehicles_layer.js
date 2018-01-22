@@ -7,7 +7,7 @@ import Mapbox from "@mapbox/react-native-mapbox-gl";
 import bus from "./assets/bus.png";
 import tram from "./assets/tram.png";
 
-import {MIN_LABEL_LAYER_ID, INCLUDE_ALL, EXCLUDE_ALL} from "./App";
+import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./constants";
 import {getVehiclePoints, getSelectedItem} from "./selectors";
 
 // VehiclePoints example:

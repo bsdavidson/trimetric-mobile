@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import Moment from "moment";
 
 import {
   getSelectedItem,
@@ -23,7 +22,7 @@ import {
   View
 } from "react-native";
 
-import {parseArrivalTime} from "./arrivals";
+import {parseArrivalTime, parseTimestamp} from "./helpers";
 
 import {
   clearSelection,
@@ -31,7 +30,6 @@ import {
   setSelectedItemsViewHeight
 } from "./actions";
 import Arrivals from "./arrivals";
-import VehicleInfo from "./vehicle_info";
 import tram from "./assets/tram.png";
 import bus from "./assets/bus.png";
 import stopImage from "./assets/stop.png";
@@ -57,7 +55,7 @@ function keyExtractor(item, index) {
   return String(index);
 }
 
-class SelectedItemsView extends Component {
+export class SelectedItemsView extends Component {
   constructor(props) {
     super(props);
     let screenWidth = Dimensions.get("window").width;
@@ -66,13 +64,13 @@ class SelectedItemsView extends Component {
     this.state = {
       currentIndex: 0,
       isOpen: false,
+      isScrolling: false,
       layoutHeight: null,
       layoutWidth: null,
       marginTop: screenHeight * 0.4,
       openTween: new Animated.Value(0),
       screenHeight,
-      screenWidth,
-      isScrolling: false
+      screenWidth
     };
 
     this.headerListRef = null;
@@ -80,14 +78,14 @@ class SelectedItemsView extends Component {
     this.headerScrollTimeout = null;
 
     this.calculatePageIndex = this.calculatePageIndex.bind(this);
+    this.getItemLayout = this.getItemLayout.bind(this);
     this.handleHeaderListRef = this.handleHeaderListRef.bind(this);
     this.handleHeaderScroll = this.handleHeaderScroll.bind(this);
     this.handleIconTap = this.handleIconTap.bind(this);
     this.handleLayout = this.handleLayout.bind(this);
-    this.renderHeaderItem = this.renderHeaderItem.bind(this);
-    this.headerPagination = this.headerPagination.bind(this);
-    this.getItemLayout = this.getItemLayout.bind(this);
     this.handleVehicleHeaderPress = this.handleVehicleHeaderPress.bind(this);
+    this.headerPagination = this.headerPagination.bind(this);
+    this.renderHeaderItem = this.renderHeaderItem.bind(this);
   }
 
   calculatePageIndex(itemWidth, currentOffset) {
@@ -351,7 +349,7 @@ class SelectedItemsView extends Component {
       detailsView = <Arrivals selectedStop={this.props.selectedItem} />;
     }
     if (this.props.selectedItem.type === "vehicle") {
-      detailsView = <VehicleInfo />;
+      detailsView = null;
     }
 
     return (
@@ -360,17 +358,17 @@ class SelectedItemsView extends Component {
         style={[styles.drawer, viewStyle]}>
         <View style={styles.headerView}>
           <FlatList
-            ref={this.handleHeaderListRef}
             data={this.props.data}
-            style={styles.header}
-            renderItem={this.renderHeaderItem}
-            getItemLayout={this.getItemLayout}
             extraData={this.state}
+            getItemLayout={this.getItemLayout}
             horizontal={true}
-            pagingEnabled={true}
             keyExtractor={keyExtractor}
-            showsHorizontalScrollIndicator={false}
             onScroll={this.handleHeaderScroll}
+            pagingEnabled={true}
+            ref={this.handleHeaderListRef}
+            renderItem={this.renderHeaderItem}
+            showsHorizontalScrollIndicator={false}
+            style={styles.header}
           />
           {header}
           <TouchableOpacity
@@ -458,7 +456,7 @@ function StopItem(props) {
   );
 }
 
-function VehicleItem(props) {
+export function VehicleItem(props) {
   let {width, vehicle, onPress, onClear, stopInfo, following} = props;
   return (
     <TouchableOpacity style={[styles.vehicleItem, {width}]} onPress={onPress}>
@@ -483,7 +481,7 @@ function VehicleItem(props) {
                 {CURRENT_VEHICLE_STATUS[vehicle.current_status]} {stopInfo.name}
               </Text>
               <Text style={styles.itemVehicleUpdatedText}>
-                Updated: {Moment.unix(vehicle.timestamp).fromNow()}
+                Updated: {parseTimestamp(vehicle.timestamp).fromNow()}
               </Text>
             </View>
           </View>
@@ -495,19 +493,19 @@ function VehicleItem(props) {
 
 const styles = StyleSheet.create({
   drawer: {
-    flex: 1,
-    position: "absolute",
-    left: 0,
-    bottom: 0,
-    width: "100%",
     backgroundColor: "#FFFFFF",
-    transform: [{perspective: 1000}],
-    zIndex: 60,
+    bottom: 0,
+    elevation: 3,
+    flex: 1,
+    left: 0,
+    position: "absolute",
     shadowColor: "#000",
     shadowOffset: {width: 0, height: -1},
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 3
+    transform: [{perspective: 1000}],
+    width: "100%",
+    zIndex: 60
   },
   drawerClose: {
     flex: 0,
@@ -528,8 +526,8 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 0, 0, 0.1)",
     borderTopWidth: 1,
     bottom: 0,
-    maxHeight: 100,
     height: 100,
+    maxHeight: 100,
     padding: 1
   },
   headerView: {
@@ -537,22 +535,22 @@ const styles = StyleSheet.create({
     borderColor: "#CCCCCC"
   },
   detailsView: {
-    paddingTop: 10,
+    flex: 1,
     paddingBottom: 10,
     paddingLeft: 5,
     paddingRight: 5,
+    paddingTop: 10,
     position: "relative",
-    top: -8,
-    flex: 1
+    top: -8
   },
   headerPagination: {
-    flexDirection: "row",
-    position: "relative",
-    maxHeight: 25,
-    height: 25,
     backgroundColor: "#efefef",
+    flexDirection: "row",
+    height: 25,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
+    maxHeight: 25,
+    position: "relative"
   },
   pageItem: {
     alignItems: "center",
@@ -571,15 +569,15 @@ const styles = StyleSheet.create({
     fontSize: 13
   },
   itemDescription: {
+    flex: 0,
     height: 100,
-    padding: 10,
     justifyContent: "center",
     minHeight: 100,
-    flex: 0
+    padding: 10
   },
   itemDescriptionIcon: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     marginTop: 5
   },
   itemDescriptionText: {

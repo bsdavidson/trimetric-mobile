@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import Moment from "moment";
 import {connect} from "react-redux";
 import {
   ActivityIndicator,
@@ -12,31 +11,23 @@ import {
 } from "react-native";
 import {selectArrival} from "./actions";
 import {
+  ROUTE_TYPE_ICONS,
+  filterArrivalsForStop,
   getSelectedItem,
   getVehicleInfoFromArrival,
-  filterArrivalsForStop,
-  parseColor,
-  ROUTE_TYPE_ICONS
+  parseColor
 } from "./selectors";
+import {parseArrivalTime} from "./helpers";
 
 import tram from "./assets/tram.png";
 import bus from "./assets/bus.png";
-
-export function parseArrivalTime(date, arrivaltime) {
-  let parts = arrivaltime.split(":").map(p => parseInt(p, 10));
-  // Time can exceed 24 hours for arrival times
-  date = Moment(date.replace(/Z$/, ""));
-  date.add(parts[0], "hours");
-  date.add(parts[1], "minutes");
-  date.add(parts[2], "seconds");
-  return date;
-}
 
 const VEHICLE_IMAGE = {
   0: tram,
   3: bus
 };
-class Arrivals extends Component {
+
+export class Arrivals extends Component {
   constructor(props) {
     super(props);
 

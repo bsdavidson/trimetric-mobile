@@ -1,0 +1,719 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#34495e",
+      "bottom": 0,
+      "height": "100%",
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "zIndex": 99,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "flex-end",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "justifyContent": "flex-end",
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#ecf0f1",
+            "flex": 0,
+            "fontFamily": "Allerta Stencil",
+            "fontSize": 50,
+            "marginBottom": 20,
+          }
+        }
+      >
+        trimetric
+      </Text>
+    </View>
+    <Loading />
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "flexDirection": "row",
+        "height": 300,
+        "transform": Array [
+          Object {
+            "translateX": 1,
+          },
+        ],
+        "width": 1600,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "column",
+            "justifyContent": "flex-end",
+            "padding": 30,
+            "paddingBottom": 50,
+          },
+          Object {
+            "width": 400,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#efefef",
+            "borderRadius": 12,
+            "flex": 0,
+            "padding": 15,
+            "paddingLeft": 15,
+            "paddingRight": 15,
+            "shadowColor": "#000",
+            "shadowOffset": Object {
+              "height": 8,
+              "width": 0,
+            },
+            "shadowOpacity": 0.4,
+            "shadowRadius": 6,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "testUri": "../../../assets/map.png",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "#AAAAAA",
+              "borderRadius": 6,
+              "borderWidth": 1,
+              "height": 75,
+              "margin": 5,
+              "marginTop": 2,
+              "padding": 10,
+              "width": 200,
+            }
+          }
+        />
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "#222222",
+                "fontSize": 16,
+                "marginTop": 15,
+                "textAlign": "center",
+              },
+              Object {
+                "marginTop": 10,
+              },
+            ]
+          }
+        >
+          Trimetric is an open source visualization that lets you watch what's going on in Portland's transit system in real-time.
+        </Text>
+        <View
+          style={
+            Object {
+              "marginTop": 5,
+            }
+          }
+        >
+          <View
+            accessibilityComponentType="button"
+            accessibilityLabel={undefined}
+            accessibilityTraits={
+              Array [
+                "button",
+              ]
+            }
+            accessible={true}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                undefined,
+                Object {
+                  "opacity": Value {
+                    "value": 1,
+                  },
+                },
+              ]
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <View
+              style={
+                Array [
+                  Object {},
+                ]
+              }
+            >
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                disabled={undefined}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "color": "#007AFF",
+                      "fontSize": 18,
+                      "padding": 8,
+                      "textAlign": "center",
+                    },
+                  ]
+                }
+              >
+                Next
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "column",
+            "justifyContent": "flex-end",
+            "padding": 30,
+            "paddingBottom": 50,
+          },
+          Object {
+            "width": 400,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#efefef",
+            "borderRadius": 12,
+            "flex": 0,
+            "padding": 15,
+            "paddingLeft": 15,
+            "paddingRight": 15,
+            "shadowColor": "#000",
+            "shadowOffset": Object {
+              "height": 8,
+              "width": 0,
+            },
+            "shadowOpacity": 0.4,
+            "shadowRadius": 6,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <Image
+            resizeMode="contain"
+            source={
+              Object {
+                "testUri": "../../../assets/bus.png",
+              }
+            }
+            style={
+              Object {
+                "flex": 1,
+                "height": 60,
+                "margin": 5,
+                "marginTop": 2,
+                "width": 60,
+              }
+            }
+          />
+          <Image
+            resizeMode="contain"
+            source={
+              Object {
+                "testUri": "../../../assets/tram.png",
+              }
+            }
+            style={
+              Object {
+                "flex": 1,
+                "height": 60,
+                "margin": 5,
+                "marginTop": 2,
+                "width": 60,
+              }
+            }
+          />
+        </View>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "#222222",
+              "fontSize": 16,
+              "fontWeight": "bold",
+              "marginTop": 15,
+              "textAlign": "center",
+            }
+          }
+        >
+          These icons are vehicles.
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "#222222",
+                "fontSize": 16,
+                "marginTop": 15,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          Tapping on them will follow them as they drive around town.
+        </Text>
+        <View
+          style={
+            Object {
+              "marginTop": 5,
+            }
+          }
+        >
+          <View
+            accessibilityComponentType="button"
+            accessibilityLabel={undefined}
+            accessibilityTraits={
+              Array [
+                "button",
+              ]
+            }
+            accessible={true}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                undefined,
+                Object {
+                  "opacity": Value {
+                    "value": 1,
+                  },
+                },
+              ]
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <View
+              style={
+                Array [
+                  Object {},
+                ]
+              }
+            >
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                disabled={undefined}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "color": "#007AFF",
+                      "fontSize": 18,
+                      "padding": 8,
+                      "textAlign": "center",
+                    },
+                  ]
+                }
+              >
+                Next
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "column",
+            "justifyContent": "flex-end",
+            "padding": 30,
+            "paddingBottom": 50,
+          },
+          Object {
+            "width": 400,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#efefef",
+            "borderRadius": 12,
+            "flex": 0,
+            "padding": 15,
+            "paddingLeft": 15,
+            "paddingRight": 15,
+            "shadowColor": "#000",
+            "shadowOffset": Object {
+              "height": 8,
+              "width": 0,
+            },
+            "shadowOpacity": 0.4,
+            "shadowRadius": 6,
+          }
+        }
+      >
+        <Image
+          resizeMode="contain"
+          source={
+            Object {
+              "testUri": "../../../assets/stop.png",
+            }
+          }
+          style={
+            Object {
+              "height": 60,
+              "margin": 5,
+              "marginTop": 2,
+              "width": 60,
+            }
+          }
+        />
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "#222222",
+                "fontSize": 16,
+                "fontWeight": "bold",
+                "marginTop": 15,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          These icons are stops.
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "#222222",
+                "fontSize": 16,
+                "marginTop": 15,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          Tapping on them will show you upcoming arrivals and how far away they are from the stop.
+        </Text>
+        <View
+          style={
+            Object {
+              "marginTop": 5,
+            }
+          }
+        >
+          <View
+            accessibilityComponentType="button"
+            accessibilityLabel={undefined}
+            accessibilityTraits={
+              Array [
+                "button",
+              ]
+            }
+            accessible={true}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                undefined,
+                Object {
+                  "opacity": Value {
+                    "value": 1,
+                  },
+                },
+              ]
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <View
+              style={
+                Array [
+                  Object {},
+                ]
+              }
+            >
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                disabled={undefined}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "color": "#007AFF",
+                      "fontSize": 18,
+                      "padding": 8,
+                      "textAlign": "center",
+                    },
+                  ]
+                }
+              >
+                Next
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "column",
+            "justifyContent": "flex-end",
+            "padding": 30,
+            "paddingBottom": 50,
+          },
+          Object {
+            "width": 400,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#efefef",
+            "borderRadius": 12,
+            "flex": 0,
+            "padding": 15,
+            "paddingLeft": 15,
+            "paddingRight": 15,
+            "shadowColor": "#000",
+            "shadowOffset": Object {
+              "height": 8,
+              "width": 0,
+            },
+            "shadowOpacity": 0.4,
+            "shadowRadius": 6,
+          }
+        }
+      >
+        <Image
+          resizeMode="contain"
+          source={
+            Object {
+              "testUri": "../../../assets/layers.png",
+            }
+          }
+          style={
+            Object {
+              "height": 80,
+              "margin": 5,
+              "marginTop": 2,
+              "width": 80,
+            }
+          }
+        />
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "#222222",
+                "fontSize": 16,
+                "fontWeight": "bold",
+                "marginTop": 15,
+                "textAlign": "center",
+              },
+              Object {
+                "marginTop": 0,
+              },
+            ]
+          }
+        >
+          This is the layers menu.
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "#222222",
+                "fontSize": 16,
+                "marginTop": 15,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          The map will show you many details, which you can show or hide using this menu.
+        </Text>
+        <View
+          style={
+            Object {
+              "marginTop": 5,
+            }
+          }
+        >
+          <View
+            accessibilityComponentType="button"
+            accessibilityLabel={undefined}
+            accessibilityTraits={
+              Array [
+                "button",
+              ]
+            }
+            accessible={true}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Array [
+                undefined,
+                Object {
+                  "opacity": Value {
+                    "value": 1,
+                  },
+                },
+              ]
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <View
+              style={
+                Array [
+                  Object {},
+                ]
+              }
+            >
+              <Text
+                accessible={true}
+                allowFontScaling={true}
+                disabled={undefined}
+                ellipsizeMode="tail"
+                style={
+                  Array [
+                    Object {
+                      "color": "#007AFF",
+                      "fontSize": 18,
+                      "padding": 8,
+                      "textAlign": "center",
+                    },
+                  ]
+                }
+              >
+                Okay, let's go!
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
