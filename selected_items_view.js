@@ -386,7 +386,7 @@ function mapStateToProps(state) {
     arrivalVehicleInfo: getVehicleInfoFromArrival(state),
     following: state.following,
     item: getSelectedItem(state),
-    itemIndex: state.itemIndex,
+    itemIndex: state.selectedItemIndex,
     itemsInfo: getSelectedItemsInfo(state),
     vehicleStopInfo: getStopInfoFromSelectedItem(state)
   };
