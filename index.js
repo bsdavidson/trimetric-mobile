@@ -1,10 +1,11 @@
-import {AppRegistry, View, Text} from "react-native";
-import {PersistGate} from "redux-persist/es/integration/react";
 import React, {Component} from "react";
+import {AppRegistry, View, Text} from "react-native";
 import {Provider} from "react-redux";
 
+import {PersistGate} from "redux-persist/es/integration/react";
+
+import App from "./app";
 import Intro from "./intro";
-import App from "./App";
 import {store, persistor} from "./store";
 
 function AppWithStore() {

@@ -20,7 +20,7 @@ exports[`layers_menu_closed 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     Object {
-      "bottom": 60,
+      "bottom": 80,
       "margin": 5,
       "marginRight": 0,
       "opacity": 1,
@@ -80,7 +80,7 @@ exports[`layers_menu_open 1`] = `
         "shadowRadius": 6,
       },
       Object {
-        "bottom": 80,
+        "bottom": 100,
         "width": 205,
       },
     ]
@@ -412,3 +412,5 @@ exports[`layers_menu_open 1`] = `
   </View>
 </View>
 `;
+
+exports[`null_layers_menu 1`] = `undefined`;

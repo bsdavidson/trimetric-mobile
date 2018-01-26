@@ -1,7 +1,8 @@
+import {Dimensions} from "react-native";
+import {createStore, combineReducers} from "redux";
+
 import {persistStore, persistCombineReducers} from "redux-persist";
 import FilesystemStorage from "redux-persist-filesystem-storage";
-import {createStore, combineReducers} from "redux";
-import {Dimensions} from "react-native";
 
 // import {douglasPeucker} from "./helpers/geom.js";
 import {

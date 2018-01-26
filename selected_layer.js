@@ -1,10 +1,11 @@
 import React, {Component} from "react";
+import {StyleSheet, View} from "react-native";
 import {connect} from "react-redux";
-import {Platform, StyleSheet, Text, View} from "react-native";
-import Mapbox from "@mapbox/react-native-mapbox-gl";
-import {getSelectedItem} from "./selectors";
 
-import {MIN_LABEL_LAYER_ID} from "./App";
+import Mapbox from "@mapbox/react-native-mapbox-gl";
+
+import {MIN_LABEL_LAYER_ID} from "./constants";
+import {getSelectedItem} from "./selectors";
 
 export function SelectedLayer(props) {
   const {selectedItem} = props;

@@ -1,8 +1,8 @@
 import "react-native";
 import React from "react";
 import renderer from "react-test-renderer";
-import {mapStateToProps, RouteShapesLayer} from "../route_shapes_layer";
 
+import {mapStateToProps, RouteShapesLayer} from "../route_shapes_layer";
 import {props} from "../__fixtures__/route_shapes_layer";
 
 jest.mock("@mapbox/react-native-mapbox-gl");

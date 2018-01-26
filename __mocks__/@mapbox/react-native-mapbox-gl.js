@@ -4,8 +4,27 @@ export default {
   setAccessToken,
   StyleSheet: {
     create: styles => styles,
-    identity: () => {}
+    identity: value => {
+      return 123;
+    },
+    camera: obj => {
+      return "camera_value";
+    }
+  },
+  StyleURL: {
+    Light: {}
   },
   ShapeSource: "ShapeSource",
-  LineLayer: "LineLayer"
+  SymbolLayer: "SymbolLayer",
+  LineLayer: "LineLayer",
+  CircleLayer: "CircleLayer",
+  VectorSource: "VectorSource",
+  FillExtrusionLayer: "FillExtrusionLayer",
+  MapView: "MapView",
+  CameraModes: {
+    Flight: 1
+  },
+  InterpolationMode: {
+    Linear: 1
+  }
 };

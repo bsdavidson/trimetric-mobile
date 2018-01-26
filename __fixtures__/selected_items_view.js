@@ -1,5 +1,5 @@
 // Selected Stop
-export const stopData = [
+export const selectedItemsInfo = [
   {
     type: "stop",
     stop: {

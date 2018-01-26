@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {connect} from "react-redux";
 import {
   ActivityIndicator,
   FlatList,
@@ -9,15 +8,17 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import {connect} from "react-redux";
+
 import {selectArrival} from "./actions";
+import {ROUTE_TYPE_ICONS} from "./constants";
+import {parseArrivalTime} from "./helpers";
 import {
-  ROUTE_TYPE_ICONS,
   filterArrivalsForStop,
   getSelectedItem,
   getVehicleInfoFromArrival,
   parseColor
 } from "./selectors";
-import {parseArrivalTime} from "./helpers";
 
 import tram from "./assets/tram.png";
 import bus from "./assets/bus.png";
@@ -47,13 +48,13 @@ export class Arrivals extends Component {
     let bgColor = parseColor(
       arrival.item.route_color ? `#${arrival.item.route_color}` : "#cccccc"
     );
-    let color = [50, 50, 50, 1];
     bgColor[3] = 0.3;
+    let color = [50, 50, 50, 1];
     let vehicleType =
       ROUTE_TYPE_ICONS[arrival.item.route_type][0].toUpperCase() +
       ROUTE_TYPE_ICONS[arrival.item.route_type].slice(1);
 
-    // Cap the number of upcomping arrivals
+    // Cap the number of upcoming arrivals
     if (arrival.item.nextArrivals.length < 3) {
       arrival.item.nextArrivals[3] = 0;
     } else {
@@ -74,15 +75,7 @@ export class Arrivals extends Component {
             );
           }
           return (
-            <View
-              style={[
-                styles.nextArrival,
-                {
-                  // borderLeftWidth: i === 0 ? 0 : 1,
-                  // borderColor: `rgba(${bgColor})`
-                }
-              ]}
-              key={i}>
+            <View style={styles.nextArrival} key={i}>
               <Text style={styles.nextArrivalTime}>
                 {parseArrivalTime(a.date, a.arrival_time).fromNow(false)}
               </Text>
@@ -103,8 +96,8 @@ export class Arrivals extends Component {
           style={[
             styles.arrivalItem,
             {
-              paddingLeft: 0,
-              borderColor: `rgba(${bgColor})`
+              borderColor: `rgba(${bgColor})`,
+              paddingLeft: 0
             }
           ]}>
           <View
@@ -204,10 +197,10 @@ export class Arrivals extends Component {
           <Text>Upcoming Arrivals</Text>
         </View>
         <FlatList
-          style={{paddingTop: 5}}
           data={arrivalsData}
-          renderItem={this.renderArrival}
           keyExtractor={(item, index) => String(index)}
+          renderItem={this.renderArrival}
+          style={{paddingTop: 5}}
         />
       </View>
     );
@@ -216,11 +209,11 @@ export class Arrivals extends Component {
 
 function mapStateToProps(state) {
   return {
-    selectedItem: getSelectedItem(state),
     arrivalVehicle: getVehicleInfoFromArrival(state),
     arrivals: state.arrivals,
-    selectedItems: state.selectedItems,
-    fetchingArrivals: state.fetchingArrivals
+    fetchingArrivals: state.fetchingArrivals,
+    selectedItem: getSelectedItem(state),
+    selectedItems: state.selectedItems
   };
 }
 
@@ -245,7 +238,6 @@ const styles = StyleSheet.create({
     padding: 5
   },
   arrivalItem: {
-    // height: 70,
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderBottomWidth: 0,

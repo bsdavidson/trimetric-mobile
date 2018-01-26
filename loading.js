@@ -1,25 +1,23 @@
 import React, {Component} from "react";
 import {View, Text, ActivityIndicator, StyleSheet} from "react-native";
-import {getVehiclePoints, getStopPoints} from "./selectors";
 import {connect} from "react-redux";
 
 import {setLoadingStatusLoaded} from "./actions";
+import {getVehiclePoints, getStopPoints} from "./selectors";
 
 export class Loading extends Component {
+  state = {
+    loading: true
+  };
+
+  loadingStatus = 0;
+
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true
-    };
-
-    this.loadingStatus = 0;
   }
 
   componentDidUpdate() {
-    if (!this.state.loading) {
-      return;
-    }
-    if (!this.props.totals) {
+    if (!this.state.loading || !this.props.totals) {
       return;
     }
     let thingsLoaded =
@@ -44,6 +42,8 @@ export class Loading extends Component {
       return;
     }
 
+    // We don't need to wait until all the vehicles are loaded, just
+    // until we get the first response.
     if (!this.props.receivedVehicles) {
       return;
     }
@@ -78,7 +78,6 @@ export class Loading extends Component {
 
         <Text style={[styles.text, {opacity: this.state.loading ? 1 : 0}]}>
           Loading GTFS data...
-          {/* <Text style={{color: "#FFFFFF"}}>{this.loadingStatus}%</Text> */}
         </Text>
       </View>
     );

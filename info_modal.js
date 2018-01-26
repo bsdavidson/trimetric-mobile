@@ -14,23 +14,24 @@ import {
 } from "react-native";
 import {connect} from "react-redux";
 
-import repoImage from "./assets/repo.png";
-import trimetImage from "./assets/trimet.png";
 import {updateLayerVisibility, toggleInfoModalVisibility} from "./actions";
 import {getVehiclePoints, getSelectedItem} from "./selectors";
+
+import repoImage from "./assets/repo.png";
+import trimetImage from "./assets/trimet.png";
 
 const FADE_DURATION = 300;
 
 class InfoModal extends Component {
+  state = {
+    fadeTween: new Animated.Value(0),
+    visible: false
+  };
+
+  timeout = null;
+
   constructor(props) {
     super(props);
-
-    this.state = {
-      fadeTween: new Animated.Value(0),
-      visible: false
-    };
-
-    this.timeout = null;
 
     this.handleDismiss = this.handleDismiss.bind(this);
     this.handleDismissPress = this.handleDismissPress.bind(this);

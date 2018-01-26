@@ -97,7 +97,7 @@ exports[`renders routeShapesLayer 2`] = `
     style={
       Array [
         Object {
-          "lineColor": undefined,
+          "lineColor": 123,
           "lineOpacity": 1,
           "lineWidth": 3,
         },

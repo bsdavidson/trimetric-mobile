@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders stat bar 1`] = `
+exports[`renders the bottom status bar 1`] = `
 <View
   style={
     Array [

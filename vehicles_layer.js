@@ -34,7 +34,7 @@ import {getVehiclePoints, getSelectedItem} from "./selectors";
 // args:
 // filter = {type:"vehicle_id", value: "1234"}
 
-function VehiclesLayer(props) {
+export function VehiclesLayer(props) {
   const {vehiclePoints, filter, labelsVisible} = props;
 
   if (!vehiclePoints) {
@@ -63,7 +63,7 @@ function VehiclesLayer(props) {
   );
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   let id;
   const selectedItem = getSelectedItem(state);
   if (selectedItem && selectedItem.item && selectedItem.type === "vehicle") {
@@ -95,26 +95,13 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(VehiclesLayer);
-// const iconScale = Platform.OS === "android" ? PixelRatio.get() : 1;
+
 const mapStyles = Mapbox.StyleSheet.create({
   vehicleSymbolsLayer: {
-    // iconRotate: Mapbox.StyleSheet.identity("bearing"),
-    iconImage: "{icon}",
-    // iconRotationAlignment: 0,
     iconAllowOverlap: true,
-    // textAllowOverlap: true,
-    textOptional: true,
+    iconImage: "{icon}",
     iconOpacity: 1,
-    textOffset: [0, -1],
-    textHaloColor: "#FFFFFF",
-    textHaloWidth: 3,
     iconSize: Mapbox.StyleSheet.camera(
-      // {
-      //   0: 0 * iconScale,
-      //   9: 0.02 * iconScale,
-      //   13: 0.05 * iconScale,
-      //   18: 0.15 * iconScale
-      // },
       {
         0: 0,
         9: 0.04,
@@ -122,6 +109,10 @@ const mapStyles = Mapbox.StyleSheet.create({
         18: 0.3
       },
       Mapbox.InterpolationMode.Linear
-    )
+    ),
+    textHaloColor: "#FFFFFF",
+    textHaloWidth: 3,
+    textOffset: [0, -1],
+    textOptional: true
   }
 });

@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {
   Image,
   PixelRatio,
-  ScrollView,
   StyleSheet,
   Switch,
   Text,
@@ -11,8 +10,11 @@ import {
 } from "react-native";
 import {connect} from "react-redux";
 
-import layersIcon from "./assets/layers.png";
 import {updateLayerVisibility} from "./actions";
+import {HEADER_CLOSED_MAX_HEIGHT} from "./selected_items_view";
+import {STAT_MENU_HEIGHT} from "./stat_menu";
+
+import layersIcon from "./assets/layers.png";
 
 const CONTAINER_PADDING = 15;
 const MIN_SCREEN_HEIGHT = 400;
@@ -28,12 +30,12 @@ const OPTIONS = [
 ];
 
 export class LayersMenu extends Component {
+  state = {
+    visible: this.props.openState || false
+  };
+
   constructor(props) {
     super(props);
-
-    this.state = {
-      visible: this.props.openState || false
-    };
 
     this.handleTogglePress = this.handleTogglePress.bind(this);
   }
@@ -43,14 +45,20 @@ export class LayersMenu extends Component {
   }
 
   render() {
-    if (!this.props.display) {
+    // Viewheight > HEADER_CLOSED_MAX_HEIGHT means it is in an open state, so do not render the
+    // layers menu as there probably won't be enough room
+    if (this.props.selectedItemsViewHeight > HEADER_CLOSED_MAX_HEIGHT) {
       return null;
     }
+    let bottom = Math.max(
+      this.props.selectedItemsViewHeight,
+      PixelRatio.getPixelSizeForLayoutSize(STAT_MENU_HEIGHT)
+    );
     if (!this.state.visible) {
       return (
         <TouchableOpacity
           onPress={this.handleTogglePress}
-          style={[styles.button, {bottom: this.props.bottom}]}>
+          style={[styles.button, {bottom}]}>
           <Image style={styles.buttonIcon} source={layersIcon} />
         </TouchableOpacity>
       );
@@ -60,7 +68,7 @@ export class LayersMenu extends Component {
     const width = CONTAINER_PADDING + (OPTION_WIDTH + OPTION_MARGIN) * columns;
 
     return (
-      <View style={[styles.container, {width, bottom: this.props.bottom + 20}]}>
+      <View style={[styles.container, {width, bottom: bottom + 20}]}>
         <TouchableOpacity
           style={styles.closeButton}
           onPress={this.handleTogglePress}>
@@ -89,9 +97,9 @@ export class LayersMenu extends Component {
 
 function mapStateToProps(state) {
   return {
-    selectedItemsViewHeight: state.selectedItemsViewHeight,
+    dimensions: state.dimensions,
     layerVisibility: state.layerVisibility,
-    dimensions: state.dimensions
+    selectedItemsViewHeight: state.selectedItemsViewHeight
   };
 }
 

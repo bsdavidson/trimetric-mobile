@@ -1,20 +1,15 @@
 import React, {Component} from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {connect} from "react-redux";
 
 import {toggleInfoModalVisibility} from "./actions";
 
+export const STAT_MENU_HEIGHT = 40;
+
 export class StatMenu extends Component {
   constructor(props) {
     super(props);
+
     this.handleInfoPress = this.handleInfoPress.bind(this);
   }
 
@@ -39,7 +34,7 @@ export class StatMenu extends Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
     activeVehicles: state.vehicles ? state.vehicles.length : 0
   };
@@ -59,7 +54,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#34495e",
     bottom: 0,
-    height: 40,
+    height: STAT_MENU_HEIGHT,
     left: 0,
     position: "absolute",
     right: 0,

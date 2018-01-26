@@ -13,27 +13,30 @@ import {
 } from "react-native";
 import {connect} from "react-redux";
 
+import {updateLayerVisibility, setSeenIntroSeen} from "./actions";
 import Loading from "./loading";
+
 import busIcon from "./assets/bus.png";
 import layersIcon from "./assets/layers.png";
 import mapIcon from "./assets/map.png";
 import stopIcon from "./assets/stop.png";
 import trainIcon from "./assets/tram.png";
-import {updateLayerVisibility, setSeenIntroSeen} from "./actions";
 
 export class Intro extends Component {
+  state = {
+    visible: true,
+    screenIndex: 0,
+    scrollTween: new Animated.Value(0)
+  };
+
+  screenWidth = Dimensions.get("window").width;
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      visible: true,
-      screenIndex: 0,
-      scrollTween: new Animated.Value(0)
-    };
     this.handleNextPress = this.handleNextPress.bind(this);
     this.handleResetPress = this.handleResetPress.bind(this);
     this.handleTogglePress = this.handleTogglePress.bind(this);
-    this.screenWidth = Dimensions.get("window").width;
   }
 
   componentDidMount() {
@@ -48,8 +51,9 @@ export class Intro extends Component {
 
   componentDidUpdate() {
     if (
-      (this.state.screenIndex > 3 && this.props.loaded && this.state.visible) ||
-      (this.props.loaded && this.props.seenIntro && this.state.visible)
+      this.props.loaded &&
+      this.state.visible &&
+      (this.state.screenIndex > 3 || this.props.seenIntro)
     ) {
       this.setState({
         visible: false
@@ -77,9 +81,7 @@ export class Intro extends Component {
       useNativeDriver: true
     }).start();
 
-    this.setState({
-      screenIndex
-    });
+    this.setState({screenIndex});
   }
 
   renderTitle() {
@@ -195,6 +197,7 @@ export class Intro extends Component {
       </Animated.View>
     );
   }
+
   render() {
     const screenWidth = this.props.dimensions.window.width;
     if (!this.state.visible) {

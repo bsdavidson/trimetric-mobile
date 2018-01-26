@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {Platform, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, View} from "react-native";
+
 import Mapbox from "@mapbox/react-native-mapbox-gl";
 
 import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./constants";
 import {getStopPoints, getSelectedItem} from "./selectors";
 
-function StopsLayer(props) {
+export function StopsLayer(props) {
   const {stopPoints, filter} = props;
   if (!stopPoints) {
     return null;
@@ -41,7 +42,7 @@ function StopsLayer(props) {
   );
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   const selectedItem = getSelectedItem(state);
   let filter = INCLUDE_ALL;
 

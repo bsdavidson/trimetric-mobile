@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {Platform, StyleSheet, Text, View} from "react-native";
-import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {connect} from "react-redux";
+
+import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {lineString} from "@turf/helpers";
 
 import {MIN_LABEL_LAYER_ID, EXCLUDE_ALL, INCLUDE_ALL} from "./constants";

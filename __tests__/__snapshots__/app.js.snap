@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`loaded_app 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <DataService />
+  <MapView
+    centerCoordinate={
+      Array [
+        -122.6865,
+        45.508,
+      ]
+    }
+    contentInset={
+      Array [
+        0,
+        0,
+        100,
+        0,
+      ]
+    }
+    onLongPress={[Function]}
+    onPress={[Function]}
+    onRegionDidChange={[Function]}
+    style={
+      Array [
+        Object {
+          "flex": 0,
+          "left": 0,
+          "position": "absolute",
+          "top": 0,
+        },
+        Object {
+          "height": 600,
+          "maxHeight": 600,
+          "maxWidth": 500,
+          "width": 500,
+        },
+      ]
+    }
+    styleURL={Object {}}
+    zoomLevel={13}
+  >
+    <BuildingsLayer />
+    <RouteShapesLayer />
+    <ArrivalShapesLayer />
+    <StopsLayer />
+    <VehiclesLayer />
+    <SelectedLayer />
+  </MapView>
+  <StatMenu />
+  <LayersMenu />
+  <InfoModal />
+  <DimensionsListener />
+  <Intro />
+</View>
+`;
+
+exports[`loaded_app_with_selectedItems 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <DataService />
+  <MapView
+    centerCoordinate={
+      Array [
+        -122.6865,
+        45.508,
+      ]
+    }
+    contentInset={
+      Array [
+        0,
+        0,
+        100,
+        0,
+      ]
+    }
+    onLongPress={[Function]}
+    onPress={[Function]}
+    onRegionDidChange={[Function]}
+    style={
+      Array [
+        Object {
+          "flex": 0,
+          "left": 0,
+          "position": "absolute",
+          "top": 0,
+        },
+        Object {
+          "height": 600,
+          "maxHeight": 600,
+          "maxWidth": 500,
+          "width": 500,
+        },
+      ]
+    }
+    styleURL={Object {}}
+    zoomLevel={13}
+  >
+    <BuildingsLayer />
+    <RouteShapesLayer />
+    <ArrivalShapesLayer />
+    <StopsLayer />
+    <VehiclesLayer />
+    <SelectedLayer />
+  </MapView>
+  <StatMenu />
+  <LayersMenu />
+  <SelectedItemsView
+    onResize={[Function]}
+  />
+  <InfoModal />
+  <DimensionsListener />
+  <Intro />
+</View>
+`;
+
+exports[`not_loaded_app 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <DataService />
+  <StatMenu />
+  <LayersMenu />
+  <InfoModal />
+  <DimensionsListener />
+  <Intro />
+</View>
+`;

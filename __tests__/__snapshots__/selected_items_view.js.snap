@@ -513,7 +513,7 @@ exports[`selected_stop 1`] = `
                     "maxWidth": "85%",
                   },
                   Object {
-                    "width": null,
+                    "width": 750,
                   },
                 ],
                 Object {
@@ -885,7 +885,7 @@ exports[`selected_vehicle 1`] = `
                     "flexDirection": "row",
                   },
                   Object {
-                    "width": null,
+                    "width": 750,
                   },
                 ],
                 Object {

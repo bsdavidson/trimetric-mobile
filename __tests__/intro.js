@@ -1,8 +1,9 @@
 import "react-native";
 import React from "react";
+import renderer from "react-test-renderer";
+
 import {Intro} from "../intro";
 import {Loading} from "../loading";
-import renderer from "react-test-renderer";
 
 jest.mock("../loading", () => {
   return "Loading";
@@ -10,7 +11,7 @@ jest.mock("../loading", () => {
 
 jest.mock("Animated");
 
-it("renders correctly", () => {
+it("renders the intro", () => {
   const tree = renderer
     .create(
       <Intro

@@ -350,14 +350,11 @@ exports[`arrivals 1`] = `
                 </Text>
                 <View
                   style={
-                    Array [
-                      Object {
-                        "flex": 1,
-                        "opacity": 0.5,
-                        "padding": 2,
-                      },
-                      Object {},
-                    ]
+                    Object {
+                      "flex": 1,
+                      "opacity": 0.5,
+                      "padding": 2,
+                    }
                   }
                 >
                   <Text

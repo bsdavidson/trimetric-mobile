@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`non_null_stopsLayer 1`] = `
+<View>
+  <ShapeSource
+    id="stop_symbols_source"
+    images={
+      Object {
+        "assets": Array [
+          "stop",
+        ],
+      }
+    }
+    shape={
+      Object {
+        "features": Array [
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.398702,
+                45.552013,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "stop_id": "13990",
+              "type": "stop",
+            },
+            "type": "Feature",
+          },
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.407683,
+                45.55363,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "stop_id": "13991",
+              "type": "stop",
+            },
+            "type": "Feature",
+          },
+        ],
+        "type": "FeatureCollection",
+      }
+    }
+  >
+    <SymbolLayer
+      belowLayerID="place-city-sm"
+      filter={undefined}
+      id="stop_symbols_layer"
+      minZoomLevel={13}
+      style={
+        Object {
+          "iconAllowOverlap": true,
+          "iconImage": "marker-15",
+          "iconSize": "camera_value",
+        }
+      }
+    />
+  </ShapeSource>
+  <ShapeSource
+    id="stop_points_source"
+    shape={
+      Object {
+        "features": Array [
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.398702,
+                45.552013,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "stop_id": "13990",
+              "type": "stop",
+            },
+            "type": "Feature",
+          },
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.407683,
+                45.55363,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "stop_id": "13991",
+              "type": "stop",
+            },
+            "type": "Feature",
+          },
+        ],
+        "type": "FeatureCollection",
+      }
+    }
+  >
+    <CircleLayer
+      belowLayerID="place-city-sm"
+      filter={undefined}
+      id="stop_points_layer"
+      maxZoomLevel={13}
+      style={
+        Object {
+          "circleColor": "#555555",
+          "circleOpacity": 0.8,
+          "circleRadius": "camera_value",
+        }
+      }
+    />
+  </ShapeSource>
+</View>
+`;
+
+exports[`null_stopsLayer 1`] = `null`;

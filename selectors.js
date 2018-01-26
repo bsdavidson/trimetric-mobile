@@ -1,17 +1,7 @@
-import {createSelector} from "reselect";
 import Moment from "moment";
 
-// Only tram and bus are used by Trimet
-export const ROUTE_TYPE_ICONS = {
-  0: "tram",
-  1: "subway",
-  2: "rail",
-  3: "bus",
-  4: "ferry",
-  5: "cable",
-  6: "gondola",
-  7: "funicular"
-};
+import {createSelector} from "reselect";
+import {ROUTE_TYPE_ICONS} from "./constants";
 
 export function parseColor(hex) {
   if (hex[0] === "#") {
@@ -46,14 +36,6 @@ function getRouteShapes(state) {
   return state.routeShapes;
 }
 
-function getVehicles(state) {
-  return state.vehicles;
-}
-
-function getStops(state) {
-  return state.stops;
-}
-
 function getSelectedArrival(state) {
   return state.selectedArrival;
 }
@@ -66,96 +48,53 @@ function getSelectedItemIndex(state) {
   return state.selectedItemIndex;
 }
 
-export const getVehicleInfoFromSelectedItem = createSelector(
-  getSelectedItems,
-  getSelectedItemIndex,
-  getVehicles,
-  (selectedItems, idx, vehicles) => {
-    let item = selectedItems[idx];
-    if (!item) {
-      return null;
+function getStops(state) {
+  return state.stops;
+}
+
+function getVehicles(state) {
+  return state.vehicles;
+}
+
+export const getRouteShapeFeatures = createSelector(
+  getRouteShapes,
+  routeShapes => {
+    if (!routeShapes) {
+      return {type: "FeatureCollection", features: []};
     }
-    for (let i = 0; i < vehicles.length; i++) {
-      if (vehicles[i].vehicle.id === item.properties.vehicle_id) {
-        return vehicles[i];
+    let featureIndexes = {};
+    let features = [];
+
+    routeShapes.forEach(s => {
+      if (!s) {
+        return;
       }
-    }
+      let idx = featureIndexes[s.color];
+      if (idx === undefined) {
+        idx = features.length;
+        featureIndexes[s.color] = idx;
+        features.push({
+          type: "Feature",
+          properties: {
+            color: "#" + s.color,
+            route_id: s.route_id
+          },
+          geometry: {
+            type: "MultiLineString",
+            coordinates: []
+          }
+        });
+      }
+      features[idx].geometry.coordinates.push(
+        s.points.map(p => {
+          return [p.lng, p.lat];
+        })
+      );
+    });
+
+    return {type: "FeatureCollection", features: features};
   }
 );
-
-export const getStopInfoFromSelectedItem = createSelector(
-  getSelectedItems,
-  getSelectedItemIndex,
-  getStops,
-  getVehicles, // Added to force update when data for selected vehicle changes
-  (selectedItems, idx, stops, vehicles) => {
-    let item = selectedItems[idx];
-    if (!item) {
-      return null;
-    }
-    let stopID = item.properties.stop_id;
-
-    if (item.properties.type === "vehicle") {
-      for (let i = 0; i < vehicles.length; i++) {
-        if (vehicles[i].vehicle.id === item.properties.vehicle_id) {
-          stopID = vehicles[i].stop_id;
-          break;
-        }
-      }
-    }
-
-    for (let i = 0; i < stops.length; i++) {
-      if (stops[i].id === stopID) {
-        return stops[i];
-      }
-    }
-  }
-);
-
-export const getVehicleInfoFromArrival = createSelector(
-  getVehicles,
-  getSelectedArrival,
-  (vehicles, arrival) => {
-    if (!arrival || !arrival.item || !arrival.item.vehicle_id) {
-      return null;
-    }
-    for (let i = 0; i < vehicles.length; i++) {
-      if (vehicles[i].vehicle.id === arrival.item.vehicle_id) {
-        return vehicles[i];
-      }
-    }
-  }
-);
-
-export const getVehiclePoints = createSelector(getVehicles, vehicles => {
-  let collection = {
-    type: "FeatureCollection",
-    features: []
-  };
-
-  collection.features = vehicles.map(v => {
-    if (!v) {
-      return;
-    }
-
-    return {
-      type: "Feature",
-      properties: {
-        type: "vehicle",
-        icon: getRouteTypeIcon(v.route_type),
-        vehicle_id: v.vehicle.id,
-        route_id: v.trip.route_id || "",
-        stop_id: v.stop_id,
-        bearing: v.position.bearing
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [v.position.lng, v.position.lat]
-      }
-    };
-  });
-  return collection;
-});
 
 export const getSelectedItemsInfo = createSelector(
   getStops,
@@ -228,46 +167,6 @@ export const getSelectedItem = createSelector(
   }
 );
 
-export const getRouteShapeFeatures = createSelector(
-  getRouteShapes,
-  routeShapes => {
-    if (!routeShapes) {
-      return {type: "FeatureCollection", features: []};
-    }
-    let featureIndexes = {};
-    let features = [];
-
-    routeShapes.forEach(s => {
-      if (!s) {
-        return;
-      }
-      let idx = featureIndexes[s.color];
-      if (idx === undefined) {
-        idx = features.length;
-        featureIndexes[s.color] = idx;
-        features.push({
-          type: "Feature",
-          properties: {
-            color: "#" + s.color,
-            route_id: s.route_id
-          },
-          geometry: {
-            type: "MultiLineString",
-            coordinates: []
-          }
-        });
-      }
-      features[idx].geometry.coordinates.push(
-        s.points.map(p => {
-          return [p.lng, p.lat];
-        })
-      );
-    });
-
-    return {type: "FeatureCollection", features: features};
-  }
-);
-
 export const getStopPoints = createSelector(getStops, stops => {
   let collection = {
     type: "FeatureCollection",
@@ -293,5 +192,96 @@ export const getStopPoints = createSelector(getStops, stops => {
     };
   });
 
+  return collection;
+});
+
+export const getStopInfoFromSelectedItem = createSelector(
+  getSelectedItems,
+  getSelectedItemIndex,
+  getStops,
+  getVehicles, // Added to force update when data for selected vehicle changes
+  (selectedItems, idx, stops, vehicles) => {
+    let item = selectedItems[idx];
+    if (!item) {
+      return null;
+    }
+    let stopID = item.properties.stop_id;
+
+    if (item.properties.type === "vehicle") {
+      for (let i = 0; i < vehicles.length; i++) {
+        if (vehicles[i].vehicle.id === item.properties.vehicle_id) {
+          stopID = vehicles[i].stop_id;
+          break;
+        }
+      }
+    }
+
+    for (let i = 0; i < stops.length; i++) {
+      if (stops[i].id === stopID) {
+        return stops[i];
+      }
+    }
+  }
+);
+
+export const getVehicleInfoFromSelectedItem = createSelector(
+  getSelectedItems,
+  getSelectedItemIndex,
+  getVehicles,
+  (selectedItems, idx, vehicles) => {
+    let item = selectedItems[idx];
+    if (!item) {
+      return null;
+    }
+    for (let i = 0; i < vehicles.length; i++) {
+      if (vehicles[i].vehicle.id === item.properties.vehicle_id) {
+        return vehicles[i];
+      }
+    }
+  }
+);
+
+export const getVehicleInfoFromArrival = createSelector(
+  getVehicles,
+  getSelectedArrival,
+  (vehicles, arrival) => {
+    if (!arrival || !arrival.item || !arrival.item.vehicle_id) {
+      return null;
+    }
+    for (let i = 0; i < vehicles.length; i++) {
+      if (vehicles[i].vehicle.id === arrival.item.vehicle_id) {
+        return vehicles[i];
+      }
+    }
+  }
+);
+
+export const getVehiclePoints = createSelector(getVehicles, vehicles => {
+  let collection = {
+    type: "FeatureCollection",
+    features: []
+  };
+
+  collection.features = vehicles.map(v => {
+    if (!v) {
+      return;
+    }
+
+    return {
+      type: "Feature",
+      properties: {
+        bearing: v.position.bearing,
+        icon: getRouteTypeIcon(v.route_type),
+        route_id: v.trip.route_id || "",
+        stop_id: v.stop_id,
+        type: "vehicle",
+        vehicle_id: v.vehicle.id
+      },
+      geometry: {
+        coordinates: [v.position.lng, v.position.lat],
+        type: "Point"
+      }
+    };
+  });
   return collection;
 });

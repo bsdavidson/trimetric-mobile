@@ -1,13 +1,4 @@
 import React, {Component} from "react";
-import {connect} from "react-redux";
-
-import {
-  getSelectedItem,
-  getVehicleInfoFromArrival,
-  getStopInfoFromSelectedItem,
-  ROUTE_TYPE_ICONS
-} from "./selectors";
-
 import {
   Animated,
   Dimensions,
@@ -21,8 +12,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-
-import {parseArrivalTime, parseTimestamp} from "./helpers";
+import {connect} from "react-redux";
 
 import {
   clearSelection,
@@ -30,6 +20,14 @@ import {
   setSelectedItemsViewHeight
 } from "./actions";
 import Arrivals from "./arrivals";
+import {parseArrivalTime, parseTimestamp} from "./helpers";
+import {
+  getSelectedItem,
+  getSelectedItemsInfo,
+  getVehicleInfoFromArrival,
+  getStopInfoFromSelectedItem
+} from "./selectors";
+
 import tram from "./assets/tram.png";
 import bus from "./assets/bus.png";
 import stopImage from "./assets/stop.png";
@@ -48,34 +46,34 @@ const CURRENT_VEHICLE_STATUS = {
 const MAP_AREA_OFFSET = 250;
 const HEADER_HEIGHT = 100;
 const HEADER_PAGINATION_HEIGHT = 25;
-const BOTTOM_STATS_BAR_HEIGHT = 40;
 const STATUS_BAR_OFFSET = Platform.OS === "android" ? 24 : 0;
+export const HEADER_CLOSED_MAX_HEIGHT =
+  HEADER_HEIGHT + HEADER_PAGINATION_HEIGHT;
 
 function keyExtractor(item, index) {
   return String(index);
 }
 
 export class SelectedItemsView extends Component {
+  state = {
+    currentIndex: 0,
+    isOpen: false,
+    isScrolling: false,
+    layoutHeight: null,
+    layoutWidth: null,
+    openTween: new Animated.Value(0),
+    screenHeight: Dimensions.get("window").height + STATUS_BAR_OFFSET,
+    screenWidth: Dimensions.get("window").width
+  };
+
+  headerListRef = null;
+  headerScrollTimeout = null;
+  scrollTimeout = null;
+
   constructor(props) {
     super(props);
-    let screenWidth = Dimensions.get("window").width;
-    let screenHeight = Dimensions.get("window").height + STATUS_BAR_OFFSET;
 
-    this.state = {
-      currentIndex: 0,
-      isOpen: false,
-      isScrolling: false,
-      layoutHeight: null,
-      layoutWidth: null,
-      marginTop: screenHeight * 0.4,
-      openTween: new Animated.Value(0),
-      screenHeight,
-      screenWidth
-    };
-
-    this.headerListRef = null;
-    this.scrollTimeout = null;
-    this.headerScrollTimeout = null;
+    this.state.marginTop = this.state.screenHeight * 0.4;
 
     this.calculatePageIndex = this.calculatePageIndex.bind(this);
     this.getItemLayout = this.getItemLayout.bind(this);
@@ -97,18 +95,19 @@ export class SelectedItemsView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedItem && nextProps.selectedItem.type === "vehicle") {
+    if (nextProps.item && nextProps.item.type === "vehicle") {
       if (this.state.isOpen) {
         this.close();
       }
     }
+
     if (
-      this.props.data.length !== nextProps.data.length &&
+      this.props.itemsInfo.length !== nextProps.itemsInfo.length &&
       !this.state.isOpen
     ) {
       this.props.onResize(
         HEADER_HEIGHT +
-          (nextProps.data.length > 1 ? HEADER_PAGINATION_HEIGHT : 0)
+          (nextProps.itemsInfo.length > 1 ? HEADER_PAGINATION_HEIGHT : 0)
       );
     }
   }
@@ -128,28 +127,28 @@ export class SelectedItemsView extends Component {
   // compare the current selected item with the selected item(s) in the store
   // and return the index.
   getSelectedItemIndex() {
-    const selectedItems = this.props.data;
-    if (selectedItems.length === 0) {
+    const items = this.props.itemsInfo;
+    if (!items || items.length === 0) {
       return -1;
     }
-    const selectedItem = this.props.selectedItem;
-    if (!selectedItem || !selectedItem[selectedItem.type]) {
+    const item = this.props.item;
+    if (!item || !item[item.type]) {
       return -1;
     }
 
-    for (let i = 0; i < selectedItems.length; i++) {
-      const si = selectedItems[i];
-      if (si.type !== selectedItem.type || !si[si.type]) {
+    for (let i = 0; i < items.length; i++) {
+      const si = items[i];
+      if (si.type !== item.type || !si[si.type]) {
         continue;
       }
-      switch (selectedItem.type) {
+      switch (item.type) {
         case "stop":
-          if (si.stop.id === selectedItem.stop.id) {
+          if (si.stop.id === item.stop.id) {
             return i;
           }
           break;
         case "vehicle":
-          if (si.vehicle.vehicle.id === selectedItem.vehicle.vehicle.id) {
+          if (si.vehicle.vehicle.id === item.vehicle.vehicle.id) {
             return i;
           }
           break;
@@ -192,7 +191,7 @@ export class SelectedItemsView extends Component {
       e.nativeEvent.layoutMeasurement.width,
       e.nativeEvent.contentOffset.x
     );
-    if (idx !== this.props.selectedItemIndex) {
+    if (idx !== this.props.itemIndex) {
       this.headerScrollTimeout = setTimeout(() => {
         this.props.onSelectItemIndex(idx);
       }, 100);
@@ -208,7 +207,7 @@ export class SelectedItemsView extends Component {
   }
 
   handleVehicleHeaderPress() {
-    this.props.onSelectItemIndex(this.props.selectedItemIndex);
+    this.props.onSelectItemIndex(this.props.itemIndex);
   }
 
   headerPagination(data, index) {
@@ -262,7 +261,6 @@ export class SelectedItemsView extends Component {
 
   close() {
     // close drawer
-
     Animated.timing(this.state.openTween, {
       toValue: 0,
       duration: 300,
@@ -275,28 +273,21 @@ export class SelectedItemsView extends Component {
 
     let height =
       HEADER_HEIGHT +
-      (this.props.data.length > 1
-        ? HEADER_PAGINATION_HEIGHT
-        : BOTTOM_STATS_BAR_HEIGHT);
+      (this.props.itemsInfo.length > 1 ? HEADER_PAGINATION_HEIGHT : 0);
 
     // Trigger layout resize
-    this.props.onResize(
-      HEADER_HEIGHT +
-        (this.props.data.length > 1
-          ? HEADER_PAGINATION_HEIGHT
-          : BOTTOM_STATS_BAR_HEIGHT)
-    );
+    this.props.onResize(height);
   }
 
   renderHeaderItem({item}) {
     if (item.type === "stop") {
       return (
         <StopItem
-          width={this.state.layoutWidth}
-          onPress={this.handleIconTap}
-          stop={item.stop}
-          selectedArrival={this.props ? this.props.selectedArrival : null}
           arrivals={item.arrivals}
+          onPress={this.handleIconTap}
+          selectedArrival={this.props ? this.props.arrival : null}
+          stop={item.stop}
+          width={this.state.screenWidth}
         />
       );
     }
@@ -304,25 +295,31 @@ export class SelectedItemsView extends Component {
     if (item.type === "vehicle") {
       return (
         <VehicleItem
-          width={this.state.layoutWidth}
-          onPress={this.handleVehicleHeaderPress}
-          vehicle={item.vehicle}
-          stopInfo={this.props.selectedVehicleStopInfo}
           following={this.props.following}
+          onPress={this.handleVehicleHeaderPress}
+          stopInfo={this.props.vehicleStopInfo}
+          vehicle={item.vehicle}
+          width={this.state.screenWidth}
         />
       );
     }
   }
 
   render() {
+    if (!this.props.itemsInfo) {
+      return null;
+    }
+    if (this.props.itemsInfo.length === 0) {
+      return null;
+    }
     let height = this.state.screenHeight - this.state.marginTop;
     let headerHeight = HEADER_HEIGHT;
     let header = null;
-    if (this.props.data.length > 1) {
+    if (this.props.itemsInfo.length > 1) {
       headerHeight += HEADER_PAGINATION_HEIGHT;
       header = (
         <View style={styles.headerPagination}>
-          {this.headerPagination(this.props.data, this.props.selectedItemIndex)}
+          {this.headerPagination(this.props.itemsInfo, this.props.itemIndex)}
         </View>
       );
     }
@@ -345,10 +342,10 @@ export class SelectedItemsView extends Component {
     };
 
     let detailsView = null;
-    if (this.props.selectedItem.type === "stop") {
-      detailsView = <Arrivals selectedStop={this.props.selectedItem} />;
+    if (this.props.item.type === "stop") {
+      detailsView = <Arrivals selectedStop={this.props.item} />;
     }
-    if (this.props.selectedItem.type === "vehicle") {
+    if (this.props.item.type === "vehicle") {
       detailsView = null;
     }
 
@@ -358,7 +355,7 @@ export class SelectedItemsView extends Component {
         style={[styles.drawer, viewStyle]}>
         <View style={styles.headerView}>
           <FlatList
-            data={this.props.data}
+            data={this.props.itemsInfo}
             extraData={this.state}
             getItemLayout={this.getItemLayout}
             horizontal={true}
@@ -385,12 +382,13 @@ export class SelectedItemsView extends Component {
 
 function mapStateToProps(state) {
   return {
+    arrival: state.selectedArrival,
+    arrivalVehicleInfo: getVehicleInfoFromArrival(state),
     following: state.following,
-    selectedItem: getSelectedItem(state),
-    selectedItemIndex: state.selectedItemIndex,
-    selectedArrival: state.selectedArrival,
-    selectedArrivalVehicleInfo: getVehicleInfoFromArrival(state),
-    selectedVehicleStopInfo: getStopInfoFromSelectedItem(state)
+    item: getSelectedItem(state),
+    itemIndex: state.itemIndex,
+    itemsInfo: getSelectedItemsInfo(state),
+    vehicleStopInfo: getStopInfoFromSelectedItem(state)
   };
 }
 

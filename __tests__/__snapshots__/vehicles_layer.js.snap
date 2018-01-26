@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`non_null_vehiclesLayer 1`] = `
+<View>
+  <ShapeSource
+    id="vehicle_symbols_source"
+    images={
+      Object {
+        "assets": Array [
+          "bus",
+          "tram",
+        ],
+      }
+    }
+    shape={
+      Object {
+        "features": Array [
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.67175,
+                45.526817,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "bearing": 272,
+              "icon": "tram",
+              "route_id": "200",
+              "stop_id": "7601",
+              "type": "vehicle",
+              "vehicle_id": "101",
+            },
+            "type": "Feature",
+          },
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.579895,
+                45.534035,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "bearing": 298,
+              "icon": "tram",
+              "route_id": "200",
+              "stop_id": "8372",
+              "type": "vehicle",
+              "vehicle_id": "536",
+            },
+            "type": "Feature",
+          },
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.563545,
+                45.53022,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "bearing": 165,
+              "icon": "tram",
+              "route_id": "200",
+              "stop_id": "8347",
+              "type": "vehicle",
+              "vehicle_id": "537",
+            },
+            "type": "Feature",
+          },
+          Object {
+            "geometry": Object {
+              "coordinates": Array [
+                -122.59301,
+                45.58756,
+              ],
+              "type": "Point",
+            },
+            "properties": Object {
+              "bearing": 145,
+              "icon": "tram",
+              "route_id": "90",
+              "stop_id": "10579",
+              "type": "vehicle",
+              "vehicle_id": "538",
+            },
+            "type": "Feature",
+          },
+        ],
+        "type": "FeatureCollection",
+      }
+    }
+  >
+    <SymbolLayer
+      belowLayerID="place-city-sm"
+      filter={
+        Array [
+          "!=",
+          "non_existing_attribute",
+          "1",
+        ]
+      }
+      id="vehicle_symbols_layer"
+      style={
+        Array [
+          Object {
+            "iconAllowOverlap": true,
+            "iconImage": "{icon}",
+            "iconOpacity": 1,
+            "iconSize": "camera_value",
+            "textHaloColor": "#FFFFFF",
+            "textHaloWidth": 3,
+            "textOffset": Array [
+              0,
+              -1,
+            ],
+            "textOptional": true,
+          },
+          Object {
+            "textField": "{route_id}",
+          },
+        ]
+      }
+    />
+  </ShapeSource>
+</View>
+`;
+
+exports[`null_vehiclesLayer 1`] = `null`;

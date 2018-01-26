@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`non_visible_buildingsLayer 1`] = `
+<VectorSource>
+  <FillExtrusionLayer
+    id="building3d"
+    sourceLayerID="building"
+    style={
+      Array [
+        Object {
+          "fillExtrusionBase": 123,
+          "fillExtrusionColor": "#FFFFFF",
+          "fillExtrusionHeight": 123,
+          "fillExtrusionOpacity": 0.5,
+        },
+        Object {
+          "visibility": "none",
+        },
+      ]
+    }
+  />
+</VectorSource>
+`;
+
+exports[`null_buildingsLayer 1`] = `null`;
+
+exports[`visible_buildingsLayer 1`] = `
+<VectorSource>
+  <FillExtrusionLayer
+    id="building3d"
+    sourceLayerID="building"
+    style={
+      Array [
+        Object {
+          "fillExtrusionBase": 123,
+          "fillExtrusionColor": "#FFFFFF",
+          "fillExtrusionHeight": 123,
+          "fillExtrusionOpacity": 0.5,
+        },
+        Object {
+          "visibility": "visible",
+        },
+      ]
+    }
+  />
+</VectorSource>
+`;

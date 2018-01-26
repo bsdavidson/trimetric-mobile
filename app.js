@@ -2,83 +2,63 @@
  * @flow
  */
 import React, {Component} from "react";
-import Mapbox from "@mapbox/react-native-mapbox-gl";
 import {
+  Dimensions,
+  PixelRatio,
   Platform,
   StyleSheet,
   Text,
-  Image,
-  View,
-  ActivityIndicator,
-  Dimensions,
-  PixelRatio,
-  TouchableOpacity,
-  Switch,
-  TouchableWithoutFeedback
+  View
 } from "react-native";
 import {connect} from "react-redux";
-import {feature, lineString} from "@turf/helpers";
-import {bboxPolygon} from "turf";
 
+import Mapbox from "@mapbox/react-native-mapbox-gl";
+import {bboxPolygon} from "turf";
+import {feature, lineString} from "@turf/helpers";
+
+import {selectItemIndex, unfollow, updateSelectedItems} from "./actions";
 import ArrivalShapesLayer from "./arrival_shapes_layer";
+import BuildingsLayer from "./buildings_layer";
+import {BOTTOM_STATS_BAR_HEIGHT, TOUCH_HALF_SIZE} from "./constants";
+import DataService from "./data";
 import DimensionsListener from "./dimension_listener";
 import InfoModal from "./info_modal";
 import Intro from "./intro";
 import LayersMenu from "./layers_menu";
 import RouteShapesLayer from "./route_shapes_layer";
+import {MAPBOX_ACCESS_TOKEN} from "./secrets";
 import SelectedItemsView from "./selected_items_view";
 import SelectedLayer from "./selected_layer";
+import {
+  getSelectedItem,
+  getSelectedItemsInfo,
+  getVehicleInfoFromArrival
+} from "./selectors";
 import StatMenu from "./stat_menu";
 import StopsLayer from "./stops_layer";
 import VehiclesLayer from "./vehicles_layer";
-import DataService from "./data";
-import {BOTTOM_STATS_BAR_HEIGHT} from "./constants";
 
-import {
-  updateSelectedItems,
-  selectItemIndex,
-  updateLayerVisibility,
-  unfollow
-} from "./actions";
-import {
-  getVehiclePoints,
-  getSelectedItemsInfo,
-  getVehicleInfoFromSelectedItem,
-  getVehicleInfoFromArrival,
-  getSelectedItem,
-  getStopPoints
-} from "./selectors";
-
-import {setTimeout} from "core-js/library/web/timers";
-
-Mapbox.setAccessToken(
-  "pk.eyJ1IjoiYnNkYXZpZHNvbiIsImEiOiJjamNsanhhcGowYmoxMnBtcjZlN3FvYTg3In0.yEf1hfjqmPi-BL9d00_sIw"
-);
-
-const TOUCH_HALF_SIZE = 10 / 2;
+Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
 export class App extends Component {
+  state = {
+    zoomLevel: 0
+  };
+
+  cameraTimeout = null;
+  mapRef = null;
+  zoomLevelTimeoutID = null;
+
   constructor(props) {
     super(props);
 
-    this.mapRef = null;
-    this.state = {
-      pressedBox: null,
-      pressedPoints: {type: "FeatureCollection", features: []},
-      visibleBoxPoly: {},
-      zoomLevel: 0
-    };
-
-    this.cameraTimeout = null;
     this.handleLongPress = this.handleLongPress.bind(this);
     this.handleMapRef = this.handleMapRef.bind(this);
     this.handlePress = this.handlePress.bind(this);
     this.handleRegionDidChange = this.handleRegionDidChange.bind(this);
     this.handleSelectedItemsResize = this.handleSelectedItemsResize.bind(this);
     this.moveCameraToArrival = this.moveCameraToArrival.bind(this);
-    this.renderSelectedItemsMenu = this.renderSelectedItemsMenu.bind(this);
     this.selectedItemCameraMove = this.selectedItemCameraMove.bind(this);
-    this.zoomLevelTimeout = null;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -97,8 +77,8 @@ export class App extends Component {
       // item.
       this.props.onMoveMap();
     }
-    clearTimeout(this.zoomLevelTimeout);
-    this.zoomLevelTimeout = setTimeout(() => {
+    clearTimeout(this.zoomLevelTimeoutID);
+    this.zoomLevelTimeoutID = setTimeout(() => {
       this.setState({
         zoomLevel: event.properties.zoomLevel
       });
@@ -117,44 +97,6 @@ export class App extends Component {
       null,
       ["stop_symbols_layer", "vehicle_symbols_layer"]
     );
-
-    // [-122.68406935038496, 45.51761313407388]
-    // [-122.68809266386711, 45.51259867961565]
-    let screenWidth = Dimensions.get("window").width;
-    let screenHeight = Dimensions.get("window").height;
-    let screenMaxY = (screenPointY + TOUCH_HALF_SIZE + 10) / screenHeight;
-    let screenMaxX = (screenPointX + TOUCH_HALF_SIZE + 10) / screenWidth;
-    let screenMinY = (screenPointY - TOUCH_HALF_SIZE - 10) / screenHeight;
-    let screenMinX = (screenPointX - TOUCH_HALF_SIZE - 10) / screenWidth;
-
-    // bounds [2][2]float64
-    // bounds[0] ne bounds[1]sw
-    // bounds[0][0] X lng  width
-    // bounds [0][1] Y lat height
-    // lat increases to the north
-    // lng increases to the east
-
-    let bounds = await this.mapRef.getVisibleBounds();
-    let boundsHeight = bounds[0][1] - bounds[1][1];
-    let boundsWidth = bounds[0][0] - bounds[1][0];
-
-    let pressedBounds = [[], [], [], [], []];
-
-    pressedBounds[0][0] = bounds[1][0] + boundsWidth * screenMinX;
-    pressedBounds[0][1] = bounds[0][1] - boundsHeight * screenMinY;
-
-    pressedBounds[1][0] = bounds[1][0] + boundsWidth * screenMaxX;
-    pressedBounds[1][1] = bounds[0][1] - boundsHeight * screenMinY;
-
-    pressedBounds[2][0] = bounds[1][0] + boundsWidth * screenMaxX;
-    pressedBounds[2][1] = bounds[0][1] - boundsHeight * screenMaxY;
-
-    pressedBounds[3][0] = bounds[1][0] + boundsWidth * screenMinX;
-    pressedBounds[3][1] = bounds[0][1] - boundsHeight * screenMaxY;
-
-    pressedBounds[4][0] = bounds[1][0] + boundsWidth * screenMinX;
-    pressedBounds[4][1] = bounds[0][1] - boundsHeight * screenMinY;
-    this.setState({pressedBox: lineString(pressedBounds)});
 
     this.props.onSelectItems({
       type: "FeatureCollection",
@@ -186,12 +128,9 @@ export class App extends Component {
     if (
       !this.mapRef ||
       !this.props.selectedItem ||
-      !this.props.selectedItem.position
+      !this.props.selectedItem.position ||
+      !this.props.following
     ) {
-      return;
-    }
-
-    if (!this.props.following) {
       return;
     }
 
@@ -201,13 +140,14 @@ export class App extends Component {
 
     this.cameraTimeout = setTimeout(() => {
       if (this.props.selectedArrivalVehicleInfo) {
-        // We are currently looking at an arrival, so set the camera accordingly
+        // We are currently looking at an arrival, so we want to move the
+        // camera to encompass both the vehicle (pos1) and the destination
+        // stop (pos2).
         let pos1 = [
           this.props.selectedArrivalVehicleInfo.position.lng,
           this.props.selectedArrivalVehicleInfo.position.lat
         ];
         let pos2 = this.props.selectedItem.position;
-
         this.moveCameraToArrival(pos1, pos2);
         return;
       }
@@ -220,20 +160,8 @@ export class App extends Component {
     }, Platform.OS === "ios" ? 100 : 0);
   }
 
-  renderSelectedItemsMenu() {
-    if (this.props.selectedItemsInfo.length === 0) {
-      return null;
-    }
-    return (
-      <SelectedItemsView
-        onResize={this.handleSelectedItemsResize}
-        data={this.props.selectedItemsInfo}
-      />
-    );
-  }
-
   render() {
-    const mapBottom = Math.max(
+    const mapInsetBottom = Math.max(
       Platform.OS === "android"
         ? Math.floor(
             PixelRatio.getPixelSizeForLayoutSize(
@@ -243,18 +171,17 @@ export class App extends Component {
         : this.props.selectedItemsViewHeight,
       BOTTOM_STATS_BAR_HEIGHT
     );
-    let page = null;
+    let map = null;
     if (this.props.loaded) {
-      page = (
+      map = (
         <Mapbox.MapView
-          styleURL={Mapbox.StyleURL.Light}
-          zoomLevel={13}
           centerCoordinate={[-122.6865, 45.508]}
-          contentInset={[0, 0, mapBottom, 0]}
-          onRegionDidChange={this.handleRegionDidChange}
-          onPress={this.handlePress}
+          contentInset={[0, 0, mapInsetBottom, 0]}
           onLongPress={this.handleLongPress}
+          onPress={this.handlePress}
+          onRegionDidChange={this.handleRegionDidChange}
           ref={this.handleMapRef}
+          styleURL={Mapbox.StyleURL.Light}
           style={[
             styles.map,
             {
@@ -263,26 +190,14 @@ export class App extends Component {
               // helps, but isn't a fix as the bug can still occcur. Therefore
               // in the release build, I disable landscape mode but will leave
               // this here in case there is a need later.
-              width: Math.max(this.props.dimensions.screen.width, 300),
               height: Math.max(this.props.dimensions.screen.height, 300),
+              maxHeight: Math.max(this.props.dimensions.screen.height, 300),
               maxWidth: Math.max(this.props.dimensions.screen.width, 300),
-              maxHeight: Math.max(this.props.dimensions.screen.height, 300)
+              width: Math.max(this.props.dimensions.screen.width, 300)
             }
-          ]}>
-          <Mapbox.VectorSource>
-            <Mapbox.FillExtrusionLayer
-              id="building3d"
-              sourceLayerID="building"
-              style={[
-                mapStyles.building,
-                {
-                  visibility: this.props.layerVisibility.buildings
-                    ? "visible"
-                    : "none"
-                }
-              ]}
-            />
-          </Mapbox.VectorSource>
+          ]}
+          zoomLevel={13}>
+          <BuildingsLayer />
           <RouteShapesLayer />
           <ArrivalShapesLayer />
           <StopsLayer />
@@ -291,20 +206,15 @@ export class App extends Component {
         </Mapbox.MapView>
       );
     }
-
     return (
       <View style={styles.container}>
         <DataService />
-        {page}
+        {map}
         <StatMenu />
-        <LayersMenu
-          display={this.props.selectedItemsViewHeight < 150}
-          bottom={Math.max(
-            this.props.selectedItemsViewHeight,
-            PixelRatio.getPixelSizeForLayoutSize(30)
-          )}
-        />
-        {this.renderSelectedItemsMenu()}
+        <LayersMenu />
+        {this.props.selectedItemsInfo.length > 0 ? (
+          <SelectedItemsView onResize={this.handleSelectedItemsResize} />
+        ) : null}
         <InfoModal />
         <DimensionsListener />
         <Intro />
@@ -355,39 +265,42 @@ export class App extends Component {
     // Android has a bug with the content inset that causes setting the camera
     // to a bounds to get pushed off screen. The workaround involes adding a
     // a stop point to reset the view to center after it sets the zoom.
-    Platform.OS === "android"
-      ? this.mapRef.setCamera({
-          stops: [
-            {
-              bounds: {
-                ne: ne,
-                sw: sw,
-                paddingLeft: 80,
-                paddingRight: 80,
-                paddingTop: 80,
-                paddingBottom: 80
-              },
-              duration: 1,
-              mode: Mapbox.CameraModes.Flight
+    // This bug should be fixed in react-native-mapbox v6.0.3
+    if (Platform.OS === "android") {
+      this.mapRef.setCamera({
+        stops: [
+          {
+            bounds: {
+              ne: ne,
+              sw: sw,
+              paddingLeft: 80,
+              paddingRight: 80,
+              paddingTop: 80,
+              paddingBottom: 80
             },
-            {
-              centerCoordinate: [(ne[0] + sw[0]) / 2, (ne[1] + sw[1]) / 2],
-              duration: 1
-            }
-          ]
-        })
-      : this.mapRef.setCamera({
-          bounds: {
-            ne: ne,
-            sw: sw,
-            paddingLeft: 20,
-            paddingRight: 20,
-            paddingTop: 20,
-            paddingBottom: 20
+            duration: 1,
+            mode: Mapbox.CameraModes.Flight
           },
-          duration: 600,
-          mode: Mapbox.CameraModes.Flight
-        });
+          {
+            centerCoordinate: [(ne[0] + sw[0]) / 2, (ne[1] + sw[1]) / 2],
+            duration: 1
+          }
+        ]
+      });
+    } else {
+      this.mapRef.setCamera({
+        bounds: {
+          ne: ne,
+          sw: sw,
+          paddingLeft: 20,
+          paddingRight: 20,
+          paddingTop: 20,
+          paddingBottom: 20
+        },
+        duration: 600,
+        mode: Mapbox.CameraModes.Flight
+      });
+    }
 
     return true;
   }
@@ -426,23 +339,14 @@ export class App extends Component {
   }
 }
 
-const mapStyles = Mapbox.StyleSheet.create({
-  building: {
-    fillExtrusionOpacity: 0.5,
-    fillExtrusionHeight: Mapbox.StyleSheet.identity("height"),
-    fillExtrusionBase: Mapbox.StyleSheet.identity("min_height"),
-    fillExtrusionColor: "#FFFFFF"
-  }
-});
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
   },
   map: {
     flex: 0,
-    position: "absolute",
     left: 0,
+    position: "absolute",
     top: 0
   }
 });
@@ -462,17 +366,12 @@ function mapStateToProps(state) {
   return {
     dimensions: state.dimensions,
     following: state.following,
-    layerVisibility: state.layerVisibility,
     loaded: state.loaded,
-    routeShapes: state.routeShapes,
     selectedArrival: state.selectedArrival,
     selectedArrivalVehicleInfo: getVehicleInfoFromArrival(state),
     selectedItem: getSelectedItem(state),
     selectedItemsInfo: getSelectedItemsInfo(state),
-    selectedItemsViewHeight: state.selectedItemsViewHeight,
-    selectedVehicleInfo: getVehicleInfoFromSelectedItem(state),
-    stopPoints: getStopPoints(state),
-    vehiclePoints: getVehiclePoints(state)
+    selectedItemsViewHeight: state.selectedItemsViewHeight
   };
 }
 

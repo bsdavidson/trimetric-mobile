@@ -2,6 +2,7 @@ import "react-native";
 import React from "react";
 import renderer from "react-test-renderer";
 
+import {Arrivals} from "../arrivals";
 import {SelectedItemsView} from "../selected_items_view";
 import {
   following,
@@ -12,10 +13,9 @@ import {
   selectedItemVehicle,
   selectedStopInfo,
   selectedVehicleInfo,
-  stopData,
+  selectedItemsInfo,
   vehicleData
 } from "../__fixtures__/selected_items_view";
-import {Arrivals} from "../arrivals";
 
 jest.mock("Animated");
 jest.mock("../helpers");
@@ -27,14 +27,14 @@ it("renders a selected stop", () => {
   const selectedStop = renderer
     .create(
       <SelectedItemsView
-        data={stopData}
+        arrival={null}
+        arrivalVehicleInfo={null}
         following={following}
+        item={selectedItem}
+        itemIndex={selectedItemIndex}
+        itemsInfo={selectedItemsInfo}
         onResize={value => {}}
-        selectedArrival={null}
-        selectedArrivalVehicleInfo={null}
-        selectedItem={selectedItem}
-        selectedItemIndex={selectedItemIndex}
-        selectedVehicleStopInfo={selectedStopInfo}
+        vehicleStopInfo={selectedStopInfo}
       />
     )
     .toJSON();
@@ -45,14 +45,14 @@ it("renders a selected vehicle", () => {
   const selectedVehicle = renderer
     .create(
       <SelectedItemsView
-        data={vehicleData}
+        arrival={null}
+        arrivalVehicleInfo={null}
         following={following}
+        item={selectedItemVehicle}
+        itemIndex={selectedItemIndex}
+        itemsInfo={vehicleData}
         onResize={value => {}}
-        selectedArrival={null}
-        selectedArrivalVehicleInfo={null}
-        selectedItem={selectedItemVehicle}
-        selectedItemIndex={selectedItemIndex}
-        selectedVehicleStopInfo={selectedVehicleInfo}
+        vehicleStopInfo={selectedVehicleInfo}
       />
     )
     .toJSON();

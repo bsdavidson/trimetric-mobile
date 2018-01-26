@@ -56,5 +56,6 @@ buck-out/
 .env
 android/captures
 android/app/release
+secrets.js
 .vscode
 NOTES

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Dimensions} from "react-native";
 import {connect} from "react-redux";
+
 import {updateDimensions} from "./actions";
 
 class DimensionsListener extends Component {

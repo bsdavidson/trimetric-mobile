@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders selectedLayer 1`] = `null`;
+
+exports[`renders selectedLayer 2`] = `
+<View>
+  <ShapeSource
+    id="pressed_points_source"
+    shape={
+      Object {
+        "geometry": Object {
+          "coordinates": Array [
+            -122.68415115773678,
+            45.50685913695389,
+          ],
+          "type": "Point",
+        },
+        "properties": Object {
+          "stop_id": "7749",
+          "type": "stop",
+        },
+        "type": "Feature",
+      }
+    }
+  >
+    <CircleLayer
+      belowLayerID="place-city-sm"
+      id="pressed_points_layer"
+      style={
+        Object {
+          "circleColor": "rgba(0,0,0,0)",
+          "circleRadius": 14,
+          "circleStrokeColor": "#00FFFF",
+          "circleStrokeOpacity": 0.5,
+          "circleStrokeWidth": 2,
+        }
+      }
+    />
+  </ShapeSource>
+</View>
+`;

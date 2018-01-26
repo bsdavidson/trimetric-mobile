@@ -3,10 +3,8 @@
 Trimetric Mobile is a [React Native] app that pulls data from a [Trimetric server]
 to provide a real-time visualization of the [Trimet] transit system.
 
-### Demo
-
 You can download the app from [Google Play] or the [Apple App Store].
-It connects to the Trimetric server running at http://trimtric.briand.co.
+They connect to the Trimetric server running at http://trimtric.briand.co.
 
 ### Screenshots
 
@@ -51,6 +49,14 @@ If you have ADB installed and a properly configured Android device, you can run 
 
 ```sh
 react-native run-android
+```
+
+### Testing
+
+You can run tests by typing:
+
+```sh
+yarn test
 ```
 
 [trimet]: https://trimet.org
