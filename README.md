@@ -6,12 +6,11 @@ Trimetric Mobile is a [React Native] app that pulls data from a [Go backend serv
 to provide a real-time visualization of Portland's [Trimet] transit system.
 
 You can download the app from [Google Play] or the [iOS App Store]. You can also
-view a web version of the same visualization at http://trimtric.briand.co.
+view a web version of the same visualization at https://trimetric.briand.co.
 
 ### Screenshots
 
-<img alt="overview" src="images/overview.jpg" width="200">
-<img alt="arrival route" src="images/arrival_route.jpg" width="200">
+<img alt="overview" src="images/overview.jpg" width="200"> <img alt="arrival route" src="images/arrival_route.jpg" width="200">
 
 ### Setup
 
