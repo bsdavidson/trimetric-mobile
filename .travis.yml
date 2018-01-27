@@ -1,0 +1,6 @@
+dist: trusty
+language: node_js
+node_js:
+- "node"
+before_install:
+- cp secrets.js.example secrets.js
